@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@screens/*": ["src/screens/*"],
+      "@assets/*": ["src/assets/*"],
+      "@constants/*": ["src/constants/*"],
+      "@navigation/*": ["src/navigation/*"],
+      "@storage/*": ["src/storage/*"],
+      "@store/*": ["src/store/*"],
+      "@utils/*": ["src/utils/*"]
+      // Thêm các alias khác nếu cần thiết
+    }
+  },
+  "extends": "expo/tsconfig.base"
+}
