@@ -4,6 +4,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 type TRootStackParamList = {
   Welcome: undefined;
   Home: undefined;
+  Role: undefined;
+  LoginOrRegisterForm: undefined;
 };
 
 type TNavigation<T extends keyof TRootStackParamList> =
