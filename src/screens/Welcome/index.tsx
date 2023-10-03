@@ -12,6 +12,7 @@ export const Welcome = () => {
 
   const handlePressStart = () => {
     navigation.replace("Role");
+
   };
 
   return (
