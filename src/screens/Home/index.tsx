@@ -1,4 +1,4 @@
-import { Button } from "@react-native-material/core";
+import { Button } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
 
