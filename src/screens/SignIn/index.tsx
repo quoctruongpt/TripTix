@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ButtonApp } from "@components/Button";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -69,7 +70,7 @@ export const SignIn = () => {
               />
             )}
           />
-          <Button
+          <ButtonApp
             title="Login"
             containerStyle={styles.btnLoginContainer}
             buttonStyle={styles.btnLogin}
@@ -100,8 +101,6 @@ const styles = StyleSheet.create({
   inputStyle: { fontSize: 14, marginLeft: 12 },
   btnLogin: {
     backgroundColor: "rgba(127, 220, 103, 1)",
-    borderRadius: 20,
-    padding: 12,
   },
   btnLoginContainer: { margin: 24, marginTop: 40 },
   footer: { flexDirection: "row", alignItems: "center" },

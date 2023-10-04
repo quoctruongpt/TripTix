@@ -8,14 +8,17 @@ const Stack = createNativeStackNavigator<TRootStackParamList>();
 export default function AppNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={"Welcome"} component={Welcome} />
+      <Stack.Screen
+        name={"Welcome"}
+        component={Welcome}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name={"Home"} component={Home} />
       <Stack.Screen
         name={"SignIn"}
         component={SignIn}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name={"Home"} component={Home} />
       <Stack.Screen
         name={"LoginOrRegisterForm"}
         component={LoginOrRegisterForm}

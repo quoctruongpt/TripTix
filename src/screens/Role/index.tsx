@@ -10,10 +10,10 @@ export const Role: React.FC = () => {
   const navigation = useNavigation<TNavigation<"Role">>();
 
   const handlePressRoleCustomer = () => {
-    navigation.replace("LoginOrRegisterForm");
+    navigation.navigate("LoginOrRegisterForm");
   };
   const handlePressRoleDriver = () => {
-    navigation.replace("LoginOrRegisterForm");
+    navigation.navigate("LoginOrRegisterForm");
   };
   return (
     <SafeAreaView style={styles.container}>

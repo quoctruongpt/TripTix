@@ -6,8 +6,20 @@ import { View } from "react-native";
 import { Images } from "@assets/images";
 import { TNavigation } from "@navigation/AppNavigator.type";
 import Icon from "react-native-vector-icons/Entypo";
+import { useNavigation } from "@react-navigation/native";
+import { ButtonApp } from "@components/Button";
 
 export const LoginOrRegisterForm: React.FC = () => {
+  const navigation = useNavigation<TNavigation<"LoginOrRegisterForm">>();
+
+  const handlePressSignIn = () => {
+    navigation.navigate("SignIn");
+  };
+
+  const handlePressSignUp = () => {
+    navigation.navigate("SignIn");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Image source={Images.Banner01} style={styles.image} />
@@ -19,14 +31,14 @@ export const LoginOrRegisterForm: React.FC = () => {
       </Text>
       <Icon name="dots-three-horizontal" size={30} color="gray" />
       <View style={styles.formLoginOrRegister}>
-        <Button
+        <ButtonApp
           title="Login"
           buttonStyle={styles.buttonLogin}
           containerStyle={styles.buttonLoginContainer}
           titleStyle={styles.titleButtonLogin}
-          onPress={() => {}}
+          onPress={handlePressSignIn}
         />
-        <Button
+        <ButtonApp
           title="Register"
           buttonStyle={styles.buttonRegister}
           containerStyle={styles.buttonRegisterContainer}
@@ -78,16 +90,13 @@ const styles = StyleSheet.create({
   },
   buttonLogin: {
     backgroundColor: "#FFF",
-    borderWidth: 2,
     borderColor: "white",
-    borderRadius: 20,
-    padding: 12,
   },
   buttonLoginContainer: {
     width: "100%",
     marginBottom: 16,
   },
-  titleButtonLogin: { fontWeight: "600", color: "#000", fontSize: 10 },
+  titleButtonLogin: { fontWeight: "600", color: "#000" },
   buttonRegister: {
     backgroundColor: "#000",
     borderRadius: 20,
@@ -96,5 +105,5 @@ const styles = StyleSheet.create({
   buttonRegisterContainer: {
     width: "100%",
   },
-  titleButtonRegister: { fontWeight: "600", color: "#fff", fontSize: 10 },
+  titleButtonRegister: { fontWeight: "600", color: "#fff" },
 });
