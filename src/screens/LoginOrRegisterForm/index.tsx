@@ -17,7 +17,7 @@ export const LoginOrRegisterForm: React.FC = () => {
   };
 
   const handlePressSignUp = () => {
-    navigation.navigate("SignIn");
+    navigation.navigate("OTP");
   };
 
   return (
@@ -43,7 +43,7 @@ export const LoginOrRegisterForm: React.FC = () => {
           buttonStyle={styles.buttonRegister}
           containerStyle={styles.buttonRegisterContainer}
           titleStyle={styles.titleButtonRegister}
-          onPress={() => {}}
+          onPress={handlePressSignUp}
         />
       </View>
     </SafeAreaView>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 40,
+    padding: 20,
     alignItems: "center",
   },
   textHeader: {
