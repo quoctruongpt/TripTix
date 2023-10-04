@@ -7,6 +7,7 @@ type TRootStackParamList = {
   Role: undefined;
   LoginOrRegisterForm: undefined;
   SignIn: undefined;
+  SignUp: undefined;
 };
 
 type TNavigation<T extends keyof TRootStackParamList> =
