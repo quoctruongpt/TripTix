@@ -21,7 +21,7 @@ const schema = yup.object().shape({
 });
 
 export const SignIn = () => {
-  const navigation = useNavigation<TNavigation<"SingIn">>();
+  const navigation = useNavigation<TNavigation<"SignIn">>();
   const {
     control,
     handleSubmit,

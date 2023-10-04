@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home, Welcome, LoginOrRegisterForm, Role, SignIn } from "@screens";
+import { Home, Welcome, LoginOrRegisterForm, Role, SignIn, OTP } from "@screens";
 import { TRootStackParamList } from "./AppNavigator.type";
 import { SignUp } from "@screens/SignUp";
 
@@ -18,6 +18,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"SignIn"}
         component={SignIn}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"OTP"}
+        component={OTP}
         options={{ headerShown: false }}
       />
       <Stack.Screen

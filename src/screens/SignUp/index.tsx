@@ -10,8 +10,12 @@ import { DatePicker } from "../../components/DatePicker";
 import { Select } from "@components/Select";
 import { PhoneInput } from "@components/PhoneInput";
 import { Controller, useForm } from "react-hook-form";
+import { TNavigation } from "@navigation/AppNavigator.type";
+import { useNavigation } from "@react-navigation/native";
 
 export const SignUp: React.FC = () => {
+  const navigation = useNavigation<TNavigation<"SignIn">>();
+
   const { control } = useForm({
     defaultValues: {
       fullName: "",
@@ -22,6 +26,10 @@ export const SignUp: React.FC = () => {
       gender: "",
     },
   });
+
+  const handleOTP = () => {
+    navigation.navigate("OTP");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,7 +66,11 @@ export const SignUp: React.FC = () => {
           />
         </ScrollView>
         <View style={styles.footer}>
-          <ButtonApp title="Continue" buttonStyle={styles.buttonContinue} />
+          <ButtonApp
+            title="Continue"
+            buttonStyle={styles.buttonContinue}
+            onPress={handleOTP}
+          />
         </View>
       </View>
     </SafeAreaView>

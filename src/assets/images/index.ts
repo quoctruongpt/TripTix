@@ -4,4 +4,5 @@ export const Images = {
   Customer: require("./user/Customer.png"),
   Driver: require("./user/Driver.png"),
   Banner01: require("./banner/Banner01.png"),
+  Otp: require("./user/Otp.png"),
 };
