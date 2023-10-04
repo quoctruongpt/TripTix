@@ -11,7 +11,8 @@ export const Welcome = () => {
   const navigation = useNavigation<TNavigation<"Welcome">>();
 
   const handlePressStart = () => {
-    navigation.replace("SignIn");
+    navigation.replace("Role");
+
   };
 
   return (

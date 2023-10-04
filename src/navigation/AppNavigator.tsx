@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home, Welcome, SignIn } from "@screens";
+import { Home, Welcome, LoginOrRegisterForm, Role, SignIn } from "@screens";
 import { TRootStackParamList } from "./AppNavigator.type";
 
 const Stack = createNativeStackNavigator<TRootStackParamList>();
@@ -13,6 +13,17 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"SignIn"}
         component={SignIn}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name={"Home"} component={Home} />
+      <Stack.Screen
+        name={"LoginOrRegisterForm"}
+        component={LoginOrRegisterForm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"Role"}
+        component={Role}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
