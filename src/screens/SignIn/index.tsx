@@ -12,6 +12,8 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ButtonApp } from "@components/Button";
+import { useNavigation } from "@react-navigation/native";
+import { TNavigation } from "@navigation/AppNavigator.type";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -19,6 +21,7 @@ const schema = yup.object().shape({
 });
 
 export const SignIn = () => {
+  const navigation = useNavigation<TNavigation<"SignIn">>();
   const {
     control,
     handleSubmit,
@@ -31,6 +34,10 @@ export const SignIn = () => {
   const handleSignIn = handleSubmit((data) => {
     console.warn(data);
   });
+
+  const handleSignUp = () => {
+    navigation.navigate("SignUp");
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -83,6 +90,7 @@ export const SignIn = () => {
             title="Create an Account"
             type="clear"
             titleStyle={styles.btnSignUp}
+            onPress={handleSignUp}
           />
         </View>
       </SafeAreaView>

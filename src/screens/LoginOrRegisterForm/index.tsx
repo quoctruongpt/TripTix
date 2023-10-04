@@ -17,7 +17,7 @@ export const LoginOrRegisterForm: React.FC = () => {
   };
 
   const handlePressSignUp = () => {
-    navigation.navigate("OTP");
+    navigation.navigate("SignUp");
   };
 
   return (
