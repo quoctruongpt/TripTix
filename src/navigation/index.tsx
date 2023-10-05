@@ -3,14 +3,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./AuthNavigator";
 import AppNavigator from "./AppNavigator";
 import { useStore } from "@store/index";
+import { observer } from "mobx-react-lite";
 
-export default function RootNavigation() {
-  const authentication = useStore();
-  console.warn(authentication);
-  const isLogin = false;
+function RootNavigation() {
+  const {
+    authentication: { isLogin },
+  } = useStore();
+
   return (
     <NavigationContainer>
       {isLogin ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }
+
+export default observer(RootNavigation);
