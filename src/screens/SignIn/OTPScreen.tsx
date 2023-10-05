@@ -14,6 +14,8 @@ import { Controller, useForm } from "react-hook-form";
 import { ButtonApp } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { TAuthNavigation } from "@navigation/AuthNavigator.type";
+import Toast from "react-native-toast-message";
+import { useStore } from "@store/index";
 
 export const OTP = () => {
   const navigation = useNavigation<TAuthNavigation<"OTP">>();
@@ -24,13 +26,33 @@ export const OTP = () => {
   } = useForm({
     defaultValues: { first: "", second: "", third: "", four: "" },
   });
+  const {
+    authentication: { setIsLogin, isLogin },
+  } = useStore();
 
   const onTurnBackSignIn = () => {
     navigation.navigate("SignIn");
   };
+
+  const showNotification = () => {
+    Toast.show({
+      type: "success",
+      position: "top",
+      text1: "Đăng ký thành công",
+      text2: "Đang chuyển vào màn hình chính...",
+      visibilityTime: 2000,
+      topOffset: 5,
+    });
+    setTimeout(() => {
+      setIsLogin(true);
+    }, 2500);
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
+        <View style={{ zIndex: 9999 }}>
+          <Toast ref={(ref) => Toast.setRef(ref)} />
+        </View>
         <View style={styles.headerContainer}>
           <Icon
             style={{ width: "30%" }}
@@ -123,6 +145,7 @@ export const OTP = () => {
         </View>
         <View style={styles.footer}>
           <ButtonApp
+            onPress={showNotification}
             title="Verify"
             buttonStyle={styles.buttonVertify}
             containerStyle={styles.buttonVertifyContainer}
