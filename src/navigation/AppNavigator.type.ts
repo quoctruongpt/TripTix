@@ -1,22 +1,16 @@
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-type TRootStackParamList = {
-  Welcome: undefined;
-  Home: undefined;
-  Role: undefined;
-  LoginOrRegisterForm: undefined;
-  SignIn: undefined;
-  OTP: undefined;
-  SignUp: undefined;
+type TAppStackParamList = {
+  BottomTabNavigator: undefined;
 };
 
-type TNavigation<T extends keyof TRootStackParamList> =
-  NativeStackNavigationProp<TRootStackParamList, T>;
+type TAppNavigation<T extends keyof TAppStackParamList> =
+  NativeStackNavigationProp<TAppStackParamList, T>;
 
-type TRoute<T extends keyof TRootStackParamList> = RouteProp<
-  TRootStackParamList,
+type TAppRoute<T extends keyof TAppStackParamList> = RouteProp<
+  TAppStackParamList,
   T
 >;
 
-export type { TRootStackParamList, TNavigation, TRoute };
+export type { TAppStackParamList, TAppNavigation, TAppRoute };

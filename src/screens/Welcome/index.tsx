@@ -5,14 +5,13 @@ import { Button, Text } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 
 import { Images } from "@assets/images";
-import { TNavigation } from "@navigation/AppNavigator.type";
+import { TAuthNavigation } from "@navigation/AuthNavigator.type";
 
 export const Welcome = () => {
-  const navigation = useNavigation<TNavigation<"Welcome">>();
+  const navigation = useNavigation<TAuthNavigation<"Welcome">>();
 
   const handlePressStart = () => {
     navigation.replace("Role");
-
   };
 
   return (

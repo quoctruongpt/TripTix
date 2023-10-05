@@ -4,16 +4,19 @@ import { Image } from "expo-image";
 import { Button, Text } from "@rneui/themed";
 import { View } from "react-native";
 import { Images } from "@assets/images";
-import { TNavigation } from "@navigation/AppNavigator.type";
+import { TAuthNavigation, TAuthRoute } from "@navigation/AuthNavigator.type";
 import Icon from "react-native-vector-icons/Entypo";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ButtonApp } from "@components/Button";
+import { ERules } from "@constants/user";
 
 export const LoginOrRegisterForm: React.FC = () => {
-  const navigation = useNavigation<TNavigation<"LoginOrRegisterForm">>();
+  const navigation = useNavigation<TAuthNavigation<"LoginOrRegisterForm">>();
+  const { rule } = useRoute<TAuthRoute<"LoginOrRegisterForm">>().params;
+  const hideButtonSignUp = rule === ERules.Driver;
 
   const handlePressSignIn = () => {
-    navigation.navigate("SignIn");
+    navigation.navigate("SignIn", { rule });
   };
 
   const handlePressSignUp = () => {
@@ -38,13 +41,15 @@ export const LoginOrRegisterForm: React.FC = () => {
           titleStyle={styles.titleButtonLogin}
           onPress={handlePressSignIn}
         />
-        <ButtonApp
-          title="Register"
-          buttonStyle={styles.buttonRegister}
-          containerStyle={styles.buttonRegisterContainer}
-          titleStyle={styles.titleButtonRegister}
-          onPress={handlePressSignUp}
-        />
+        {!hideButtonSignUp && (
+          <ButtonApp
+            title="Register"
+            buttonStyle={styles.buttonRegister}
+            containerStyle={styles.buttonRegisterContainer}
+            titleStyle={styles.titleButtonRegister}
+            onPress={handlePressSignUp}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

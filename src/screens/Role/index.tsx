@@ -5,16 +5,15 @@ import { Button, Text } from "@rneui/themed";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Images } from "@assets/images";
-import { TNavigation } from "@navigation/AppNavigator.type";
+import { TAuthNavigation } from "@navigation/AuthNavigator.type";
+import { ERules } from "@constants/user";
 export const Role: React.FC = () => {
-  const navigation = useNavigation<TNavigation<"Role">>();
+  const navigation = useNavigation<TAuthNavigation<"Role">>();
 
-  const handlePressRoleCustomer = () => {
-    navigation.navigate("LoginOrRegisterForm");
+  const handleChooseRole = (rule: ERules) => {
+    navigation.navigate("LoginOrRegisterForm", { rule });
   };
-  const handlePressRoleDriver = () => {
-    navigation.navigate("LoginOrRegisterForm");
-  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Image source={Images.BusFace} style={styles.image} />
@@ -59,7 +58,7 @@ export const Role: React.FC = () => {
               paddingHorizontal: 20,
             }}
             titleStyle={{ color: "black" }}
-            onPress={handlePressRoleDriver}
+            onPress={() => handleChooseRole(ERules.Driver)}
           />
         </View>
 
@@ -91,7 +90,7 @@ export const Role: React.FC = () => {
               paddingHorizontal: 20,
             }}
             titleStyle={{ color: "black" }}
-            onPress={handlePressRoleCustomer}
+            onPress={() => handleChooseRole(ERules.Customer)}
           />
         </View>
       </View>

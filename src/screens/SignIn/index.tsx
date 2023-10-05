@@ -12,8 +12,10 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ButtonApp } from "@components/Button";
-import { useNavigation } from "@react-navigation/native";
-import { TNavigation } from "@navigation/AppNavigator.type";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { TAuthNavigation, TAuthRoute } from "@navigation/AuthNavigator.type";
+import { ERules } from "@constants/user";
+import { useStore } from "@store/index";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -21,7 +23,14 @@ const schema = yup.object().shape({
 });
 
 export const SignIn = () => {
-  const navigation = useNavigation<TNavigation<"SignIn">>();
+  const navigation = useNavigation<TAuthNavigation<"SignIn">>();
+  const { rule } = useRoute<TAuthRoute<"LoginOrRegisterForm">>().params;
+  const hideButtonSignUp = rule === ERules.Driver;
+  const {
+    authentication: { setIsLogin, isLogin },
+  } = useStore();
+  // console.warn(isLogin);
+
   const {
     control,
     handleSubmit,
@@ -32,7 +41,8 @@ export const SignIn = () => {
   });
 
   const handleSignIn = handleSubmit((data) => {
-    console.warn(data);
+    setIsLogin(true);
+    // navigation.reset({routes: [{name: ''}]})
   });
 
   const handleSignUp = () => {
@@ -84,14 +94,18 @@ export const SignIn = () => {
             onPress={handleSignIn}
           />
         </View>
-        <View style={styles.footer}>
-          <Text>Not Registered yet?</Text>
-          <Button
-            title="Create an Account"
-            type="clear"
-            titleStyle={styles.btnSignUp}
-            onPress={handleSignUp}
-          />
+        <View>
+          {!hideButtonSignUp && (
+            <View style={styles.footer}>
+              <Text>Not Registered yet?</Text>
+              <Button
+                title="Create an Account"
+                type="clear"
+                titleStyle={styles.btnSignUp}
+                onPress={handleSignUp}
+              />
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

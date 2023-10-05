@@ -13,10 +13,10 @@ import { Images } from "@assets/images";
 import { Controller, useForm } from "react-hook-form";
 import { ButtonApp } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
-import { TNavigation } from "@navigation/AppNavigator.type";
+import { TAuthNavigation } from "@navigation/AuthNavigator.type";
 
 export const OTP = () => {
-  const navigation = useNavigation<TNavigation<"OTP">>();
+  const navigation = useNavigation<TAuthNavigation<"OTP">>();
   const {
     control,
     handleSubmit,

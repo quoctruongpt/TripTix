@@ -10,11 +10,11 @@ import { DatePicker } from "../../components/DatePicker";
 import { Select } from "@components/Select";
 import { PhoneInput } from "@components/PhoneInput";
 import { Controller, useForm } from "react-hook-form";
-import { TNavigation } from "@navigation/AppNavigator.type";
+import { TAuthNavigation } from "@navigation/AuthNavigator.type";
 import { useNavigation } from "@react-navigation/native";
 
 export const SignUp: React.FC = () => {
-  const navigation = useNavigation<TNavigation<"SignIn">>();
+  const navigation = useNavigation<TAuthNavigation<"SignIn">>();
 
   const { control } = useForm({
     defaultValues: {
