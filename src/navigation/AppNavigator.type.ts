@@ -5,6 +5,9 @@ type TAppStackParamList = {
   BottomTabNavigator: undefined;
   TopUp: undefined;
   Home: undefined;
+  Settings: undefined;
+  Point: undefined;
+  Info: undefined;
 };
 
 type TAppNavigation<T extends keyof TAppStackParamList> =
