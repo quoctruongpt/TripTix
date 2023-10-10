@@ -8,6 +8,7 @@ type TAppStackParamList = {
   Settings: undefined;
   Point: undefined;
   Info: undefined;
+  SearchRoute: undefined;
 };
 
 type TAppNavigation<T extends keyof TAppStackParamList> =

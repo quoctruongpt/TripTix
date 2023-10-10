@@ -8,6 +8,7 @@ import { TopUP } from "@screens/TopUp";
 import { Settings } from "@screens/Profile/components/Settings";
 import { Point } from "@screens/Profile/components/Point";
 import { Info } from "@screens/Profile/components/Info";
+import { SearchRoute } from "@screens/SearchRoute";
 
 const Stack = createNativeStackNavigator<TAppStackParamList>();
 
@@ -43,6 +44,11 @@ export default function AppNavigator() {
         name={"Info"}
         component={Info}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"SearchRoute"}
+        component={SearchRoute}
+        options={{ title: "Tìm kiếm tuyến đường" }}
       />
     </Stack.Navigator>
   );
