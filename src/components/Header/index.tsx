@@ -2,7 +2,7 @@ import { Text } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
 
-export const Header: React.FC = ({ title }: any) => {
+export const Header: React.FC = ({ title, children }: any) => {
   return (
     <View
       style={{
@@ -15,9 +15,13 @@ export const Header: React.FC = ({ title }: any) => {
         borderTopRightRadius: 5,
       }}
     >
-      <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-        {title}
-      </Text>
+      {children ? (
+        children
+      ) : (
+        <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+          {title}
+        </Text>
+      )}
     </View>
   );
 };

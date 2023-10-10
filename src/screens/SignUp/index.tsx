@@ -57,7 +57,11 @@ export const SignUp: React.FC = () => {
             placeholderTextColor={"#ccc"}
           />
           <PhoneInput />
+          <View>
+            
+          </View>
           <Select
+            placeholder="Select Gender"
             items={[
               { label: "Male", value: "male" },
               { label: "Female", value: "female" },

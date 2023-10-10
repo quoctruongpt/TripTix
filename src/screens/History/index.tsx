@@ -3,7 +3,7 @@ import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, ScrollView } from "react-native";
-import { Header } from "../../common/Header";
+import { Header } from "../../components/Header";
 
 export const History: React.FC = () => {
   return (

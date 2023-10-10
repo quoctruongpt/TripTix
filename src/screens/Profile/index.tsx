@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Footer } from "./components/Footer";
 import { Content } from "./components/Content";
-import { Header } from "../../common/Header";
+import { Header } from "@components/Header";
 
 export const Profile: React.FC = () => {
   return (
