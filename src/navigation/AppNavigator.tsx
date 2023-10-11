@@ -8,6 +8,7 @@ import { TopUP } from "@screens/TopUp";
 import { Settings } from "@screens/Profile/components/Settings";
 import { Point } from "@screens/Profile/components/Point";
 import { Info } from "@screens/Profile/components/Info";
+import { SelectRoute } from "@screens/SelectRoute";
 import { SearchRoute } from "@screens/SearchRoute";
 import { DepartureInformation } from "@screens/DepartureInformation";
 import { TicketInformation } from "@screens/TicketInformation";
@@ -30,6 +31,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"Home"}
         component={TopUP}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"SelectRoute"}
+        component={SelectRoute}
         options={{ headerShown: false }}
       />
       <Stack.Screen

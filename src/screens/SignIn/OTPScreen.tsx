@@ -35,14 +35,6 @@ export const OTP = () => {
   };
 
   const showNotification = () => {
-    // Toast.show({
-    //   type: "success",
-    //   position: "top",
-    //   text1: "Đăng ký thành công",
-    //   text2: "Đang chuyển vào màn hình chính...",
-    //   visibilityTime: 2000,
-    //   topOffset: 5,
-    // });
     setTimeout(() => {
       setIsLogin(true);
     }, 2500);
@@ -51,7 +43,7 @@ export const OTP = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
         <View style={{ zIndex: 9999 }}>
-          <Toast ref={(ref) => Toast.setRef(ref)} />
+          {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
         </View>
         <View style={styles.headerContainer}>
           <Icon
