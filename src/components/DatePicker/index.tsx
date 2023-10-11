@@ -7,22 +7,31 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 export const DatePicker: React.FC<{
   value: Date;
   onConfirm: (value: Date) => void;
-}> = ({ value, onConfirm }) => {
+  renderButton?: (title: string, onPress: () => void) => React.ReactNode;
+  placeholder: string;
+}> = ({ value, onConfirm, renderButton, placeholder }) => {
   const [showPicker, setShowPicker] = useState(false);
 
   const handleClose = () => {
     setShowPicker(false);
   };
+  const title = value ? dayjs(value).format("DD/MM/YYYY") : placeholder;
   return (
     <>
-      <TouchableOpacity
-        style={{ backgroundColor: "#fafafa", padding: 16, marginVertical: 12 }}
-        onPress={() => setShowPicker(true)}
-      >
-        <Text style={{ color: value ? undefined : "#ccc" }}>
-          {value ? dayjs(value).format("DD/MM/YYYY") : "Date of Birth"}
-        </Text>
-      </TouchableOpacity>
+      {renderButton ? (
+        renderButton(title, () => setShowPicker(true))
+      ) : (
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#fafafa",
+            padding: 16,
+            marginVertical: 12,
+          }}
+          onPress={() => setShowPicker(true)}
+        >
+          <Text style={{ color: value ? undefined : "#ccc" }}>{title}</Text>
+        </TouchableOpacity>
+      )}
 
       <DateTimePickerModal
         isVisible={showPicker}

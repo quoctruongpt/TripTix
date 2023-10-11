@@ -35,17 +35,9 @@ export const OTP = () => {
   };
 
   const showNotification = () => {
-    // Toast.show({
-    //   type: "success",
-    //   position: "top",
-    //   text1: "Đăng ký thành công",
-    //   text2: "Đang chuyển vào màn hình chính...",
-    //   visibilityTime: 2000,
-    //   topOffset: 5,
-    // });
-    // setTimeout(() => {
-    //   setIsLogin(true);
-    // }, 2500);
+    setTimeout(() => {
+      setIsLogin(true);
+    }, 2500);
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
