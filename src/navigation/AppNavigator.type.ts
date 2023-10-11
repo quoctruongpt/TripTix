@@ -9,6 +9,8 @@ type TAppStackParamList = {
   Point: undefined;
   Info: undefined;
   SearchRoute: undefined;
+  DepartureInformation: undefined;
+  TicketInformation: undefined;
 };
 
 type TAppNavigation<T extends keyof TAppStackParamList> =

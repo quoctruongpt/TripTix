@@ -8,7 +8,8 @@ export const ChooseProvince: React.FC<{
   value: string;
   onChange: (value: string) => void;
   renderButton?: (title: string, onPress: () => void) => React.ReactNode;
-}> = ({ data = [], value, onChange, renderButton }) => {
+  title?: string;
+}> = ({ data = [], value, onChange, renderButton, title }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
   const defferedValue = useDeferredValue(valueSearch);
@@ -48,7 +49,7 @@ export const ChooseProvince: React.FC<{
           <Text
             style={{ fontSize: 16, fontWeight: "700", textAlign: "center" }}
           >
-            Chọn điểm đến
+            {title ?? "Chọn điểm đến"}
           </Text>
           <Input
             placeholder="Tìm kiếm"

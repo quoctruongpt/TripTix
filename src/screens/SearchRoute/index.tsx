@@ -7,6 +7,8 @@ import { styles } from "./styles";
 import { DatePicker } from "@components/DatePicker";
 import { ChooseProvince } from "@components/ChooseProvince";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigation } from "@react-navigation/native";
+import { TAppNavigation } from "@navigation/AppNavigator.type";
 
 const List = [
   {
@@ -32,6 +34,7 @@ const List = [
 ];
 
 export const SearchRoute: React.FC = () => {
+  const navigation = useNavigation<TAppNavigation<"SearchRoute">>();
   const { control, setValue, getValues } = useForm({
     defaultValues: {
       from: "3",
@@ -45,6 +48,10 @@ export const SearchRoute: React.FC = () => {
     const to = getValues("to");
     setValue("from", to);
     setValue("to", from);
+  };
+
+  const handleSubmit = () => {
+    navigation.navigate("DepartureInformation");
   };
 
   return (
@@ -106,6 +113,7 @@ export const SearchRoute: React.FC = () => {
           title={"Tìm kiếm"}
           containerStyle={styles.buttonSearch}
           buttonStyle={{ backgroundColor: "#ef5222" }}
+          onPress={handleSubmit}
         />
       </View>
     </View>
