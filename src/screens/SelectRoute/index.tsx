@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "@components/Header";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/base";
 import { Select } from "@components/Select";
 
@@ -31,10 +31,47 @@ const listDate = [
   },
 ];
 
+const data = [
+  {
+    timeStart: "18:00",
+    timeEnd: "08:00",
+    price: 2500,
+    placeStart: "Quy Nhơn",
+    placeEnd: "Ha noi",
+    type: "bed",
+    distance: 1700,
+    seatAvaiable: 20,
+    suggestText: "Quý khách vui lòng thắt dây an toàn trước khi di chuyển",
+  },
+  {
+    timeStart: "18:00",
+    timeEnd: "08:00",
+    price: 2500,
+    type: "bed",
+    placeStart: "Quy Nhơn",
+    placeEnd: "Ha noi",
+    distance: 1700,
+    seatAvaiable: 20,
+    suggestText: "Quý khách vui lòng thắt dây an toàn trước khi di chuyển",
+  },
+  {
+    timeStart: "18:00",
+    timeEnd: "08:00",
+    price: 2500,
+    type: "bed",
+    placeStart: "Quy Nhơn",
+    placeEnd: "Ha noi",
+    distance: 1700,
+    seatAvaiable: 20,
+    suggestText: "Quý khách vui lòng thắt dây an toàn trước khi di chuyển",
+  },
+];
+
 export const SelectRoute: React.FC = () => {
   const [listDates, setListDates] = useState(listDate);
   const [selectedValuePrice, setSelectedValue] = useState(null);
   const [activeDate, setActiveDate] = useState(dayjs().format("DD/MM"));
+  const [dataRoute, setDataRoute] = useState(data);
 
   const onActiveDate = (item) => {
     setActiveDate(item.dateString);
@@ -156,32 +193,114 @@ export const SelectRoute: React.FC = () => {
           padding: 0,
         }}
       >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            borderWidth: 2,
-            borderColor: "red",
-          }}
-        >
+        {dataRoute.map((d, index) => (
           <View
             style={{
               display: "flex",
-              justifyContent: "space-between",
-              flexDirection: "row",
+              flexDirection: "column",
+              width: "100%",
+              shadowColor: "#000000",
+              padding: 10,
+              borderTopWidth: 1,
+              borderColor: "gray",
             }}
           >
             <View
-              style={{ justifyContent: "flex-start", flexDirection: "row" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "row",
+              }}
             >
-              <Text style={{ fontWeight: "600" }}>time</Text>
+              <View
+                style={{
+                  justifyContent: "flex-start",
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={{ fontWeight: "600" }}>
+                  {d.timeStart} - {d.timeEnd}
+                </Text>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  minWidth: 60,
+                }}
+              >
+                <Icon name="battery" size={12} color="gray" />
+                <Icon name="hourglass" size={12} color="gray" />
+                <Icon name="wifi" size={12} color="gray" />
+              </View>
             </View>
-            <View>
-              <Text>time</Text>
+            <View
+              style={{
+                marginTop: 5,
+                padding: 5,
+                backgroundColor: "#A9A9A9",
+                width: 220,
+                borderRadius: 20,
+              }}
+            >
+              <Text>
+                {d.price} - {d.type} - {d.seatAvaiable} Seat(s) availabel
+              </Text>
             </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginTop: 15,
+                paddingHorizontal: 15,
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Icon name="map-marker" size={14} color="red" />
+                <View
+                  style={{
+                    width: 2,
+                    backgroundColor: "#A9A9A9",
+                    height: 40,
+                    borderRadius: 5,
+                  }}
+                ></View>
+                <Icon name="map-marker" size={14} color="green" />
+              </View>
+              <View
+                style={{
+                  marginLeft: 15,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ fontSize: 18 }}>{d.placeStart}</Text>
+                <Text style={{ color: "#A9A9A9" }}>Route:{d.distance}</Text>
+                <Text style={{ fontSize: 18 }}>{d.placeEnd}</Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                marginLeft: 35,
+                marginTop: 10,
+                fontSize: 16,
+                color: "#FF8C00",
+              }}
+            >
+              {d.suggestText}
+            </Text>
           </View>
-        </View>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { ButtonApp } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { TAuthNavigation } from "@navigation/AuthNavigator.type";
-import Toast from "react-native-toast-message";
+// import Toast from "react-native-toast-message";
 import { useStore } from "@store/index";
 
 export const OTP = () => {
@@ -35,23 +35,23 @@ export const OTP = () => {
   };
 
   const showNotification = () => {
-    Toast.show({
-      type: "success",
-      position: "top",
-      text1: "Đăng ký thành công",
-      text2: "Đang chuyển vào màn hình chính...",
-      visibilityTime: 2000,
-      topOffset: 5,
-    });
-    setTimeout(() => {
-      setIsLogin(true);
-    }, 2500);
+    // Toast.show({
+    //   type: "success",
+    //   position: "top",
+    //   text1: "Đăng ký thành công",
+    //   text2: "Đang chuyển vào màn hình chính...",
+    //   visibilityTime: 2000,
+    //   topOffset: 5,
+    // });
+    // setTimeout(() => {
+    //   setIsLogin(true);
+    // }, 2500);
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
         <View style={{ zIndex: 9999 }}>
-          <Toast ref={(ref) => Toast.setRef(ref)} />
+          {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
         </View>
         <View style={styles.headerContainer}>
           <Icon
