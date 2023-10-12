@@ -1,5 +1,5 @@
 import { Chip, Divider, Text } from "@rneui/themed";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { ButtonSwitch } from "./components/ButtonSwitch";
 import { Item } from "./components/Item";
@@ -9,39 +9,37 @@ import { ChooseProvince } from "@components/ChooseProvince";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
-
-const List = [
-  {
-    id: "1",
-    title: "Ha Noi",
-  },
-  {
-    id: "2",
-    title: "HCM",
-  },
-  {
-    id: "3",
-    title: "Phu Tho",
-  },
-  {
-    id: "4",
-    title: "Hung Yen",
-  },
-  {
-    id: "5",
-    title: "Nam Dinh",
-  },
-];
+import { storage } from "@storage/index";
+import { Keys } from "@constants/storage";
+import dayjs from "dayjs";
 
 export const SearchRoute: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SearchRoute">>();
-  const { control, setValue, getValues } = useForm({
+  const { control, setValue, getValues, handleSubmit } = useForm({
     defaultValues: {
-      from: "3",
-      to: "4",
+      from: "1",
+      to: "19",
       date: new Date(),
     },
   });
+
+  const [provinces, setProvinces] = useState([]);
+
+  useEffect(() => {
+    getProvinces();
+  }, []);
+
+  const getProvinces = async () => {
+    const jsonProvinces = await storage.getItem(Keys.Provinces);
+    const _provinces = JSON.parse(jsonProvinces ?? "");
+    const _provincesConvert = _provinces
+      ? _provinces.map((item) => ({
+          id: item.code.toString(),
+          title: item.name,
+        }))
+      : [];
+    setProvinces(_provincesConvert);
+  };
 
   const handleSwitch = () => {
     const from = getValues("from");
@@ -50,9 +48,13 @@ export const SearchRoute: React.FC = () => {
     setValue("to", from);
   };
 
-  const handleSubmit = () => {
-    navigation.navigate("DepartureInformation");
-  };
+  const handleSearch = handleSubmit((data: any) => {
+    navigation.navigate("SelectRoute", {
+      fromId: data.from,
+      toId: data.to,
+      date: dayjs().unix(data.date),
+    });
+  });
 
   return (
     <View style={styles.container}>
@@ -67,7 +69,7 @@ export const SearchRoute: React.FC = () => {
                 renderButton={(title, onPress) => (
                   <Item label="Điểm đi" value={title} onPress={onPress} />
                 )}
-                data={List}
+                data={provinces}
                 onChange={onChange}
               />
             )}
@@ -82,7 +84,7 @@ export const SearchRoute: React.FC = () => {
                 renderButton={(title, onPress) => (
                   <Item label="Điểm đến" value={title} onPress={onPress} />
                 )}
-                data={List}
+                data={provinces}
                 onChange={onChange}
               />
             )}
@@ -113,7 +115,7 @@ export const SearchRoute: React.FC = () => {
           title={"Tìm kiếm"}
           containerStyle={styles.buttonSearch}
           buttonStyle={{ backgroundColor: "#ef5222" }}
-          onPress={handleSubmit}
+          onPress={handleSearch}
         />
       </View>
     </View>

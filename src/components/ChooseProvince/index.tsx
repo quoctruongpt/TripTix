@@ -15,10 +15,10 @@ export const ChooseProvince: React.FC<{
   const defferedValue = useDeferredValue(valueSearch);
   const dataFilter = useMemo(() => {
     return data.filter((item) => item.title.includes(defferedValue));
-  }, [defferedValue]);
+  }, [defferedValue, data]);
   const selected = useMemo(() => {
     return data.find((item) => item.id === value);
-  }, [value]);
+  }, [value, dataFilter]);
 
   const onClose = () => {
     setShowPopup(false);
