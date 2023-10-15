@@ -41,10 +41,10 @@ export const SelectSeat: React.FC = () => {
       return prevItems.map((item) => {
         if (item.id === seat.id && seat.avaiable == 1) {
           return { ...item, selected: !item.selected };
-        } else {
+        } else if (item.id === seat.id && seat.avaiable !== 1) {
           setShowError(true);
           setTimeout(() => {
-            setShowError(false);
+            return setShowError(false);
           }, 1500);
         }
         return item;
@@ -180,7 +180,14 @@ export const SelectSeat: React.FC = () => {
           })}
       </View>
       {showError && (
-        <Text style={{ color: "red" }}>Use can't select Seat UnAvaiable</Text>
+        <Text
+          style={{
+            color: "red",
+            paddingHorizontal: 15,
+          }}
+        >
+          Use can't select Seat UnAvaiable
+        </Text>
       )}
 
       <View
