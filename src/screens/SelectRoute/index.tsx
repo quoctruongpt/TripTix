@@ -111,48 +111,48 @@ export const SelectRoute: React.FC = () => {
       >
         <ScrollView horizontal contentContainerStyle={{ padding: 0 }}>
           {listDates.map((item, index) => (
-            <View
-              key={index}
-              style={{
-                width: 80,
-                height: 60,
-                padding: 10,
-                marginTop: 5,
-                marginHorizontal: 5,
-                borderRadius: 5,
-                backgroundColor: `${
-                  activeDate == item.dateString ? "#ff4000" : "#fff"
-                }`,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-              }}
-            >
-              <Text
-                onPress={() => onActiveDate(item)}
+            <TouchableOpacity onPress={() => onActiveDate(item)}>
+              <View
+                key={index}
                 style={{
-                  color: `${activeDate == item.dateString ? "#fff" : "#000"}`,
-                }}
-              >
-                {item.dayOfWeek}
-              </Text>
-              <Text
-                onPress={() => onActiveDate(item)}
-                style={{
-                  color: `${
-                    activeDate == item.dateString ? "#ff4000" : "#000"
-                  }`,
-                  backgroundColor: "#fff",
-                  width: "90%",
+                  width: 80,
+                  height: 60,
+                  padding: 10,
                   marginTop: 5,
-                  borderRadius: 10,
-                  textAlign: "center",
+                  marginHorizontal: 5,
+                  borderRadius: 5,
+                  backgroundColor: `${
+                    activeDate == item.dateString ? "#ff4000" : "#fff"
+                  }`,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
                 }}
               >
-                {item.dateString}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    color: `${activeDate == item.dateString ? "#fff" : "#000"}`,
+                  }}
+                >
+                  {item.dayOfWeek}
+                </Text>
+                <Text
+                  style={{
+                    color: `${
+                      activeDate == item.dateString ? "#ff4000" : "#000"
+                    }`,
+                    backgroundColor: "#fff",
+                    width: "90%",
+                    marginTop: 5,
+                    borderRadius: 10,
+                    textAlign: "center",
+                  }}
+                >
+                  {item.dateString}
+                </Text>
+              </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
         <View
