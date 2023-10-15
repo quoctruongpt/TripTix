@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "@components/Header";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/base";
 import { Select } from "@components/Select";
-
 import dayjs from "dayjs";
+import { useNavigation } from "@react-navigation/native";
+import { TAppNavigation } from "@navigation/AppNavigator.type";
 
 const listDate = [
   {
@@ -68,6 +69,7 @@ const data = [
 ];
 
 export const SelectRoute: React.FC = () => {
+  const navigation = useNavigation<TAppNavigation<"SelectRoute">>();
   const [listDates, setListDates] = useState(listDate);
   const [selectedValuePrice, setSelectedValue] = useState(null);
   const [activeDate, setActiveDate] = useState(dayjs().format("DD/MM"));
@@ -77,15 +79,22 @@ export const SelectRoute: React.FC = () => {
     setActiveDate(item.dateString);
   };
 
-  // const handleSelectItem = (item) => {
-  //   console.warn(item);
-  // };
-
+  const onShowSelectSeatScreen = (item) => {
+    navigation.navigate("SelectSeat");
+  };
+  const onTurnBack = () => {
+    navigation.navigate("SearchRoute");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Header>
         <View style={styles.headerContainer}>
-          <Icon name="chevron-left" size={22} color="white" />
+          <Icon
+            onPress={onTurnBack}
+            name="chevron-left"
+            size={22}
+            color="white"
+          />
           <Text h4 h4Style={styles.title}>
             Select Route
           </Text>
@@ -191,115 +200,118 @@ export const SelectRoute: React.FC = () => {
         style={{
           flex: 1,
           padding: 0,
+          zIndex: -1,
         }}
       >
         {dataRoute.map((d, index) => (
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              shadowColor: "#000000",
-              padding: 10,
-              borderTopWidth: 1,
-              borderColor: "gray",
-            }}
-          >
+          <TouchableOpacity onPress={() => onShowSelectSeatScreen(d)}>
             <View
               style={{
                 display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "row",
+                flexDirection: "column",
+                width: "100%",
+                shadowColor: "#000000",
+                padding: 10,
+                borderTopWidth: 1,
+                borderColor: "gray",
               }}
             >
               <View
                 style={{
-                  justifyContent: "flex-start",
+                  display: "flex",
+                  justifyContent: "space-between",
                   flexDirection: "row",
                 }}
               >
-                <Text style={{ fontWeight: "600" }}>
-                  {d.timeStart} - {d.timeEnd}
+                <View
+                  style={{
+                    justifyContent: "flex-start",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text style={{ fontWeight: "600" }}>
+                    {d.timeStart} - {d.timeEnd}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    minWidth: 60,
+                  }}
+                >
+                  <Icon name="battery" size={12} color="gray" />
+                  <Icon name="hourglass" size={12} color="gray" />
+                  <Icon name="wifi" size={12} color="gray" />
+                </View>
+              </View>
+              <View
+                style={{
+                  marginTop: 5,
+                  padding: 5,
+                  backgroundColor: "#A9A9A9",
+                  width: 220,
+                  borderRadius: 20,
+                }}
+              >
+                <Text>
+                  {d.price} - {d.type} - {d.seatAvaiable} Seat(s) availabel
                 </Text>
               </View>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  minWidth: 60,
+                  marginTop: 15,
+                  paddingHorizontal: 15,
                 }}
               >
-                <Icon name="battery" size={12} color="gray" />
-                <Icon name="hourglass" size={12} color="gray" />
-                <Icon name="wifi" size={12} color="gray" />
-              </View>
-            </View>
-            <View
-              style={{
-                marginTop: 5,
-                padding: 5,
-                backgroundColor: "#A9A9A9",
-                width: 220,
-                borderRadius: 20,
-              }}
-            >
-              <Text>
-                {d.price} - {d.type} - {d.seatAvaiable} Seat(s) availabel
-              </Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                marginTop: 15,
-                paddingHorizontal: 15,
-              }}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Icon name="map-marker" size={14} color="red" />
                 <View
                   style={{
-                    width: 2,
-                    backgroundColor: "#A9A9A9",
-                    height: 40,
-                    borderRadius: 5,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
-                ></View>
-                <Icon name="map-marker" size={14} color="green" />
+                >
+                  <Icon name="map-marker" size={14} color="red" />
+                  <View
+                    style={{
+                      width: 2,
+                      backgroundColor: "#A9A9A9",
+                      height: 40,
+                      borderRadius: 5,
+                    }}
+                  ></View>
+                  <Icon name="map-marker" size={14} color="green" />
+                </View>
+                <View
+                  style={{
+                    marginLeft: 15,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 18 }}>{d.placeStart}</Text>
+                  <Text style={{ color: "#A9A9A9" }}>Route:{d.distance}</Text>
+                  <Text style={{ fontSize: 18 }}>{d.placeEnd}</Text>
+                </View>
               </View>
-              <View
+              <Text
                 style={{
-                  marginLeft: 15,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  justifyContent: "space-between",
+                  marginLeft: 35,
+                  marginTop: 10,
+                  fontSize: 16,
+                  color: "#FF8C00",
                 }}
               >
-                <Text style={{ fontSize: 18 }}>{d.placeStart}</Text>
-                <Text style={{ color: "#A9A9A9" }}>Route:{d.distance}</Text>
-                <Text style={{ fontSize: 18 }}>{d.placeEnd}</Text>
-              </View>
+                {d.suggestText}
+              </Text>
             </View>
-            <Text
-              style={{
-                marginLeft: 35,
-                marginTop: 10,
-                fontSize: 16,
-                color: "#FF8C00",
-              }}
-            >
-              {d.suggestText}
-            </Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </SafeAreaView>

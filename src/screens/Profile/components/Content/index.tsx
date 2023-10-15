@@ -56,23 +56,6 @@ export const Content: React.FC = () => {
         />
       </View>
       <View style={styles.itemNormal}>
-        <Icon
-          onPress={onClickSelectRoute}
-          name="credit-card"
-          size={18}
-          color="#D2691E"
-        />
-        <View style={styles.textWrapper}>
-          <Text
-            onPress={onClickSelectRoute}
-            style={{ color: "#000", fontSize: 14 }}
-          >
-            Select Route
-          </Text>
-        </View>
-        <Icon name="chevron-right" size={18} color="gray" />
-      </View>
-      <View style={styles.itemNormal}>
         <Icon name="credit-card" size={18} color="#D2691E" />
         <View style={styles.textWrapper}>
           <Text style={{ color: "#000", fontSize: 14 }}>Open SHB account</Text>

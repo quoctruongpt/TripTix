@@ -5,4 +5,7 @@ export const Images = {
   Driver: require("./user/Driver.png"),
   Banner01: require("./banner/Banner01.png"),
   Otp: require("./user/Otp.png"),
+  SeatDisable: require("./bus/SeatDisable.png"),
+  SeatAvaiable: require("./bus/SeatAvaiable.png"),
+  SeatSelected: require("./bus/SeatSelected.png"),
 };

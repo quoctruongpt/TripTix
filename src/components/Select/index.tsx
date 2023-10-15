@@ -30,7 +30,7 @@ export const Select: React.FC<DropDownPickerProps<"string">> = ({
         setOpen={setOpen}
         placeholder={props.placeholder}
         placeholderStyle={{ color: "#ccc" }}
-        zIndex={3000}
+        zIndex={9999}
         onChangeItem={handleChangeItem}
         zIndexInverse={1000}
         {...props}

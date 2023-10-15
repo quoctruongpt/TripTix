@@ -12,6 +12,7 @@ import { SelectRoute } from "@screens/SelectRoute";
 import { SearchRoute } from "@screens/SearchRoute";
 import { DepartureInformation } from "@screens/DepartureInformation";
 import { TicketInformation } from "@screens/TicketInformation";
+import { SelectSeat } from "@screens/SelectSeat";
 
 const Stack = createNativeStackNavigator<TAppStackParamList>();
 
@@ -36,6 +37,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"SelectRoute"}
         component={SelectRoute}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"SelectSeat"}
+        component={SelectSeat}
         options={{ headerShown: false }}
       />
       <Stack.Screen
