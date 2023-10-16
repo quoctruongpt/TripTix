@@ -37,27 +37,27 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"SelectRoute"}
         component={SelectRoute}
-        options={{ headerShown: false }}
+        options={{ title: "Select Route" }}
       />
       <Stack.Screen
         name={"SelectSeat"}
         component={SelectSeat}
-        options={{ headerShown: false }}
+        options={{ title: "Select Seat" }}
       />
       <Stack.Screen
         name={"Settings"}
         component={Settings}
-        options={{ headerShown: false }}
+        options={{ title: "Settings" }}
       />
       <Stack.Screen
         name={"Point"}
         component={Point}
-        options={{ headerShown: false }}
+        options={{ title: "Point" }}
       />
       <Stack.Screen
         name={"Info"}
         component={Info}
-        options={{ headerShown: false }}
+        options={{ title: "Info" }}
       />
       <Stack.Screen
         name={"SearchRoute"}

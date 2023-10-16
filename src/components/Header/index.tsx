@@ -2,11 +2,16 @@ import { Text } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
 
-export const Header: React.FC = ({ title, children }: any) => {
+export const Header: React.FC = ({
+  title,
+  children,
+  color,
+  colorText,
+}: any) => {
   return (
     <View
       style={{
-        backgroundColor: "red",
+        backgroundColor: color,
         padding: 25,
         display: "flex",
         justifyContent: "center",
@@ -18,7 +23,7 @@ export const Header: React.FC = ({ title, children }: any) => {
       {children ? (
         children
       ) : (
-        <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+        <Text style={{ color: colorText, fontSize: 16, fontWeight: "bold" }}>
           {title}
         </Text>
       )}

@@ -29,7 +29,6 @@ export const SignIn = () => {
   const {
     authentication: { setIsLogin, isLogin },
   } = useStore();
-  // console.warn(isLogin);
 
   const {
     control,
@@ -42,7 +41,6 @@ export const SignIn = () => {
 
   const handleSignIn = handleSubmit((data) => {
     setIsLogin(true);
-    // navigation.reset({routes: [{name: ''}]})
   });
 
   const handleSignUp = () => {
