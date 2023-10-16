@@ -15,13 +15,13 @@ const Seats = [
   { id: 2, name: "A2", avaiable: 0, selected: false },
   { id: 3, name: "A3", avaiable: 0, selected: false },
   { id: 4, name: "A4", avaiable: 0, selected: false },
-  { id: 5, name: "A5", avaiable: 1, selected: false, price: 1000 },
-  { id: 6, name: "A6", avaiable: 1, selected: false, price: 1000 },
-  { id: 7, name: "A7", avaiable: 1, selected: false, price: 1000 },
-  { id: 8, name: "A8", avaiable: 1, selected: false, price: 1000 },
-  { id: 9, name: "A9", avaiable: 1, selected: false, price: 1000 },
-  { id: 10, name: "A10", avaiable: 1, selected: false, price: 1000 },
-  { id: 11, name: "A11", avaiable: 1, selected: false, price: 1000 },
+  { id: 5, name: "A5", avaiable: 1, selected: false, price: 1500 },
+  { id: 6, name: "A6", avaiable: 1, selected: false, price: 2000 },
+  { id: 7, name: "A7", avaiable: 1, selected: false, price: 4000 },
+  { id: 8, name: "A8", avaiable: 1, selected: false, price: 2000 },
+  { id: 9, name: "A9", avaiable: 1, selected: false, price: 2000 },
+  { id: 10, name: "A10", avaiable: 1, selected: false, price: 2000 },
+  { id: 11, name: "A11", avaiable: 1, selected: false, price: 3000 },
   { id: 12, name: "A12", avaiable: 1, selected: false, price: 1000 },
   { id: 13, name: "A13", avaiable: 1, selected: false, price: 1000 },
 ];
@@ -65,28 +65,17 @@ export const SelectSeat: React.FC = () => {
     }
   }, [listSeat]);
 
+  const onDepartureInfo = () => {
+    navigation.navigate("DepartureInformation");
+  };
+
   const selectedSeatsText = listSelectSeat.join(", ");
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header>
-        <View style={styles.headerContainer}>
-          <Icon
-            name="chevron-left"
-            onPress={onTurnBack}
-            size={22}
-            color="white"
-          />
-          <Text h4 h4Style={styles.title}>
-            Select Seat
-          </Text>
-        </View>
-      </Header>
       <View
         style={{
-          borderTopColor: "gray",
-          borderWidth: 1,
-          padding: 10,
+          paddingHorizontal: 10,
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
@@ -318,7 +307,13 @@ export const SelectSeat: React.FC = () => {
           marginBottom: 15,
         }}
       >
-        <ButtonApp title="Continue" buttonStyle={styles.buttonContinue} />
+        <ButtonApp
+          title="Continue"
+          onPress={onDepartureInfo}
+          buttonStyle={{
+            backgroundColor: `${listSelectSeat.length ? "red" : "gray"}`,
+          }}
+        />
       </View>
     </SafeAreaView>
   );
@@ -329,23 +324,7 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: 0,
   },
-  headerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    flexWrap: "nowrap",
-    alignItems: "center",
-  },
-  title: {
-    display: "flex",
-    justifyContent: "flex-start",
-    width: "60%",
-    marginBottom: 0,
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+
   buttonContinue: {
     backgroundColor: "red",
   },

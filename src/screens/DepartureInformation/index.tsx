@@ -1,3 +1,4 @@
+import { ButtonApp } from "@components/Button";
 import { ChooseProvince } from "@components/ChooseProvince";
 import { Steps } from "@components/Steps";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
@@ -7,7 +8,6 @@ import { formatPrice } from "@utils/price";
 import React from "react";
 import { SafeAreaView, View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-import Icon1 from "react-native-vector-icons/FontAwesome5";
 
 const HHHH = [
   {
@@ -99,10 +99,13 @@ export const DepartureInformation: React.FC = () => {
         <Input value="0964878794" inputStyle={{ fontSize: 16 }} />
       </View>
       <View style={[styles.box, { flex: 1 }]} />
-      <Chip
-        title="Tiếp tục"
-        containerStyle={{ padding: 16 }}
+      <ButtonApp
+        title="Continue"
         onPress={handleConfirm}
+        buttonStyle={{
+          backgroundColor: "red",
+          margin: 10,
+        }}
       />
     </SafeAreaView>
   );

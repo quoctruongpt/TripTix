@@ -1,3 +1,4 @@
+import { ButtonApp } from "@components/Button";
 import { ButtonBack } from "@components/ButtonBack";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { useNavigation } from "@react-navigation/native";
@@ -33,7 +34,6 @@ export const TicketInformation: React.FC = () => {
         ]}
       />
       <Box
-        title="Thông tin chuyến xe"
         data={[
           { label: "Tuyến", value: "hai hung" },
           { label: "Thời gian", value: "01345454" },
@@ -61,10 +61,13 @@ export const TicketInformation: React.FC = () => {
           />
         </View>
       </View>
-      <Chip
+      <ButtonApp
         title="Thanh toán"
-        containerStyle={{ padding: 16 }}
         onPress={() => {}}
+        buttonStyle={{
+          backgroundColor: "red",
+          margin: 10,
+        }}
       />
 
       <Dialog

@@ -87,26 +87,9 @@ export const SelectRoute: React.FC = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Header>
-        <View style={styles.headerContainer}>
-          <Icon
-            onPress={onTurnBack}
-            name="chevron-left"
-            size={22}
-            color="white"
-          />
-          <Text h4 h4Style={styles.title}>
-            Select Route
-          </Text>
-        </View>
-      </Header>
       <View
         style={{
-          elevation: 5,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.5,
-          shadowRadius: 4,
+          marginTop: 0,
         }}
       >
         <ScrollView horizontal contentContainerStyle={{ padding: 0 }}>
@@ -117,8 +100,7 @@ export const SelectRoute: React.FC = () => {
                 style={{
                   width: 80,
                   height: 60,
-                  padding: 10,
-                  marginTop: 5,
+                  paddingHorizontal: 10,
                   marginHorizontal: 5,
                   borderRadius: 5,
                   backgroundColor: `${
@@ -322,22 +304,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     padding: 0,
-  },
-  headerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    flexWrap: "nowrap",
-    alignItems: "center",
-  },
-  title: {
-    display: "flex",
-    justifyContent: "flex-start",
-    width: "60%",
-    marginBottom: 0,
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    margin: 0,
+    flex: 1,
   },
 });
