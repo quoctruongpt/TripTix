@@ -57,7 +57,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"Info"}
         component={Info}
-        options={{ title: "Info" }}
+        options={{ title: "User Information" }}
       />
       <Stack.Screen
         name={"SearchRoute"}
