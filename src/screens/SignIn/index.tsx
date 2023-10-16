@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, Input, Button } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -14,8 +14,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ButtonApp } from "@components/Button";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { TAuthNavigation, TAuthRoute } from "@navigation/AuthNavigator.type";
-import { ERules } from "@constants/user";
 import { useStore } from "@store/index";
+import { postLogin } from "@httpClient/authentication.api";
+import { EAccountType } from "@enums";
+import { StatusApiCall, StorageKeys } from "@constants/global";
+import { storage } from "@storage/index";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -25,24 +28,38 @@ const schema = yup.object().shape({
 export const SignIn = () => {
   const navigation = useNavigation<TAuthNavigation<"SignIn">>();
   const { rule } = useRoute<TAuthRoute<"LoginOrRegisterForm">>().params;
-  const hideButtonSignUp = rule === ERules.Driver;
+  const hideButtonSignUp = rule === EAccountType.Driver;
   const {
     authentication: { setIsLogin, isLogin },
   } = useStore();
-  // console.warn(isLogin);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm({
     defaultValues: { email: "", password: "" },
     resolver: yupResolver(schema),
   });
 
-  const handleSignIn = handleSubmit((data) => {
-    setIsLogin(true);
-    // navigation.reset({routes: [{name: ''}]})
+  const handleSignIn = handleSubmit(async (dataForm: any) => {
+    try {
+      setIsLoading(true);
+      const { data } = await postLogin(dataForm.email, dataForm.password);
+      if (data.status === StatusApiCall.Success) {
+        await Promise.all([
+          storage.setItem(StorageKeys.Token, data.data.token),
+          storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),
+        ]);
+        setIsLogin(true);
+      }
+    } catch (e) {
+      setError("password", { message: "Đăng nhập thất bại. Vui lòng thử lại" });
+    } finally {
+      setIsLoading(false);
+    }
   });
 
   const handleSignUp = () => {
@@ -84,6 +101,7 @@ export const SignIn = () => {
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
+                secureTextEntry
               />
             )}
           />
@@ -92,6 +110,7 @@ export const SignIn = () => {
             containerStyle={styles.btnLoginContainer}
             buttonStyle={styles.btnLogin}
             onPress={handleSignIn}
+            loading={isLoading}
           />
         </View>
         <View>

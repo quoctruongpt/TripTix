@@ -3,6 +3,7 @@ import { Steps } from "@components/Steps";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { useNavigation } from "@react-navigation/native";
 import { Chip, Input, Text } from "@rneui/themed";
+import { formatPrice } from "@utils/price";
 import React from "react";
 import { SafeAreaView, View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
@@ -25,6 +26,22 @@ const HHHH = [
 
 export const DepartureInformation: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"DepartureInformation">>();
+  const finalPrice = 285000;
+  const type = "Bed";
+  const routeDetail = {
+    timeStart: 1234,
+    timeEnd: 1234,
+    from: "Bến xe An Nhơn",
+    to: "Bến xe Bình Định",
+    distance: 720,
+    note: "Quý khách đang chọn tuyến đường...",
+  };
+  const seats = ["A1", "A2"];
+  const pickupLocations = [
+    { id: 1, title: "Bến xe" },
+    { id: 2, title: "Bến xe" },
+  ];
+  const users = { name: "Quoc Truong", phone: "09654841" };
 
   const handleConfirm = () => {
     navigation.navigate("TicketInformation");
@@ -34,7 +51,7 @@ export const DepartureInformation: React.FC = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f7f7f7" }}>
       <View style={styles.box}>
         <Chip
-          title={"285,000d - Bed"}
+          title={`${formatPrice(finalPrice)} - ${type}`}
           containerStyle={{ flexDirection: "row" }}
           buttonStyle={{ backgroundColor: "#ccc" }}
           titleStyle={{ fontWeight: "700", color: "#000" }}
@@ -45,9 +62,9 @@ export const DepartureInformation: React.FC = () => {
       <View style={[styles.box, { flexDirection: "row" }]}>
         <View style={{ flex: 1 }}>
           <Text>Số ghế đã chọn</Text>
-          <Text style={styles.value}>A14</Text>
+          <Text style={styles.value}>{seats.join(", ")}</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigation.goBack}>
           <Text style={{ color: "#f6a288" }}>Chọn lại</Text>
         </TouchableOpacity>
       </View>

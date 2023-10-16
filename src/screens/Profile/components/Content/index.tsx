@@ -1,11 +1,12 @@
 import { Text, Avatar } from "@rneui/themed";
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { StyleSheet } from "react-native";
 import { useStore } from "@store/index";
+import { deleteDataUser } from "@storage/common";
 export const Content: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"Home">>();
   const {
@@ -24,7 +25,8 @@ export const Content: React.FC = () => {
   const onClickSelectRoute = () => {
     navigation.navigate("SelectRoute");
   };
-  const onClickLogout = () => {
+  const onClickLogout = async () => {
+    await deleteDataUser();
     setIsLogin(false);
   };
 
@@ -147,12 +149,10 @@ export const Content: React.FC = () => {
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
-      <View style={styles.itemNormal}>
+      <TouchableOpacity onPress={onClickLogout} style={styles.itemNormal}>
         <Icon onPress={onClickLogout} name="logout" size={18} color="black" />
         <View style={styles.textWrapper}>
-          <Text onPress={onClickLogout} style={{ color: "#000", fontSize: 14 }}>
-            Logout
-          </Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Logout</Text>
         </View>
         <Icon
           onPress={onClickLogout}
@@ -160,7 +160,7 @@ export const Content: React.FC = () => {
           size={18}
           color="gray"
         />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

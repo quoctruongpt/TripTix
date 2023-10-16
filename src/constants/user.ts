@@ -1,6 +1,8 @@
-enum ERules {
-  Driver = 1,
-  Customer = 2,
-}
+import { EGender } from "@enums";
 
-export { ERules };
+const ListGender = [
+  { label: "Male", value: EGender.Male },
+  { label: "Female", value: EGender.Female },
+];
+
+export { ListGender };

@@ -6,11 +6,11 @@ import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Images } from "@assets/images";
 import { TAuthNavigation } from "@navigation/AuthNavigator.type";
-import { ERules } from "@constants/user";
+import { EAccountType } from "@enums";
 export const Role: React.FC = () => {
   const navigation = useNavigation<TAuthNavigation<"Role">>();
 
-  const handleChooseRole = (rule: ERules) => {
+  const handleChooseRole = (rule: EAccountType) => {
     navigation.navigate("LoginOrRegisterForm", { rule });
   };
 
@@ -58,7 +58,7 @@ export const Role: React.FC = () => {
               paddingHorizontal: 20,
             }}
             titleStyle={{ color: "black" }}
-            onPress={() => handleChooseRole(ERules.Driver)}
+            onPress={() => handleChooseRole(EAccountType.Driver)}
           />
         </View>
 
@@ -90,7 +90,7 @@ export const Role: React.FC = () => {
               paddingHorizontal: 20,
             }}
             titleStyle={{ color: "black" }}
-            onPress={() => handleChooseRole(ERules.Customer)}
+            onPress={() => handleChooseRole(EAccountType.Customer)}
           />
         </View>
       </View>

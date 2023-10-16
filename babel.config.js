@@ -16,6 +16,8 @@ module.exports = function (api) {
             "@screens": "./src/screens",
             "@storage": "./src/storage",
             "@httpClient": "./src/httpClient",
+            "@enums": "./src/enums",
+            "@types": "./src/types",
           },
         },
       ],
