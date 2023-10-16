@@ -1,13 +1,13 @@
-import { ERules } from "@constants/user";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { EAccountType } from "@enums";
 
 type TAuthStackParamList = {
   Welcome: undefined;
   Home: undefined;
   Role: undefined;
-  LoginOrRegisterForm: { rule: ERules };
-  SignIn: { rule: ERules };
+  LoginOrRegisterForm: { rule: EAccountType };
+  SignIn: { rule: EAccountType };
   OTP: undefined;
   SignUp: undefined;
 };

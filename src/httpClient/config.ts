@@ -19,7 +19,7 @@ const errorInterceptor = async (error: any) => {
       break;
 
     default:
-      console.warn("Server Error");
+      break;
   }
 
   return Promise.reject(error);

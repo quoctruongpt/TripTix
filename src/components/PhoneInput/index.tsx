@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { ReactNativeModalDateTimePickerProps } from "react-native-modal-datetime-picker";
-import ReactNativePhoneInput from "react-native-phone-input";
+import ReactNativePhoneInput, {
+  ReactNativePhoneInputProps,
+} from "react-native-phone-input";
 
-export const PhoneInput: React.FC<ReactNativeModalDateTimePickerProps> = ({
+export const PhoneInput: React.FC<ReactNativePhoneInputProps> = ({
   ...props
 }) => {
   return (

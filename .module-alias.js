@@ -11,6 +11,8 @@ module.exports = {
     "@store": path.resolve(__dirname, "src/store"),
     "@utils": path.resolve(__dirname, "src/utils"),
     "@httpClient": path.resolve(__dirname, "src/httpClient"),
+    "@enums": path.resolve(__dirname, "src/enums"),
+    "@types": path.resolve(__dirname, "src/types"),
     // Thêm các alias khác nếu cần thiết
   },
   extensions: ["js", "jsx", "json"], // Có thể thêm các extensions khác nếu cần

@@ -8,12 +8,12 @@ import { TAuthNavigation, TAuthRoute } from "@navigation/AuthNavigator.type";
 import Icon from "react-native-vector-icons/Entypo";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ButtonApp } from "@components/Button";
-import { ERules } from "@constants/user";
+import { EAccountType } from "@enums";
 
 export const LoginOrRegisterForm: React.FC = () => {
   const navigation = useNavigation<TAuthNavigation<"LoginOrRegisterForm">>();
   const { rule } = useRoute<TAuthRoute<"LoginOrRegisterForm">>().params;
-  const hideButtonSignUp = rule === ERules.Driver;
+  const hideButtonSignUp = rule === EAccountType.Driver;
 
   const handlePressSignIn = () => {
     navigation.navigate("SignIn", { rule });

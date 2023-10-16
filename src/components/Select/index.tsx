@@ -9,9 +9,8 @@ export const Select: React.FC<DropDownPickerProps<"string">> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const handleChangeItem = (item) => {
-    setValue(item.value);
-  };
+  console.log(value);
+
   return (
     <View
       style={{
@@ -31,7 +30,6 @@ export const Select: React.FC<DropDownPickerProps<"string">> = ({
         placeholder={props.placeholder}
         placeholderStyle={{ color: "#ccc" }}
         zIndex={9999}
-        onChangeItem={handleChangeItem}
         zIndexInverse={1000}
         {...props}
       />
