@@ -3,7 +3,7 @@ import React from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export const UserInfoBox: React.FC = () => {
+export const UserInfoBox: React.FC<{ name: string }> = ({ name }) => {
   const { top } = useSafeAreaInsets();
 
   return (
@@ -28,7 +28,7 @@ export const UserInfoBox: React.FC = () => {
       <View style={{ flex: 1, marginLeft: 16 }}>
         <Text style={{ color: "#fff" }}>Hello,</Text>
         <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-          Hai Hung
+          {name}
         </Text>
       </View>
     </View>

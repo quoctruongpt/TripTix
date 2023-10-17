@@ -5,7 +5,10 @@ import { WalletItem } from "../WalletItem";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 
-export const PayBox: React.FC = () => {
+export const PayBox: React.FC<{ coins: number; voucherCoins: number }> = ({
+  coins = 0,
+  voucherCoins = 0,
+}) => {
   const navigation = useNavigation<TAppNavigation<"Home">>();
 
   const handleTopUp = () => {
@@ -35,11 +38,11 @@ export const PayBox: React.FC = () => {
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1, borderRightWidth: 1, borderColor: "#dde2e8" }}>
           <Text>Số dư</Text>
-          <Text style={{ fontWeight: "700" }}>1000 xu</Text>
+          <Text style={{ fontWeight: "700" }}>{coins} xu</Text>
         </View>
         <View style={{ flex: 1, alignItems: "flex-end" }}>
           <Text>Tài khoản khuyến mại</Text>
-          <Text style={{ fontWeight: "700" }}>10 xu</Text>
+          <Text style={{ fontWeight: "700" }}>{voucherCoins} xu</Text>
         </View>
       </View>
       <Divider style={{ marginVertical: 16 }} />
