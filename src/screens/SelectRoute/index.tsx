@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Header } from "@components/Header";
+import { SafeAreaView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/base";
 import { Select } from "@components/Select";
@@ -10,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { useRoute } from "@react-navigation/native";
 import { getTrips } from "@httpClient/trip.api";
+import { useToast } from "react-native-toast-notifications";
 
 const listDate = [
   {
@@ -34,48 +34,16 @@ const listDate = [
   },
 ];
 
-const data = [
-  {
-    timeStart: "18:00",
-    timeEnd: "08:00",
-    price: 2500,
-    placeStart: "Quy Nhơn",
-    placeEnd: "Ha noi",
-    type: "bed",
-    distance: 1700,
-    seatAvaiable: 20,
-    suggestText: "Quý khách vui lòng thắt dây an toàn trước khi di chuyển",
-  },
-  {
-    timeStart: "18:00",
-    timeEnd: "08:00",
-    price: 2500,
-    type: "bed",
-    placeStart: "Quy Nhơn",
-    placeEnd: "Ha noi",
-    distance: 1700,
-    seatAvaiable: 20,
-    suggestText: "Quý khách vui lòng thắt dây an toàn trước khi di chuyển",
-  },
-  {
-    timeStart: "18:00",
-    timeEnd: "08:00",
-    price: 2500,
-    type: "bed",
-    placeStart: "Quy Nhơn",
-    placeEnd: "Ha noi",
-    distance: 1700,
-    seatAvaiable: 20,
-    suggestText: "Quý khách vui lòng thắt dây an toàn trước khi di chuyển",
-  },
-];
-
 export const SelectRoute: React.FC = () => {
+  const toast = useToast();
+
   const navigation = useNavigation<TAppNavigation<"SelectRoute">>();
   const [listDates, setListDates] = useState(listDate);
   const [selectedValuePrice, setSelectedValue] = useState(null);
   const [activeDate, setActiveDate] = useState(dayjs().format("DD/MM"));
-  const [dataRoute, setDataRoute] = useState(data);
+  const [dataRoute, setDataRoute] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const route = useRoute();
 
   const onActiveDate = (item) => {
@@ -90,14 +58,34 @@ export const SelectRoute: React.FC = () => {
   };
 
   useEffect(() => {
-    getTrips(null)
-      .then((response) => {
-        console.warn(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    handleGetTrips();
   }, []);
+
+  const handleGetTrips = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getTrips(1, "15-10-2023 06:00:00");
+      if (!data.reponse) {
+        toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
+          type: "danger",
+          placement: "top",
+          duration: 2000,
+        });
+      }
+
+      setDataRoute(data);
+
+      throw new Error();
+    } catch {
+      toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
+        type: "danger",
+        placement: "top",
+        duration: 2000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -229,7 +217,8 @@ export const SelectRoute: React.FC = () => {
                   }}
                 >
                   <Text style={{ fontWeight: "600" }}>
-                    {d.timeStart} - {d.timeEnd}
+                    {dayjs(d.startTime).format("HH:mm")} -{" "}
+                    {dayjs(d.endTime).format("HH:mm")}
                   </Text>
                 </View>
                 <View
@@ -256,7 +245,8 @@ export const SelectRoute: React.FC = () => {
                 }}
               >
                 <Text>
-                  {d.price} - {d.type} - {d.seatAvaiable} Seat(s) availabel
+                  {d.fare} - {d.busDTO.type} - {d.availableSeat} Seat(s)
+                  availabel
                 </Text>
               </View>
               <View
@@ -294,9 +284,13 @@ export const SelectRoute: React.FC = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={{ fontSize: 18 }}>{d.placeStart}</Text>
-                  <Text style={{ color: "#A9A9A9" }}>Route:{d.distance}</Text>
-                  <Text style={{ fontSize: 18 }}>{d.placeEnd}</Text>
+                  <Text style={{ fontSize: 18 }}>
+                    {d.routeDTO.departurePoint}
+                  </Text>
+                  <Text style={{ color: "#A9A9A9" }}>
+                    Route:{d.routeDTO.distance}
+                  </Text>
+                  <Text style={{ fontSize: 18 }}>{d.routeDTO.destination}</Text>
                 </View>
               </View>
               <Text
@@ -307,7 +301,7 @@ export const SelectRoute: React.FC = () => {
                   color: "#FF8C00",
                 }}
               >
-                {d.suggestText}
+                Chọn chuyến đi này
               </Text>
             </View>
           </TouchableOpacity>
