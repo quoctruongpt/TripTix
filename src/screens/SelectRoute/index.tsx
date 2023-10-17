@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "@components/Header";
@@ -8,6 +8,8 @@ import { Select } from "@components/Select";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
+import { useRoute } from "@react-navigation/native";
+import { getTrips } from "@httpClient/trip.api";
 
 const listDate = [
   {
@@ -74,6 +76,7 @@ export const SelectRoute: React.FC = () => {
   const [selectedValuePrice, setSelectedValue] = useState(null);
   const [activeDate, setActiveDate] = useState(dayjs().format("DD/MM"));
   const [dataRoute, setDataRoute] = useState(data);
+  const route = useRoute();
 
   const onActiveDate = (item) => {
     setActiveDate(item.dateString);
@@ -85,6 +88,17 @@ export const SelectRoute: React.FC = () => {
   const onTurnBack = () => {
     navigation.navigate("SearchRoute");
   };
+
+  useEffect(() => {
+    getTrips(null)
+      .then((response) => {
+        console.warn(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -94,7 +108,7 @@ export const SelectRoute: React.FC = () => {
       >
         <ScrollView horizontal contentContainerStyle={{ padding: 0 }}>
           {listDates.map((item, index) => (
-            <TouchableOpacity onPress={() => onActiveDate(item)}>
+            <TouchableOpacity onPress={() => onActiveDate(item)} key={index}>
               <View
                 key={index}
                 style={{
@@ -186,7 +200,10 @@ export const SelectRoute: React.FC = () => {
         }}
       >
         {dataRoute.map((d, index) => (
-          <TouchableOpacity onPress={() => onShowSelectSeatScreen(d)}>
+          <TouchableOpacity
+            key={index}
+            onPress={() => onShowSelectSeatScreen(d)}
+          >
             <View
               style={{
                 display: "flex",
