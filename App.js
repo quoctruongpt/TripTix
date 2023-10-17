@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { getProvinces } from "@httpClient/global.api";
 import { storage } from "@storage/index";
 import { Keys } from "@constants/storage";
+import { ToastProvider } from "react-native-toast-notifications";
 
 export default function App() {
   useEffect(() => {
@@ -23,9 +24,11 @@ export default function App() {
 
   return (
     <Provider value={rootStore}>
-      <SafeAreaProvider>
-        <RootNavigation />
-      </SafeAreaProvider>
+      <ToastProvider>
+        <SafeAreaProvider>
+          <RootNavigation />
+        </SafeAreaProvider>
+      </ToastProvider>
     </Provider>
   );
 }

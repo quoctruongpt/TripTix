@@ -1,6 +1,6 @@
 import { Chip, Divider, Text } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { ButtonSwitch } from "./components/ButtonSwitch";
 import { Item } from "./components/Item";
 import { styles } from "./styles";
@@ -13,8 +13,11 @@ import { storage } from "@storage/index";
 import { Keys } from "@constants/storage";
 import dayjs from "dayjs";
 import { getRouteInfo } from "@httpClient/trip.api";
+import { StatusApiCall } from "@constants/global";
+import { useToast } from "react-native-toast-notifications";
 
 export const SearchRoute: React.FC = () => {
+  const toast = useToast();
   const navigation = useNavigation<TAppNavigation<"SearchRoute">>();
   const { control, setValue, getValues, handleSubmit } = useForm({
     defaultValues: {
@@ -25,6 +28,7 @@ export const SearchRoute: React.FC = () => {
   });
 
   const [provinces, setProvinces] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getProvinces();
@@ -49,15 +53,38 @@ export const SearchRoute: React.FC = () => {
     setValue("to", from);
   };
 
-  const handleSearch = handleSubmit(async (data: any) => {
+  const handleSearch = handleSubmit(async (dataForm: any) => {
     try {
-      const hihi = await getRouteInfo(data.from, data.to);
-    } catch {}
-    // navigation.navigate("SelectRoute", {
-    //   fromId: data.from,
-    //   toId: data.to,
-    //   date: dayjs().unix(data.date),
-    // });
+      setIsLoading(true);
+      const { data } = await getRouteInfo(dataForm.from, dataForm.to);
+      if (data.status === StatusApiCall.Success) {
+        const route = data.data[0];
+        if (route) {
+          navigation.navigate("SelectRoute", {
+            routeId: route.idRoute,
+          });
+
+          return;
+        }
+
+        toast.show("Không tìm thấy thông tin tuyến đường", {
+          type: "warning",
+          placement: "top",
+          duration: 2000,
+        });
+        return;
+      }
+
+      throw new Error();
+    } catch {
+      toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
+        type: "danger",
+        placement: "top",
+        duration: 2000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   });
 
   return (
@@ -120,6 +147,7 @@ export const SearchRoute: React.FC = () => {
           containerStyle={styles.buttonSearch}
           buttonStyle={{ backgroundColor: "#ef5222" }}
           onPress={handleSearch}
+          disabled={isLoading}
         />
       </View>
     </View>

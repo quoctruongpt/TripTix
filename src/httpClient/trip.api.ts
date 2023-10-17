@@ -10,7 +10,7 @@ const getTrips = (params: any) => {
 
 const getRouteInfo = (departurePoint: string, destination: string) =>
   httpClient.get(
-    `${routes.trip.getRouteInfo}?departurePoint=${departurePoint}&destination=${destination}`
+    `${routes.trip.getRouteInfo}?codeDeparturePoint=${departurePoint}&codeDestination=${destination}`
   );
 
 export { getTrips, getRouteInfo };
