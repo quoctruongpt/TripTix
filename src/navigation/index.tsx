@@ -9,7 +9,7 @@ import { StorageKeys } from "@constants/global";
 
 function RootNavigation() {
   const {
-    authentication: { isLogin, setIsLogin },
+    authentication: { isLogin, setIsLogin, setUserInfo },
   } = useStore();
 
   useEffect(() => {
@@ -17,8 +17,13 @@ function RootNavigation() {
   }, []);
 
   const checkAuthentication = async () => {
-    const token = await storage.getItem(StorageKeys.Token);
-    setIsLogin(!!token);
+    const [token, userInfo] = await storage.multiGet([
+      StorageKeys.Token,
+      StorageKeys.userInfo,
+    ]);
+
+    setIsLogin(!!token[1]);
+    setUserInfo(JSON.parse(userInfo[1] ?? "{}"));
   };
 
   return (

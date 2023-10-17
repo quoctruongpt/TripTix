@@ -30,7 +30,7 @@ export const SignIn = () => {
   const { rule } = useRoute<TAuthRoute<"LoginOrRegisterForm">>().params;
   const hideButtonSignUp = rule === EAccountType.Driver;
   const {
-    authentication: { setIsLogin, isLogin },
+    authentication: { setIsLogin, setUserInfo },
   } = useStore();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,6 +53,7 @@ export const SignIn = () => {
           storage.setItem(StorageKeys.Token, data.data.token),
           storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),
         ]);
+        setUserInfo(data.data.user);
         setIsLogin(true);
       }
     } catch (e) {
