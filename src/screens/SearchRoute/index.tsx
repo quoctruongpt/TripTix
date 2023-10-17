@@ -82,6 +82,7 @@ export const SearchRoute: React.FC = () => {
         placement: "top",
         duration: 2000,
       });
+      navigation.navigate("SelectRoute");
     } finally {
       setIsLoading(false);
     }
