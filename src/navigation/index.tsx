@@ -6,6 +6,7 @@ import { useStore } from "@store/index";
 import { observer } from "mobx-react-lite";
 import { storage } from "@storage/index";
 import { StorageKeys } from "@constants/global";
+import { setAuthorization } from "@httpClient";
 
 function RootNavigation() {
   const {
@@ -22,6 +23,7 @@ function RootNavigation() {
       StorageKeys.userInfo,
     ]);
 
+    setAuthorization(token[1]);
     setIsLogin(!!token[1]);
     setUserInfo(JSON.parse(userInfo[1] ?? "{}"));
   };

@@ -1,4 +1,5 @@
 import httpClient from ".";
+import { routes } from "./routes";
 
 const baseURL = "http://btbs.ap-southeast-1.elasticbeanstalk.com";
 
@@ -7,4 +8,9 @@ const getTrips = (params: any) => {
   return httpClient.get(url, { params });
 };
 
-export { getTrips };
+const getRouteInfo = (departurePoint: string, destination: string) =>
+  httpClient.get(
+    `${routes.trip.getRouteInfo}?departurePoint=${departurePoint}&destination=${destination}`
+  );
+
+export { getTrips, getRouteInfo };

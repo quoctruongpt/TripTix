@@ -1,6 +1,6 @@
 import { storage } from "@storage/index";
 import axios from "axios";
-import { authInterceptor, errorInterceptor, onFulfill } from "./config";
+import { errorInterceptor, onFulfill } from "./config";
 import { url } from "./url";
 
 const httpClient = axios.create({
@@ -9,7 +9,14 @@ const httpClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-httpClient.interceptors.request.use(authInterceptor);
+const setAuthorization = (token: string) => {
+  httpClient.interceptors.request.use((config: any) => {
+    config.headers["Authorization"] = token ? "Bearer " + token : null;
+    return config;
+  });
+};
+
 httpClient.interceptors.response.use(onFulfill, errorInterceptor);
 
+export { setAuthorization };
 export default httpClient;

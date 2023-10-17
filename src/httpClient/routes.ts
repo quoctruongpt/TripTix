@@ -8,6 +8,9 @@ const routes = {
     login: url.baseUrl + "/usersystem/login",
     register: url.baseUrl + "/usersystem/register",
   },
+  trip: {
+    getRouteInfo: url.baseUrl + "/route",
+  },
 };
 
 export { routes };

@@ -25,11 +25,4 @@ const errorInterceptor = async (error: any) => {
   return Promise.reject(error);
 };
 
-const getAuthToken = async () => storage.getItem("token");
-
-const authInterceptor = (config: any) => {
-  config.headers["Authorization"] = getAuthToken();
-  return config;
-};
-
-export { errorInterceptor, authInterceptor, onFulfill };
+export { errorInterceptor, onFulfill };

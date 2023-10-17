@@ -12,6 +12,7 @@ import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { storage } from "@storage/index";
 import { Keys } from "@constants/storage";
 import dayjs from "dayjs";
+import { getRouteInfo } from "@httpClient/trip.api";
 
 export const SearchRoute: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SearchRoute">>();
@@ -48,12 +49,15 @@ export const SearchRoute: React.FC = () => {
     setValue("to", from);
   };
 
-  const handleSearch = handleSubmit((data: any) => {
-    navigation.navigate("SelectRoute", {
-      fromId: data.from,
-      toId: data.to,
-      date: dayjs().unix(data.date),
-    });
+  const handleSearch = handleSubmit(async (data: any) => {
+    try {
+      const hihi = await getRouteInfo(data.from, data.to);
+    } catch {}
+    // navigation.navigate("SelectRoute", {
+    //   fromId: data.from,
+    //   toId: data.to,
+    //   date: dayjs().unix(data.date),
+    // });
   });
 
   return (

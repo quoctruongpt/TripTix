@@ -19,6 +19,7 @@ import { postLogin } from "@httpClient/authentication.api";
 import { EAccountType } from "@enums";
 import { StatusApiCall, StorageKeys } from "@constants/global";
 import { storage } from "@storage/index";
+import { setAuthorization } from "@httpClient";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -53,6 +54,7 @@ export const SignIn = () => {
           storage.setItem(StorageKeys.Token, data.data.token),
           storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),
         ]);
+        setAuthorization(data.data.token);
         setUserInfo(data.data.user);
         setIsLogin(true);
       }
