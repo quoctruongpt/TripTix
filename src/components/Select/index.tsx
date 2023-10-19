@@ -9,7 +9,6 @@ export const Select: React.FC<DropDownPickerProps<"string">> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  console.log(value);
 
   return (
     <View

@@ -35,12 +35,12 @@ export const History: React.FC = () => {
         >
           {activeTab === 0 && (
             <View>
-              <Text>Lịch sử vé</Text>
+              <Text>Lịch sử vé trống</Text>
             </View>
           )}
           {activeTab === 1 && (
             <View>
-              <Text>Danh sách vé sắp khởi hành</Text>
+              <Text>Danh sách vé sắp khởi hành trống</Text>
             </View>
           )}
         </ScrollView>
