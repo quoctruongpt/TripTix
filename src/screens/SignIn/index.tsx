@@ -54,7 +54,7 @@ export const SignIn = () => {
           storage.setItem(StorageKeys.Token, data.data.token),
           storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),
         ]);
-        setAuthorization(data.data.token);
+
         setUserInfo(data.data.user);
         setIsLogin(true);
       }

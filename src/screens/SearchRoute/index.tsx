@@ -1,4 +1,4 @@
-import { Chip, Divider, Text } from "@rneui/themed";
+import { Chip, Divider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ButtonSwitch } from "./components/ButtonSwitch";
@@ -11,7 +11,6 @@ import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { storage } from "@storage/index";
 import { Keys } from "@constants/storage";
-import dayjs from "dayjs";
 import { getRouteInfo } from "@httpClient/trip.api";
 import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
@@ -57,6 +56,7 @@ export const SearchRoute: React.FC = () => {
     try {
       setIsLoading(true);
       const { data } = await getRouteInfo(dataForm.from, dataForm.to);
+
       if (data.status === StatusApiCall.Success) {
         const route = data.data[0];
         if (route) {
@@ -76,13 +76,14 @@ export const SearchRoute: React.FC = () => {
       }
 
       throw new Error();
-    } catch {
+    } catch (e) {
+      console.log(e);
+
       toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
         type: "danger",
         placement: "top",
         duration: 2000,
       });
-      navigation.navigate("SelectRoute");
     } finally {
       setIsLoading(false);
     }

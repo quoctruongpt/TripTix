@@ -1,3 +1,4 @@
+import { StorageKeys } from "@constants/global";
 import { storage } from "@storage/index";
 
 const HttpCodes = {
@@ -25,4 +26,28 @@ const errorInterceptor = async (error: any) => {
   return Promise.reject(error);
 };
 
-export { errorInterceptor, onFulfill };
+// Lưu token
+const saveTokenToAsyncStorage = async (token: string) => {
+  try {
+    await storage.setItem(StorageKeys.Token, token);
+  } catch (error) {
+    console.error("Lỗi khi lưu token:", error);
+  }
+};
+
+// Lấy token
+const getTokenFromAsyncStorage = async () => {
+  try {
+    const token = await storage.getItem(StorageKeys.Token);
+    return token;
+  } catch (error) {
+    console.error("Lỗi khi lấy token:", error);
+  }
+};
+
+export {
+  errorInterceptor,
+  onFulfill,
+  saveTokenToAsyncStorage,
+  getTokenFromAsyncStorage,
+};

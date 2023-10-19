@@ -23,7 +23,6 @@ function RootNavigation() {
       StorageKeys.userInfo,
     ]);
 
-    setAuthorization(token[1]);
     setIsLogin(!!token[1]);
     setUserInfo(JSON.parse(userInfo[1] ?? "{}"));
   };
