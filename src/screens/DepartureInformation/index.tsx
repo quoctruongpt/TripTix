@@ -24,6 +24,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup.object().shape({
   pickUpId: yup.string().required("Vui lòng chọn điểm đón"),
+  dropOffId: yup.string().required("Vui lòng chọn điểm đón"),
   name: yup
     .string()
     .required("Vui lòng nhập họ tên")
@@ -48,6 +49,7 @@ export const DepartureInformation: React.FC = () => {
   } = useForm({
     defaultValues: {
       pickUpId: "",
+      dropOffId: "",
       name: userInfo.fullName,
       phone: userInfo.phone,
     },
@@ -93,7 +95,9 @@ export const DepartureInformation: React.FC = () => {
                 <ChooseProvince
                   title="Chọn điểm đón"
                   placeholder="Điểm đón"
-                  data={routeInfo.listtripStopDTO}
+                  data={routeInfo.listtripStopDTO.filter(
+                    (item) => item.type === "PICKUP"
+                  )}
                   onChange={onChange}
                   value={value}
                   renderButton={(title, onPress) => (
@@ -112,6 +116,44 @@ export const DepartureInformation: React.FC = () => {
                         style={{ flex: 1, color: title ? "black" : "#ccc" }}
                       >
                         {title ?? "Điểm đón"}
+                      </Text>
+                      <Icon name="chevron-down" size={20} />
+                    </TouchableOpacity>
+                  )}
+                />
+              )}
+            />
+          </View>
+          <View style={styles.box}>
+            <Text>Vui lòng chọn điểm đến:</Text>
+            <Controller
+              control={control}
+              name="dropOffId"
+              render={({ field: { value, onChange } }) => (
+                <ChooseProvince
+                  title="Chọn điểm đến"
+                  placeholder="Điểm đến"
+                  data={routeInfo.listtripStopDTO.filter(
+                    (item) => item.type === "DROPOFF"
+                  )}
+                  onChange={onChange}
+                  value={value}
+                  renderButton={(title, onPress) => (
+                    <TouchableOpacity
+                      onPress={onPress}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#ccc",
+                        borderRadius: 4,
+                        padding: 12,
+                        marginTop: 16,
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Text
+                        style={{ flex: 1, color: title ? "black" : "#ccc" }}
+                      >
+                        {title ?? "Điểm đến"}
                       </Text>
                       <Icon name="chevron-down" size={20} />
                     </TouchableOpacity>
@@ -142,7 +184,6 @@ export const DepartureInformation: React.FC = () => {
                   value={value}
                   onChangeText={onChange}
                   inputStyle={{ fontSize: 16 }}
-                  editable={false}
                 />
               )}
             />

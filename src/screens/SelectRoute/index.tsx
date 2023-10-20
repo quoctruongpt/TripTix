@@ -87,8 +87,7 @@ export const SelectRoute: React.FC = () => {
   const handleGetTrips = async () => {
     try {
       setIsLoading(true);
-      // const params = { routeId, startTime: moment(dateSelected).unix() };
-      const params = { routeId, startTime: 1704067216 };
+      const params = { routeId, startTime: moment(dateSelected).unix() };
       const { data } = await getTrips(params);
       if (data.status === StatusApiCall.Success) {
         const routeData = data.data.map((item, index) => {

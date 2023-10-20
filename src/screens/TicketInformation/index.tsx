@@ -40,11 +40,12 @@ export const TicketInformation: React.FC = () => {
   const pickup = routeInfo.listtripStopDTO.find(
     (item) => String(item.id) === String(userInformation.pickUpId)
   );
+  const dropOff = routeInfo.listtripStopDTO.find(
+    (item) => String(item.id) === String(userInformation.dropOffId)
+  );
 
   const handlePayment = async () => {
     try {
-      const dropOff =
-        routeInfo.listtripStopDTO[routeInfo.listtripStopDTO.length - 1];
       const params = {
         idTrip: routeInfo.idTrip,
         idCustomer: userInfo.idUserSystem,
@@ -62,7 +63,8 @@ export const TicketInformation: React.FC = () => {
           [
             {
               text: "Về trang chủ",
-              onPress: () => navigation.reset({ routes: [{ name: "Home" }] }),
+              onPress: () =>
+                navigation.reset({ routes: [{ name: "BottomTabNavigator" }] }),
             },
           ],
           { cancelable: false }
@@ -110,6 +112,7 @@ export const TicketInformation: React.FC = () => {
           { label: "Số vé", value: seatSelected.length },
           { label: "Số ghế", value: seatSelected.join(" ,") },
           { label: "Điểm đón", value: pickup?.title },
+          { label: "Điểm trả", value: dropOff?.title },
           {
             label: "Tổng",
             value: formatPrice(seatSelected.length * routeInfo.fare),
