@@ -6,6 +6,7 @@ import { StyleSheet, ScrollView } from "react-native";
 import { Header } from "../../components/Header";
 import TabsComponent from "@components/Tabs";
 import { Text } from "@rneui/base";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export const History: React.FC = () => {
   const [listTicket, setListTicket] = useState(null);
@@ -34,13 +35,49 @@ export const History: React.FC = () => {
           }}
         >
           {activeTab === 0 && (
-            <View>
-              <Text>Lịch sử vé</Text>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 10,
+              }}
+            >
+              {!listHistory && (
+                <>
+                  <Icon
+                    name="ticket-confirmation-outline"
+                    size={80}
+                    style={{ color: "red" }}
+                  />
+                  <Text style={{ color: "orange" }}>Lịch sử vé trống</Text>
+                </>
+              )}
             </View>
           )}
           {activeTab === 1 && (
-            <View>
-              <Text>Danh sách vé sắp khởi hành</Text>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 10,
+              }}
+            >
+              {!listTicket && (
+                <>
+                  <Icon
+                    name="ticket"
+                    size={80}
+                    style={{ color: "red" }}
+                  />
+                  <Text style={{ color: "orange" }}>
+                    Danh sách vé sắp khởi hành trống
+                  </Text>
+                </>
+              )}
             </View>
           )}
         </ScrollView>
