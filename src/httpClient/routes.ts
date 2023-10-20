@@ -10,6 +10,8 @@ const routes = {
   },
   trip: {
     getRouteInfo: url.baseUrl + "/route",
+    getTrip: url.baseUrl + "/trips",
+    postBookTicket: url.baseUrl + "/bookings",
   },
 };
 

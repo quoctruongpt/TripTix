@@ -10,7 +10,6 @@ export const Home: React.FC = () => {
   const {
     authentication: { userInfo },
   } = useStore();
-  console.log(userInfo);
 
   return (
     <View style={styles.container}>

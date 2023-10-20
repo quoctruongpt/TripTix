@@ -1,79 +1,111 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import { SafeAreaView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/base";
 import { Select } from "@components/Select";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
-import { TAppNavigation } from "@navigation/AppNavigator.type";
+import { TAppNavigation, TAppRoute } from "@navigation/AppNavigator.type";
 import { useRoute } from "@react-navigation/native";
 import { getTrips } from "@httpClient/trip.api";
 import { useToast } from "react-native-toast-notifications";
-
-const listDate = [
-  {
-    dateString: dayjs().format("DD/MM"),
-    dayOfWeek: dayjs().format("ddd"),
-  },
-  {
-    dateString: dayjs().add(1, "day").format("DD/MM"),
-    dayOfWeek: dayjs().add(1, "day").format("ddd"),
-  },
-  {
-    dateString: dayjs().add(2, "day").format("DD/MM"),
-    dayOfWeek: dayjs().add(2, "day").format("ddd"),
-  },
-  {
-    dateString: dayjs().add(3, "day").format("DD/MM"),
-    dayOfWeek: dayjs().add(3, "day").format("ddd"),
-  },
-  {
-    dateString: dayjs().add(4, "day").format("DD/MM"),
-    dayOfWeek: dayjs().add(4, "day").format("ddd"),
-  },
-];
+import { StatusApiCall } from "@constants/global";
+import { formatPrice } from "@utils/price";
+import {
+  CarTypeArray,
+  CarTypes,
+  PriceTypeArray,
+  PriceTypeId,
+  TimeFilterArray,
+} from "@constants/route";
+import { Steps } from "@components/Steps";
+import ReactNativeCalendarStrip from "react-native-calendar-strip";
+import moment, { Duration, Moment, duration } from "moment";
+import { useStore } from "@store/index";
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 export const SelectRoute: React.FC = () => {
   const toast = useToast();
+  const {
+    route: { setRouteInfo },
+  } = useStore();
 
   const navigation = useNavigation<TAppNavigation<"SelectRoute">>();
-  const [listDates, setListDates] = useState(listDate);
-  const [selectedValuePrice, setSelectedValue] = useState(null);
-  const [activeDate, setActiveDate] = useState(dayjs().format("DD/MM"));
+  const [dateSelected, setDateSelected] = useState<Duration>(duration());
   const [dataRoute, setDataRoute] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [filter, setFilter] = useState({ price: null, type: null, time: null });
 
-  const route = useRoute();
+  const dataRouteFilter = useMemo(() => {
+    const dataFilterByType = dataRoute.filter((item) =>
+      filter.type ? item.busDTO.type === filter.type : true
+    );
+    if (filter.price) {
+      dataFilterByType.sort((a, b) =>
+        filter.price === PriceTypeId.Up ? a.fare - b.fare : b.fare - a.fare
+      );
+    }
 
-  const onActiveDate = (item) => {
-    setActiveDate(item.dateString);
-  };
+    return dataFilterByType;
+  }, [filter, dataRoute]);
 
-  const onShowSelectSeatScreen = (item) => {
+  const { routeId } = useRoute<TAppRoute<"SelectRoute">>().params;
+
+  const handleChooseRoute = (item) => {
+    setRouteInfo(item);
     navigation.navigate("SelectSeat");
-  };
-  const onTurnBack = () => {
-    navigation.navigate("SearchRoute");
   };
 
   useEffect(() => {
     handleGetTrips();
-  }, []);
+  }, [dateSelected]);
+
+  const updateFilter = (data: any) => {
+    setFilter((pre) => ({ ...pre, ...data }));
+  };
+
+  const getIconStep = (length, index) => {
+    if (index === 0) {
+      return { name: "my-location", color: "green" };
+    }
+
+    if (index === length - 1) {
+      return { name: "location-on", color: "red" };
+    }
+
+    return { name: "location-searching", color: "orange" };
+  };
 
   const handleGetTrips = async () => {
     try {
       setIsLoading(true);
-      const data = await getTrips(1, "15-10-2023 06:00:00");
-      if (!data.reponse) {
-        toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
-          type: "danger",
-          placement: "top",
-          duration: 2000,
+      // const params = { routeId, startTime: moment(dateSelected).unix() };
+      const params = { routeId, startTime: 1704067216 };
+      const { data } = await getTrips(params);
+      if (data.status === StatusApiCall.Success) {
+        const routeData = data.data.map((item, index) => {
+          return {
+            ...item,
+            listtripStopDTO: item.listtripStopDTO.map((stopDTO, index) => ({
+              id: stopDTO.idStation,
+              title: stopDTO.stationDTO.name,
+              type: stopDTO.type,
+              time: dayjs(stopDTO.timeComes).format("HH:mm"),
+              icon: getIconStep(item.listtripStopDTO.length, index),
+            })),
+          };
         });
+        setDataRoute(routeData);
+        return;
       }
-
-      setDataRoute(data);
 
       throw new Error();
     } catch {
@@ -89,92 +121,61 @@ export const SelectRoute: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          marginTop: 0,
-        }}
-      >
-        <ScrollView horizontal contentContainerStyle={{ padding: 0 }}>
-          {listDates.map((item, index) => (
-            <TouchableOpacity onPress={() => onActiveDate(item)} key={index}>
-              <View
-                key={index}
-                style={{
-                  width: 80,
-                  height: 60,
-                  paddingHorizontal: 10,
-                  marginHorizontal: 5,
-                  borderRadius: 5,
-                  backgroundColor: `${
-                    activeDate == item.dateString ? "#ff4000" : "#fff"
-                  }`,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                }}
-              >
-                <Text
-                  style={{
-                    color: `${activeDate == item.dateString ? "#fff" : "#000"}`,
-                  }}
-                >
-                  {item.dayOfWeek}
-                </Text>
-                <Text
-                  style={{
-                    color: `${
-                      activeDate == item.dateString ? "#ff4000" : "#000"
-                    }`,
-                    backgroundColor: "#fff",
-                    width: "90%",
-                    marginTop: 5,
-                    borderRadius: 10,
-                    textAlign: "center",
-                  }}
-                >
-                  {item.dateString}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+      <View>
+        <View style={styles.container}>
+          <View style={{ backgroundColor: "red" }}>
+            <ReactNativeCalendarStrip
+              scrollable
+              style={{ paddingTop: 20, paddingBottom: 10 }}
+              iconContainer={{ flex: 0.1 }}
+              minDate={new Date()}
+              dayComponent={({ date }) => {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor:
+                        moment(date).format("DDMMYYYY") ===
+                        moment(dateSelected).format("DDMMYYYY")
+                          ? "green"
+                          : "#ccc",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 200,
+                    }}
+                    onPress={() => setDateSelected(date)}
+                  >
+                    <Text>{moment(date).format("DD")}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        </View>
         <View
           style={{
+            paddingTop: 40,
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             flexDirection: "row",
             paddingHorizontal: 5,
           }}
         >
-          <View style={{ width: "30%", marginRight: 5 }}>
+          <View style={{ width: "40%", marginRight: 5 }}>
             <Select
               placeholder="Price"
-              items={[
-                { label: "1-1000", value: "1" },
-                { label: "1000-10000", value: "2" },
-                { label: "10000-100000", value: "3" },
-              ]}
+              items={PriceTypeArray}
+              value={filter.price}
+              onSelectItem={(e) => updateFilter({ price: e.value })}
             />
           </View>
-          <View style={{ width: "30%", marginRight: 5 }}>
+          <View style={{ width: "40%", marginRight: 5 }}>
             <Select
               placeholder="Seat Type"
-              items={[
-                { label: "Normal", value: "1" },
-                { label: "Vip", value: "2" },
-                { label: "Premium", value: "3" },
-              ]}
-            />
-          </View>
-          <View style={{ width: "30%", marginRight: 5 }}>
-            <Select
-              placeholder="Time"
-              items={[
-                { label: "1 hour", value: "1" },
-                { label: "2 hour", value: "2" },
-                { label: "3 hour", value: "3" },
-              ]}
+              items={CarTypeArray}
+              value={filter.type}
+              onSelectItem={(e) => updateFilter({ type: e.value })}
             />
           </View>
         </View>
@@ -186,12 +187,12 @@ export const SelectRoute: React.FC = () => {
           padding: 0,
           zIndex: -1,
         }}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleGetTrips} />
+        }
       >
-        {dataRoute.map((d, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => onShowSelectSeatScreen(d)}
-          >
+        {dataRouteFilter.map((d, index) => (
+          <TouchableOpacity key={index} onPress={() => handleChooseRoute(d)}>
             <View
               style={{
                 display: "flex",
@@ -216,9 +217,9 @@ export const SelectRoute: React.FC = () => {
                     flexDirection: "row",
                   }}
                 >
-                  <Text style={{ fontWeight: "600" }}>
-                    {dayjs(d.startTime).format("HH:mm")} -{" "}
-                    {dayjs(d.endTime).format("HH:mm")}
+                  <Text style={{ fontWeight: "700" }}>
+                    {dayjs.unix(d.startTimee).utc().format("HH:mm")} -{" "}
+                    {dayjs.unix(d.endTimee).utc().format("HH:mm")}
                   </Text>
                 </View>
                 <View
@@ -235,64 +236,27 @@ export const SelectRoute: React.FC = () => {
                   <Icon name="wifi" size={12} color="gray" />
                 </View>
               </View>
-              <View
-                style={{
-                  marginTop: 5,
-                  padding: 5,
-                  backgroundColor: "#A9A9A9",
-                  width: 220,
-                  borderRadius: 20,
-                }}
-              >
-                <Text>
-                  {d.fare} - {d.busDTO.type} - {d.availableSeat} Seat(s)
-                  availabel
-                </Text>
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginTop: 15,
-                  paddingHorizontal: 15,
-                }}
-              >
+              <View style={{ alignItems: "flex-start" }}>
                 <View
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
+                    marginTop: 5,
+                    padding: 5,
+                    backgroundColor: "#f0f1f3",
+                    borderRadius: 20,
                   }}
                 >
-                  <Icon name="map-marker" size={14} color="red" />
-                  <View
-                    style={{
-                      width: 2,
-                      backgroundColor: "#A9A9A9",
-                      height: 40,
-                      borderRadius: 5,
-                    }}
-                  ></View>
-                  <Icon name="map-marker" size={14} color="green" />
-                </View>
-                <View
-                  style={{
-                    marginLeft: 15,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 18 }}>
-                    {d.routeDTO.departurePoint}
+                  <Text style={{ fontWeight: "700" }}>
+                    {formatPrice(d.fare)} - {CarTypes[d.busDTO.type]} -{" "}
+                    {d.availableSeat} Seat(s) availabel
                   </Text>
-                  <Text style={{ color: "#A9A9A9" }}>
-                    Route:{d.routeDTO.distance}
-                  </Text>
-                  <Text style={{ fontSize: 18 }}>{d.routeDTO.destination}</Text>
                 </View>
               </View>
+              <Steps
+                data={[
+                  d?.listtripStopDTO[0],
+                  d?.listtripStopDTO[d?.listtripStopDTO.length - 1],
+                ]}
+              />
               <Text
                 style={{
                   marginLeft: 35,
@@ -301,11 +265,17 @@ export const SelectRoute: React.FC = () => {
                   color: "#FF8C00",
                 }}
               >
-                Chọn chuyến đi này
+                {d.busDTO.description}
               </Text>
             </View>
           </TouchableOpacity>
         ))}
+
+        {dataRouteFilter.length <= 0 && (
+          <Text style={{ textAlign: "center", color: "#ccc" }}>
+            Không tìm thấy tuyến đường phù hợp
+          </Text>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -317,5 +287,6 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     flex: 1,
+    backgroundColor: "#fff",
   },
 });

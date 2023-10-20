@@ -9,6 +9,8 @@ import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { Image } from "expo-image";
 import { Images } from "@assets/images";
 import { ButtonApp } from "@components/Button";
+import { useStore } from "@store/index";
+import { formatPrice } from "@utils/price";
 
 const Seats = [
   { id: 1, name: "A1", avaiable: 0, selected: false },
@@ -28,44 +30,39 @@ const Seats = [
 
 export const SelectSeat: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SelectSeat">>();
-  const [listSeat, setListSeat] = useState(Seats);
+  const {
+    route: { routeInfo, setSeatSelected },
+  } = useStore();
+  const [listSeat, setListSeat] = useState([]);
   const [listSelectSeat, setListSelectSeat] = useState([]);
   const [showError, setShowError] = useState(false);
 
-  const onTurnBack = () => {
-    navigation.navigate("SelectRoute");
+  useEffect(() => {
+    handleGenSeats();
+  }, []);
+
+  const handleGenSeats = () => {
+    const array = [...Array(routeInfo.busDTO.capacity).keys()];
+    const seatBooked = routeInfo.seatNameBooking;
+
+    setListSeat(
+      array.map((_, index) => {
+        const name = `A${index < 9 ? 0 : ""}${index + 1}`;
+        return { id: name, name, avaiable: !seatBooked.includes(name) };
+      })
+    );
   };
 
   const onActiveSeat = (seat) => {
-    setListSeat((prevItems) => {
-      return prevItems.map((item) => {
-        if (item.id === seat.id && seat.avaiable == 1) {
-          return { ...item, selected: !item.selected };
-        } else if (item.id === seat.id && seat.avaiable !== 1) {
-          setShowError(true);
-          setTimeout(() => {
-            return setShowError(false);
-          }, 1500);
-        }
-        return item;
-      });
-    });
+    const seatId = seat.id;
+    const newList = listSelectSeat.includes(seatId)
+      ? listSelectSeat.filter((item) => item !== seatId)
+      : [...listSelectSeat, seatId];
+    setListSelectSeat(newList);
   };
 
-  useEffect(() => {
-    if (listSeat) {
-      const uniqueNames = new Set();
-      listSeat
-        .filter((l) => l.selected)
-        .forEach((list) => {
-          uniqueNames.add(list.name);
-        });
-
-      setListSelectSeat(Array.from(uniqueNames));
-    }
-  }, [listSeat]);
-
   const onDepartureInfo = () => {
+    setSeatSelected(listSelectSeat);
     navigation.navigate("DepartureInformation");
   };
 
@@ -103,20 +100,26 @@ export const SelectSeat: React.FC = () => {
                       borderWidth: 1,
                       borderRadius: 10,
                       padding: 5,
-                      borderColor: `${seat.selected ? "white" : "green"}`,
+                      borderColor: `${
+                        listSelectSeat.includes(seat.id) ? "green" : "white"
+                      }`,
                       backgroundColor: `${
-                        seat.selected ? "green" : "transparent"
+                        listSelectSeat.includes(seat.id)
+                          ? "green"
+                          : "transparent"
                       }`,
                     }}
                   >
                     <Text
                       style={{
-                        color: `${seat.selected ? "white" : "green"}`,
+                        color: `${
+                          listSelectSeat.includes(seat.id) ? "white" : "green"
+                        }`,
                       }}
                     >
                       {seat.name}
                     </Text>
-                    {seat.selected ? (
+                    {listSelectSeat.includes(seat.id) ? (
                       <Image
                         source={Images.SeatSelected}
                         style={{ width: 22, height: 20 }}
@@ -135,7 +138,7 @@ export const SelectSeat: React.FC = () => {
               );
             }
             return (
-              <TouchableOpacity onPress={() => onActiveSeat(seat)}>
+              <TouchableOpacity disabled>
                 <View
                   style={{
                     marginRight: 10,
@@ -223,7 +226,7 @@ export const SelectSeat: React.FC = () => {
             <Text style={{ marginBottom: 10, color: "red" }}>
               {selectedSeatsText}
             </Text>
-            <Text>285,000đ</Text>
+            <Text>{formatPrice(listSelectSeat.length * routeInfo.fare)}</Text>
           </View>
         </View>
       </View>
@@ -310,9 +313,7 @@ export const SelectSeat: React.FC = () => {
         <ButtonApp
           title="Continue"
           onPress={onDepartureInfo}
-          buttonStyle={{
-            backgroundColor: `${listSelectSeat.length ? "red" : "gray"}`,
-          }}
+          disabled={listSelectSeat.length === 0}
         />
       </View>
     </SafeAreaView>

@@ -1,10 +1,9 @@
-import { Chip, Divider } from "@rneui/themed";
+import { Chip } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ButtonSwitch } from "./components/ButtonSwitch";
 import { Item } from "./components/Item";
 import { styles } from "./styles";
-import { DatePicker } from "@components/DatePicker";
 import { ChooseProvince } from "@components/ChooseProvince";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -20,9 +19,8 @@ export const SearchRoute: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SearchRoute">>();
   const { control, setValue, getValues, handleSubmit } = useForm({
     defaultValues: {
-      from: "1",
-      to: "19",
-      date: new Date(),
+      from: "68",
+      to: "79",
     },
   });
 
@@ -76,9 +74,7 @@ export const SearchRoute: React.FC = () => {
       }
 
       throw new Error();
-    } catch (e) {
-      console.log(e);
-
+    } catch {
       toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
         type: "danger",
         placement: "top",
@@ -123,27 +119,7 @@ export const SearchRoute: React.FC = () => {
             )}
           />
         </View>
-        <Divider />
-        <View style={styles.timeWrap}>
-          <Controller
-            control={control}
-            name="date"
-            render={({ field: { value, onChange } }) => (
-              <DatePicker
-                value={value}
-                onConfirm={onChange}
-                renderButton={(title, onPress) => (
-                  <Item
-                    label="Ngày khởi hành"
-                    value={title}
-                    onPress={onPress}
-                  />
-                )}
-                placeholder=""
-              />
-            )}
-          />
-        </View>
+
         <Chip
           title={"Tìm kiếm"}
           containerStyle={styles.buttonSearch}

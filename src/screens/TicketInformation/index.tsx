@@ -3,6 +3,9 @@ import { ButtonBack } from "@components/ButtonBack";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { useNavigation } from "@react-navigation/native";
 import { Chip, Dialog, Divider, Text } from "@rneui/themed";
+import { useStore } from "@store/index";
+import { formatPrice } from "@utils/price";
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
@@ -11,10 +14,21 @@ import {
   StyleProp,
   TextStyle,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import { postBookTicket } from "@httpClient/trip.api";
+import { StatusApiCall } from "@constants/global";
+import { useToast } from "react-native-toast-notifications";
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 export const TicketInformation: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"TicketInformation">>();
+  const toast = useToast();
+  const {
+    route: { routeInfo, userInformation, seatSelected },
+    authentication: { userInfo },
+  } = useStore();
   const [confirmCancel, setConfirmCancel] = useState(false);
 
   useEffect(() => {
@@ -23,26 +37,82 @@ export const TicketInformation: React.FC = () => {
     });
   }, []);
 
+  const pickup = routeInfo.listtripStopDTO.find(
+    (item) => String(item.id) === String(userInformation.pickUpId)
+  );
+
+  const handlePayment = async () => {
+    try {
+      const dropOff =
+        routeInfo.listtripStopDTO[routeInfo.listtripStopDTO.length - 1];
+      const params = {
+        idTrip: routeInfo.idTrip,
+        idCustomer: userInfo.idUserSystem,
+        codePickUpPoint: pickup.id,
+        codeDropOffPoint: dropOff.id,
+        seatName: seatSelected,
+      };
+
+      const { data } = await postBookTicket(params);
+
+      if (data.status === StatusApiCall.Success) {
+        Alert.alert(
+          "Thành công",
+          "Quý khách đã đặt vé thành công. Cảm ơn đã sử dụng dịch vụ đặt vé xe của TripTix",
+          [
+            {
+              text: "Về trang chủ",
+              onPress: () => navigation.reset({ routes: [{ name: "Home" }] }),
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+
+      throw new Error(data.data);
+    } catch (error: any) {
+      toast.show(
+        `Có lỗi xảy ra. Vui lòng thử lại \n ${error.response?.data?.data}`,
+        {
+          type: "danger",
+          placement: "top",
+          duration: 5000,
+        }
+      );
+    } finally {
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ccc" }}>
       <Box
         title="Thông tin người đặt vé"
         data={[
-          { label: "Họ tên", value: "hai hung" },
-          { label: "Số điện thoại", value: "01345454" },
-          { label: "Email", value: "abv@gamil.com" },
+          { label: "Họ tên", value: userInformation.name },
+          { label: "Số điện thoại", value: userInformation.phone },
+          { label: "Email", value: userInfo.email },
         ]}
       />
       <Box
         data={[
-          { label: "Tuyến", value: "hai hung" },
-          { label: "Thời gian", value: "01345454" },
-          { label: "Số vé", value: "abv@gamil.com" },
-          { label: "Số ghees", value: "abv@gamil.com" },
-          { label: "Vị trí", value: "abv@gamil.com" },
+          {
+            label: "Tuyến",
+            value: `${routeInfo.routeDTO.departurePoint} - ${routeInfo.routeDTO.destination}`,
+          },
+          {
+            label: "Thời gian",
+            value: dayjs
+              .unix(routeInfo.startTimee)
+              .utc()
+              .format("HH:mm - DD/MM/YYYY"),
+          },
+          { label: "Số vé", value: seatSelected.length },
+          { label: "Số ghế", value: seatSelected.join(" ,") },
+          { label: "Điểm đón", value: pickup?.title },
           {
             label: "Tổng",
-            value: "285000",
+            value: formatPrice(seatSelected.length * routeInfo.fare),
             styleValue: { fontSize: 16, fontWeight: "700" },
           },
         ]}
@@ -51,19 +121,22 @@ export const TicketInformation: React.FC = () => {
         <View
           style={{ padding: 16, backgroundColor: "#f9f9f9", borderRadius: 12 }}
         >
-          <Item label="Giá" value="285,000đ" />
+          <Item
+            label="Giá"
+            value={formatPrice(seatSelected.length * routeInfo.fare)}
+          />
           <Item label="Khuyễn mại" value="0đ" />
           <Divider style={{ marginVertical: 12 }} />
           <Item
             label="Thành tiền"
-            value="285,000đ"
+            value={formatPrice(seatSelected.length * routeInfo.fare)}
             styleValue={{ fontSize: 16, fontWeight: "700" }}
           />
         </View>
       </View>
       <ButtonApp
         title="Thanh toán"
-        onPress={() => {}}
+        onPress={handlePayment}
         buttonStyle={{
           backgroundColor: "red",
           margin: 10,

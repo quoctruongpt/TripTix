@@ -1,6 +1,6 @@
 import { Button, Input, Text } from "@rneui/themed";
 import React, { useDeferredValue, useMemo, useState } from "react";
-import { View, FlatList, TouchableOpacity } from "react-native";
+import { View, FlatList, TouchableOpacity, SafeAreaView } from "react-native";
 import ReactNativeModal from "react-native-modal";
 
 export const ChooseProvince: React.FC<{
@@ -9,7 +9,8 @@ export const ChooseProvince: React.FC<{
   onChange: (value: string) => void;
   renderButton?: (title: string, onPress: () => void) => React.ReactNode;
   title?: string;
-}> = ({ data = [], value, onChange, renderButton, title }) => {
+  placeholder?: string;
+}> = ({ data = [], value, onChange, renderButton, title, placeholder }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
   const defferedValue = useDeferredValue(valueSearch);
@@ -35,15 +36,20 @@ export const ChooseProvince: React.FC<{
         renderButton(selected?.title, () => setShowPopup(true))
       ) : (
         <TouchableOpacity onPress={() => setShowPopup(true)}>
-          <Text>{selected?.title}</Text>
+          <Text>{selected?.title || placeholder}</Text>
         </TouchableOpacity>
       )}
-      <ReactNativeModal isVisible={showPopup} onBackdropPress={onClose}>
+      <ReactNativeModal
+        isVisible={showPopup}
+        onBackdropPress={onClose}
+        avoidKeyboard
+      >
         <View
           style={{
             backgroundColor: "#fff",
             borderRadius: 20,
             padding: 16,
+            maxHeight: 500,
           }}
         >
           <Text

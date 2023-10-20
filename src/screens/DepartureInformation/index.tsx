@@ -18,52 +18,44 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { useForm, Controller } from "react-hook-form";
+import { CarTypes } from "@constants/route";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-const HHHH = [
-  {
-    time: "18:00",
-    title: "Bến xe An Nhơn",
-    desc: "Route: 720km",
-    icon: { name: "my-location", color: "green" },
-  },
-  {
-    time: "18:00",
-    title: "Bến xe An Nhơn",
-    desc: "Route: 720km",
-    icon: { name: "location-on", color: "red" },
-  },
-];
+const schema = yup.object().shape({
+  pickUpId: yup.string().required("Vui lòng chọn điểm đón"),
+  name: yup
+    .string()
+    .required("Vui lòng nhập họ tên")
+    .min(4, "Họ tên tối thiểu 4 ký tự"),
+  phone: yup
+    .string()
+    .required("Vui lòng nhập số điệnthoaij")
+    .min(10, "Số điện thoại phải chứa 10 ký tự")
+    .max(10, "Số điện thoại phải chứa 10 ký tự"),
+});
 
 export const DepartureInformation: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"DepartureInformation">>();
   const {
     authentication: { userInfo },
+    route: { routeInfo, seatSelected, setUserInformation },
   } = useStore();
-  const pickupLocations = [
-    { id: "1", title: "Bến xe" },
-    { id: "2", title: "Bến xe" },
-  ];
-  const { control } = useForm({
+  const {
+    control,
+    formState: { isValid },
+    handleSubmit,
+  } = useForm({
     defaultValues: {
-      pickUpId: pickupLocations[0]?.id,
+      pickUpId: "",
       name: userInfo.fullName,
       phone: userInfo.phone,
     },
+    resolver: yupResolver(schema),
   });
-  const finalPrice = 285000;
-  const type = "Bed";
-  const routeDetail = {
-    timeStart: 1234,
-    timeEnd: 1234,
-    from: "Bến xe An Nhơn",
-    to: "Bến xe Bình Định",
-    distance: 720,
-    note: "Quý khách đang chọn tuyến đường...",
-  };
-  const seats = ["A1", "A2"];
-  console.log(userInfo);
 
-  const handleConfirm = () => {
+  const handleConfirm = (dataForm) => {
+    setUserInformation(dataForm);
     navigation.navigate("TicketInformation");
   };
 
@@ -73,18 +65,20 @@ export const DepartureInformation: React.FC = () => {
         <KeyboardAwareScrollView style={{ flex: 1 }}>
           <View style={styles.box}>
             <Chip
-              title={`${formatPrice(finalPrice)} - ${type}`}
+              title={`${formatPrice(routeInfo.fare)} - ${
+                CarTypes[routeInfo.busDTO.type]
+              }`}
               containerStyle={{ flexDirection: "row" }}
               buttonStyle={{ backgroundColor: "#ccc" }}
               titleStyle={{ fontWeight: "700", color: "#000" }}
             />
 
-            <Steps data={HHHH} />
+            <Steps data={routeInfo.listtripStopDTO} />
           </View>
           <View style={[styles.box, { flexDirection: "row" }]}>
             <View style={{ flex: 1 }}>
               <Text>Số ghế đã chọn</Text>
-              <Text style={styles.value}>{seats.join(", ")}</Text>
+              <Text style={styles.value}>{seatSelected.join(", ")}</Text>
             </View>
             <TouchableOpacity onPress={navigation.goBack}>
               <Text style={{ color: "#f6a288" }}>Chọn lại</Text>
@@ -98,7 +92,8 @@ export const DepartureInformation: React.FC = () => {
               render={({ field: { value, onChange } }) => (
                 <ChooseProvince
                   title="Chọn điểm đón"
-                  data={pickupLocations}
+                  placeholder="Điểm đón"
+                  data={routeInfo.listtripStopDTO}
                   onChange={onChange}
                   value={value}
                   renderButton={(title, onPress) => (
@@ -113,7 +108,11 @@ export const DepartureInformation: React.FC = () => {
                         flexDirection: "row",
                       }}
                     >
-                      <Text style={{ flex: 1 }}>{title}</Text>
+                      <Text
+                        style={{ flex: 1, color: title ? "black" : "#ccc" }}
+                      >
+                        {title ?? "Điểm đón"}
+                      </Text>
                       <Icon name="chevron-down" size={20} />
                     </TouchableOpacity>
                   )}
@@ -131,6 +130,7 @@ export const DepartureInformation: React.FC = () => {
                   value={value}
                   onChangeText={onChange}
                   inputStyle={{ fontSize: 16, fontWeight: "700" }}
+                  editable={false}
                 />
               )}
             />
@@ -142,6 +142,7 @@ export const DepartureInformation: React.FC = () => {
                   value={value}
                   onChangeText={onChange}
                   inputStyle={{ fontSize: 16 }}
+                  editable={false}
                 />
               )}
             />
@@ -150,11 +151,12 @@ export const DepartureInformation: React.FC = () => {
         </KeyboardAwareScrollView>
         <ButtonApp
           title="Continue"
-          onPress={handleConfirm}
+          onPress={handleSubmit(handleConfirm)}
           buttonStyle={{
             backgroundColor: "red",
             margin: 10,
           }}
+          disabled={!isValid}
         />
       </SafeAreaView>
     </TouchableWithoutFeedback>
