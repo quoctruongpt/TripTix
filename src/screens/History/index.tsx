@@ -1,16 +1,94 @@
 import { Button } from "@rneui/themed";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, ScrollView } from "react-native";
 import { Header } from "../../components/Header";
 import TabsComponent from "@components/Tabs";
-import { Text } from "@rneui/base";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import TichketHistory from "./components/TichketHistory";
+import PerpareDepart from "./components/PerpareDepart";
+import dayjs from "dayjs";
+
+const Tickets = [
+  // staus
+  // 1: finish
+  // 2: cancle
+  // 3: paid
+  // 4: run
+  {
+    id: 1,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 1,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+  {
+    id: 1,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 1,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+  {
+    id: 1,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 1,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+  {
+    id: 2,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 2,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+  {
+    id: 3,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 3,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+  {
+    id: 4,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 4,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+  {
+    id: 5,
+    code: "QƯEQRA",
+    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
+    status: 1,
+    departurePoint: "Lâm Đồng",
+    destination: "Hồ chí mình",
+    bookedSeat: "A4,A15",
+    timeDestination: dayjs().format("HH:mm"),
+  },
+];
 
 export const History: React.FC = () => {
-  const [listTicket, setListTicket] = useState(null);
-  const [listHistory, setListHistory] = useState(null);
+  const [listTicket, setListTicket] = useState(Tickets);
   const [activeTab, setActiveTab] = useState(1);
 
   const handleTabPress = (index) => {
@@ -35,50 +113,10 @@ export const History: React.FC = () => {
           }}
         >
           {activeTab === 0 && (
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 10,
-              }}
-            >
-              {!listHistory && (
-                <>
-                  <Icon
-                    name="ticket-confirmation-outline"
-                    size={80}
-                    style={{ color: "red" }}
-                  />
-                  <Text style={{ color: "orange" }}>Lịch sử vé trống</Text>
-                </>
-              )}
-            </View>
+            <TichketHistory listTicket={listTicket} type="history" />
           )}
           {activeTab === 1 && (
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 10,
-              }}
-            >
-              {!listTicket && (
-                <>
-                  <Icon
-                    name="ticket"
-                    size={80}
-                    style={{ color: "red" }}
-                  />
-                  <Text style={{ color: "orange" }}>
-                    Danh sách vé sắp khởi hành trống
-                  </Text>
-                </>
-              )}
-            </View>
+            <TichketHistory listTicket={listTicket} type="perpare" />
           )}
         </ScrollView>
       </View>
