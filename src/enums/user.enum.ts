@@ -4,8 +4,8 @@ enum EGender {
 }
 
 enum EAccountType {
-  Customer = "CUSTOMER",
-  Driver = "DRIVER",
+  Customer = "ROLE_CUSTOMER",
+  Driver = "ROLE_DRIVER",
 }
 
 export { EGender, EAccountType };

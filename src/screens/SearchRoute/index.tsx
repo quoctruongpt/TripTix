@@ -1,6 +1,6 @@
 import { Chip } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { ButtonSwitch } from "./components/ButtonSwitch";
 import { Item } from "./components/Item";
 import { styles } from "./styles";
@@ -13,6 +13,7 @@ import { Keys } from "@constants/storage";
 import { getRouteInfo } from "@httpClient/trip.api";
 import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
+import { Banner } from "@screens/Home/components/Banner";
 
 export const SearchRoute: React.FC = () => {
   const toast = useToast();
@@ -128,6 +129,9 @@ export const SearchRoute: React.FC = () => {
           disabled={isLoading}
         />
       </View>
+      <ScrollView>
+        <Banner />
+      </ScrollView>
     </View>
   );
 };

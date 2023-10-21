@@ -9,4 +9,18 @@ const postLogin = (username: string, password: string) =>
 const postRegister = (data: TRegisterParams) =>
   httpClient.post(routes.authentication.register, data);
 
-export { postLogin, postRegister };
+const getUserInfo = (id: number) => {
+  return httpClient.get(`${routes.authentication.getUserInfo}?id=${id}`);
+};
+
+const postSendOtp = (email: string) => {
+  return httpClient.post(`${routes.authentication.sendOtp}?email=${email}`);
+};
+
+const postConfirmOtp = (email: string, otp: string) => {
+  return httpClient.get(
+    `${routes.authentication.confirmOtp}?key=${email}&otp=${otp}`
+  );
+};
+
+export { postLogin, postRegister, getUserInfo, postSendOtp, postConfirmOtp };

@@ -23,14 +23,14 @@ import {
   CarTypes,
   PriceTypeArray,
   PriceTypeId,
-  TimeFilterArray,
 } from "@constants/route";
 import { Steps } from "@components/Steps";
-import ReactNativeCalendarStrip from "react-native-calendar-strip";
-import moment, { Duration, Moment, duration } from "moment";
 import { useStore } from "@store/index";
+import { DatePicker } from "@components/DatePicker";
 const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const SelectRoute: React.FC = () => {
   const toast = useToast();
@@ -39,7 +39,7 @@ export const SelectRoute: React.FC = () => {
   } = useStore();
 
   const navigation = useNavigation<TAppNavigation<"SelectRoute">>();
-  const [dateSelected, setDateSelected] = useState<Duration>(duration());
+  const [dateSelected, setDateSelected] = useState<Date>(new Date());
   const [dataRoute, setDataRoute] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState({ price: null, type: null, time: null });
@@ -87,7 +87,10 @@ export const SelectRoute: React.FC = () => {
   const handleGetTrips = async () => {
     try {
       setIsLoading(true);
-      const params = { routeId, startTime: moment(dateSelected).unix() };
+      const params = {
+        routeId,
+        startTime: dayjs(dateSelected).add(7, "hour").unix(),
+      };
       const { data } = await getTrips(params);
       if (data.status === StatusApiCall.Success) {
         const routeData = data.data.map((item, index) => {
@@ -107,7 +110,9 @@ export const SelectRoute: React.FC = () => {
       }
 
       throw new Error();
-    } catch {
+    } catch (er) {
+      console.log(er);
+
       toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
         type: "danger",
         placement: "top",
@@ -121,47 +126,38 @@ export const SelectRoute: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <View style={styles.container}>
-          <View style={{ backgroundColor: "red" }}>
-            <ReactNativeCalendarStrip
-              scrollable
-              style={{ paddingTop: 20, paddingBottom: 10 }}
-              iconContainer={{ flex: 0.1 }}
-              minDate={new Date()}
-              dayComponent={({ date }) => {
-                return (
-                  <TouchableOpacity
-                    style={{
-                      width: 30,
-                      height: 30,
-                      backgroundColor:
-                        moment(date).format("DDMMYYYY") ===
-                        moment(dateSelected).format("DDMMYYYY")
-                          ? "green"
-                          : "#ccc",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: 200,
-                    }}
-                    onPress={() => setDateSelected(date)}
-                  >
-                    <Text>{moment(date).format("DD")}</Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
-        </View>
+        <View style={styles.container}></View>
         <View
           style={{
-            paddingTop: 40,
             display: "flex",
             justifyContent: "center",
             flexDirection: "row",
             paddingHorizontal: 5,
           }}
         >
-          <View style={{ width: "40%", marginRight: 5 }}>
+          <View style={{ width: "30%", marginRight: 5, marginVertical: 12 }}>
+            <DatePicker
+              value={dateSelected}
+              onConfirm={(date) => setDateSelected(date)}
+              placeholder="Birthday"
+              minimumDate={new Date()}
+              renderButton={(title, onPress) => (
+                <TouchableOpacity
+                  onPress={onPress}
+                  style={{
+                    backgroundColor: "#fafafa",
+                    borderRadius: 8,
+                    paddingVertical: 16,
+                  }}
+                >
+                  <Text style={{ textAlign: "center", fontWeight: "700" }}>
+                    {title}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <View style={{ width: "30%", marginRight: 5 }}>
             <Select
               placeholder="Price"
               items={PriceTypeArray}
@@ -169,7 +165,7 @@ export const SelectRoute: React.FC = () => {
               onSelectItem={(e) => updateFilter({ price: e.value })}
             />
           </View>
-          <View style={{ width: "40%", marginRight: 5 }}>
+          <View style={{ width: "30%", marginRight: 5 }}>
             <Select
               placeholder="Seat Type"
               items={CarTypeArray}

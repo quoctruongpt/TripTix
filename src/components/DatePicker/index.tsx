@@ -2,14 +2,18 @@ import { Text } from "@rneui/themed";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal, {
+  DateTimePickerProps,
+} from "react-native-modal-datetime-picker";
 
-export const DatePicker: React.FC<{
-  value: Date;
-  onConfirm: (value: Date) => void;
-  renderButton?: (title: string, onPress: () => void) => React.ReactNode;
-  placeholder: string;
-}> = ({ value, onConfirm, renderButton, placeholder }) => {
+export const DatePicker: React.FC<
+  {
+    value: Date;
+    onConfirm: (value: Date) => void;
+    renderButton?: (title: string, onPress: () => void) => React.ReactNode;
+    placeholder: string;
+  } & DateTimePickerProps
+> = ({ value, onConfirm, renderButton, placeholder, ...props }) => {
   const [showPicker, setShowPicker] = useState(false);
 
   const handleClose = () => {
@@ -42,6 +46,7 @@ export const DatePicker: React.FC<{
         }}
         onCancel={handleClose}
         date={value}
+        {...props}
       />
     </>
   );

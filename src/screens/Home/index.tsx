@@ -5,8 +5,9 @@ import { UserInfoBox } from "./components/UserInfoBox";
 import { Banner } from "./components/Banner";
 import { ListActions } from "./components/ListActions";
 import { useStore } from "@store/index";
+import { observer } from "mobx-react-lite";
 
-export const Home: React.FC = () => {
+export const Home: React.FC = observer(() => {
   const {
     authentication: { userInfo },
   } = useStore();
@@ -23,7 +24,7 @@ export const Home: React.FC = () => {
       </ScrollView>
     </View>
   );
-};
+});
 
 export const styles = StyleSheet.create({
   container: {

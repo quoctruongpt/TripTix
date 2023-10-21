@@ -38,11 +38,15 @@ export const PayBox: React.FC<{ coins: number; voucherCoins: number }> = ({
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1, borderRightWidth: 1, borderColor: "#dde2e8" }}>
           <Text>Số dư</Text>
-          <Text style={{ fontWeight: "700" }}>{coins} xu</Text>
+          <Text style={{ fontWeight: "700" }}>
+            {coins.toLocaleString("en-US")} xu
+          </Text>
         </View>
         <View style={{ flex: 1, alignItems: "flex-end" }}>
           <Text>Tài khoản khuyến mại</Text>
-          <Text style={{ fontWeight: "700" }}>{voucherCoins} xu</Text>
+          <Text style={{ fontWeight: "700" }}>
+            {voucherCoins.toLocaleString("en-US")} xu
+          </Text>
         </View>
       </View>
       <Divider style={{ marginVertical: 16 }} />

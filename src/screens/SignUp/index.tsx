@@ -13,7 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import { TAuthNavigation } from "@navigation/AuthNavigator.type";
 import { useNavigation } from "@react-navigation/native";
 import { SelectGender } from "./components/SelectGender";
-import { postRegister } from "@httpClient/authentication.api";
+import { postSendOtp } from "@httpClient/authentication.api";
 import { EAccountType } from "@enums";
 import dayjs from "dayjs";
 import { StatusApiCall } from "@constants/global";
@@ -52,39 +52,11 @@ export const SignUp: React.FC = () => {
   });
 
   const handleContinue = handleSubmit(async (dataForm: any) => {
-    try {
-      setIsLoading(true);
-      const { data } = await postRegister({
-        fullName: dataForm.fullName,
-        address: dataForm.address,
-        birthday: dayjs(dataForm.dayOfBirth).unix(),
-        email: dataForm.email,
-        phone: dataForm.phone,
-        gender: dataForm.gender,
-        role: EAccountType.Customer,
-        password: dataForm.password,
-      });
-      if (data.status === StatusApiCall.Success) {
-        Alert.alert(
-          "Thông báo",
-          "Bạn đã đăng ký thành công. Vui lòng đăng nhập tài khoản",
-          [
-            {
-              text: "Đăng nhập",
-              onPress: () =>
-                navigation.replace("SignIn", { rule: EAccountType.Customer }),
-            },
-          ]
-        );
-        return;
-      }
-
-      throw new Error();
-    } catch {
-      Alert.alert("Thông báo", "Đăng ký thất bại. Vui lòng thử lại");
-    } finally {
-      setIsLoading(false);
-    }
+    navigation.navigate("OTP", {
+      ...dataForm,
+      birthday: dayjs(dataForm.dayOfBirth).unix(),
+      role: EAccountType.Customer,
+    });
   });
 
   return (
@@ -132,6 +104,7 @@ export const SignUp: React.FC = () => {
                 value={value}
                 onConfirm={onChange}
                 placeholder="Birthday"
+                maximumDate={new Date()}
               />
             )}
           />

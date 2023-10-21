@@ -1,151 +1,165 @@
-import React from "react";
-import { Text, Input, Button } from "@rneui/themed";
+import React, { useEffect, useState } from "react";
+import { Text } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
+  Alert,
   Keyboard,
   StyleSheet,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Icon from "react-native-vector-icons/AntDesign";
 import { Image } from "expo-image";
 import { Images } from "@assets/images";
-import { Controller, useForm } from "react-hook-form";
 import { ButtonApp } from "@components/Button";
-import { useNavigation } from "@react-navigation/native";
-import { TAuthNavigation } from "@navigation/AuthNavigator.type";
-// import Toast from "react-native-toast-message";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { TAuthNavigation, TAuthRoute } from "@navigation/AuthNavigator.type";
 import { useStore } from "@store/index";
+import { CodeField, Cursor } from "react-native-confirmation-code-field";
+import {
+  postSendOtp,
+  postConfirmOtp,
+  postRegister,
+} from "@httpClient/authentication.api";
+import { StatusApiCall } from "@constants/global";
+import { useToast } from "react-native-toast-notifications";
+import { EAccountType } from "@enums";
+import { KeyboardAwareScrollView } from "@pietile-native-kit/keyboard-aware-scrollview";
 
 export const OTP = () => {
   const navigation = useNavigation<TAuthNavigation<"OTP">>();
+  const params = useRoute<TAuthRoute<"OTP">>().params || {};
+
+  const [otp, setOtp] = useState("");
   const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: { first: "", second: "", third: "", four: "" },
-  });
-  const {
-    authentication: { setIsLogin, isLogin },
+    authentication: { setIsLogin },
   } = useStore();
+  const toast = useToast();
+  const [time, setTime] = useState(0);
 
-  const onTurnBackSignIn = () => {
-    navigation.navigate("SignIn");
+  useEffect(() => {
+    sendOtp();
+  }, []);
+
+  useEffect(() => {
+    if (time > 0) {
+      setTimeout(() => setTime((preview) => preview - 1), 1000);
+      return;
+    }
+  }, [time]);
+
+  useEffect(() => {
+    if (otp.length === 6) {
+      Keyboard.dismiss();
+    }
+  }, [otp]);
+
+  const sendOtp = async () => {
+    setTime(60);
+    const { data } = await postSendOtp(params.email);
+    if (data.status === StatusApiCall.Success) {
+      toast.show("OTP has been sent successfully", { type: "success" });
+    }
   };
 
-  const showNotification = () => {
-    setTimeout(() => {
-      setIsLogin(true);
-    }, 2500);
+  const handleVerify = async () => {
+    try {
+      const { data } = await postConfirmOtp(params.email, otp);
+      if (data.status === StatusApiCall.Success) {
+        await handleRegister();
+        return;
+      }
+    } catch (error) {
+      toast.show(error?.data?.data ?? "Có lỗi xảy ra. Vui lòng thử lại", {
+        type: "error",
+      });
+    }
   };
+
+  const handleRegister = async () => {
+    try {
+      const { data } = await postRegister({ ...params, role: "CUSTOMER" });
+      if (data.status === StatusApiCall.Success) {
+        Alert.alert(
+          "Thông báo",
+          "Bạn đã đăng ký thành công. Vui lòng đăng nhập tài khoản",
+          [
+            {
+              text: "Đăng nhập",
+              onPress: () =>
+                navigation.replace("SignIn", { rule: EAccountType.Customer }),
+            },
+          ]
+        );
+        return Promise.resolve();
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
-        <View style={{ zIndex: 9999 }}>
-          {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
-        </View>
-        <View style={styles.headerContainer}>
-          <Icon
-            style={{ width: "30%" }}
-            name="arrowleft"
-            size={25}
-            color="black"
-            onPress={onTurnBackSignIn}
-          />
-
-          <Text h4 h4Style={styles.title}>
-            OTP Verification
-          </Text>
-        </View>
-        <View style={styles.imageWrapper}>
-          <Image source={Images.Otp} style={styles.image} />
-        </View>
-        <View style={styles.contentWrapper}>
-          <Text h4 h4Style={styles.titleContent}>
-            Enter OTP
-          </Text>
-          <Text h4 h4Style={styles.titleDes}>
-            An 4 digit code has been sent to {"\n"} +91 9995380399
-          </Text>
-        </View>
-        <View style={styles.arrayNumberWrapper}>
-          <Controller
-            control={control}
-            name="first"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.inputWrapper}>
-                <Input
-                  maxLength={1}
-                  keyboardType="numeric"
-                  inputStyle={styles.inputStyle}
-                  placeholder="0"
-                  value={value}
-                  onChangeText={onChange}
-                />
-              </View>
-            )}
-          />
-          <Controller
-            control={control}
-            name="second"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.inputWrapper}>
-                <Input
-                  maxLength={1}
-                  keyboardType="numeric"
-                  inputStyle={styles.inputStyle}
-                  placeholder="0"
-                  value={value}
-                  onChangeText={onChange}
-                />
-              </View>
-            )}
-          />
-          <Controller
-            control={control}
-            name="third"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.inputWrapper}>
-                <Input
-                  maxLength={1}
-                  keyboardType="numeric"
-                  inputStyle={styles.inputStyle}
-                  placeholder="0"
-                  value={value}
-                  onChangeText={onChange}
-                />
-              </View>
-            )}
-          />
-          <Controller
-            control={control}
-            name="four"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.inputWrapper}>
-                <Input
-                  maxLength={1}
-                  keyboardType="numeric"
-                  inputStyle={styles.inputStyle}
-                  placeholder="0"
-                  value={value}
-                  onChangeText={onChange}
-                />
-              </View>
-            )}
-          />
-        </View>
+        <KeyboardAwareScrollView>
+          <View style={styles.imageWrapper}>
+            <Image source={Images.Otp} style={styles.image} />
+          </View>
+          <View style={styles.contentWrapper}>
+            <Text h4 h4Style={styles.titleContent}>
+              Enter OTP
+            </Text>
+            <Text h4 h4Style={styles.titleDes}>
+              An 6 digit code has been sent to {"\n"} {params.email}
+            </Text>
+          </View>
+          <View style={{ marginTop: 24 }}>
+            <CodeField
+              value={otp}
+              onChangeText={(value) => setOtp(value)}
+              cellCount={6}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({ index, symbol, isFocused }) => (
+                <Text
+                  key={index}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderWidth: 1,
+                    borderColor: isFocused ? "orange" : "#ccc",
+                    borderRadius: 12,
+                    fontSize: 28,
+                    fontWeight: "800",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    paddingTop: 4,
+                  }}
+                >
+                  {symbol || (isFocused ? <Cursor /> : null)}
+                </Text>
+              )}
+            />
+          </View>
+        </KeyboardAwareScrollView>
         <View style={styles.footer}>
           <ButtonApp
-            onPress={showNotification}
+            onPress={handleVerify}
             title="Verify"
             buttonStyle={styles.buttonVertify}
             containerStyle={styles.buttonVertifyContainer}
             titleStyle={styles.titleButtonVertify}
+            disabled={otp.length !== 6}
           />
-          <Text h4 h4Style={styles.footerText}>
-            Resend OTP
-          </Text>
+          <TouchableOpacity onPress={sendOtp} disabled={!!time}>
+            <Text
+              h4
+              h4Style={[styles.footerText, { color: time ? "#ccc" : "orange" }]}
+            >
+              Resend OTP {time > 0 ? `(${time}s)` : ""}
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

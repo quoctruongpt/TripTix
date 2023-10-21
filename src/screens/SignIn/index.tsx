@@ -20,6 +20,7 @@ import { EAccountType } from "@enums";
 import { StatusApiCall, StorageKeys } from "@constants/global";
 import { storage } from "@storage/index";
 import { setAuthorization } from "@httpClient";
+import { useToast } from "react-native-toast-notifications";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -34,6 +35,7 @@ export const SignIn = () => {
     authentication: { setIsLogin, setUserInfo },
   } = useStore();
   const [isLoading, setIsLoading] = useState(false);
+  const toash = useToast();
 
   const {
     control,
@@ -50,6 +52,12 @@ export const SignIn = () => {
       setIsLoading(true);
       const { data } = await postLogin(dataForm.email, dataForm.password);
       if (data.status === StatusApiCall.Success) {
+        if (data.data.user.role !== rule) {
+          toash.show("Xin lỗi, tài khoản không đúng role đăng nhâp", {
+            type: "error",
+          });
+          return;
+        }
         await Promise.all([
           storage.setItem(StorageKeys.Token, data.data.token),
           storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),

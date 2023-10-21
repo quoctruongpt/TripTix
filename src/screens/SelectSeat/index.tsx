@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Header } from "@components/Header";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
@@ -11,22 +9,7 @@ import { Images } from "@assets/images";
 import { ButtonApp } from "@components/Button";
 import { useStore } from "@store/index";
 import { formatPrice } from "@utils/price";
-
-const Seats = [
-  { id: 1, name: "A1", avaiable: 0, selected: false },
-  { id: 2, name: "A2", avaiable: 0, selected: false },
-  { id: 3, name: "A3", avaiable: 0, selected: false },
-  { id: 4, name: "A4", avaiable: 0, selected: false },
-  { id: 5, name: "A5", avaiable: 1, selected: false, price: 1500 },
-  { id: 6, name: "A6", avaiable: 1, selected: false, price: 2000 },
-  { id: 7, name: "A7", avaiable: 1, selected: false, price: 4000 },
-  { id: 8, name: "A8", avaiable: 1, selected: false, price: 2000 },
-  { id: 9, name: "A9", avaiable: 1, selected: false, price: 2000 },
-  { id: 10, name: "A10", avaiable: 1, selected: false, price: 2000 },
-  { id: 11, name: "A11", avaiable: 1, selected: false, price: 3000 },
-  { id: 12, name: "A12", avaiable: 1, selected: false, price: 1000 },
-  { id: 13, name: "A13", avaiable: 1, selected: false, price: 1000 },
-];
+import { useToast } from "react-native-toast-notifications";
 
 export const SelectSeat: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SelectSeat">>();
@@ -36,6 +19,7 @@ export const SelectSeat: React.FC = () => {
   const [listSeat, setListSeat] = useState([]);
   const [listSelectSeat, setListSelectSeat] = useState([]);
   const [showError, setShowError] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     handleGenSeats();
@@ -55,10 +39,19 @@ export const SelectSeat: React.FC = () => {
 
   const onActiveSeat = (seat) => {
     const seatId = seat.id;
-    const newList = listSelectSeat.includes(seatId)
-      ? listSelectSeat.filter((item) => item !== seatId)
-      : [...listSelectSeat, seatId];
-    setListSelectSeat(newList);
+    if (listSelectSeat.includes(seatId)) {
+      setListSelectSeat(listSelectSeat.filter((item) => item !== seatId));
+      return;
+    }
+
+    if (listSelectSeat.length >= 5) {
+      toast.show("You can only book a maximum of 5 tickets", {
+        type: "danger",
+      });
+      return;
+    }
+
+    setListSelectSeat([...listSelectSeat, seatId]);
   };
 
   const onDepartureInfo = () => {

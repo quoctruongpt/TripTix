@@ -7,6 +7,9 @@ const routes = {
   authentication: {
     login: url.baseUrl + "/usersystem/login",
     register: url.baseUrl + "/usersystem/register",
+    getUserInfo: url.baseUrl + "/usersystem/detail",
+    sendOtp: url.baseUrl + "/otp/email/send",
+    confirmOtp: url.baseUrl + "/otp/valid",
   },
   trip: {
     getRouteInfo: url.baseUrl + "/route",

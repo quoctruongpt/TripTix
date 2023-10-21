@@ -23,7 +23,7 @@ const errorInterceptor = async (error: any) => {
       break;
   }
 
-  return Promise.reject(error);
+  return Promise.reject(error.response);
 };
 
 // Lưu token

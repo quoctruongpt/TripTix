@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { Button, Text } from "@rneui/themed";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Images } from "@assets/images";
 import { TAuthNavigation } from "@navigation/AuthNavigator.type";
@@ -30,15 +30,18 @@ export const Role: React.FC = () => {
           width: "100%",
         }}
       >
-        <View
+        <TouchableOpacity
+          onPress={() => handleChooseRole(EAccountType.Driver)}
           style={{
             alignItems: "center",
-            paddingVertical: 60,
-            paddingHorizontal: 25,
             backgroundColor: "white",
             borderWidth: 2,
             borderColor: "black",
             borderRadius: 45,
+            flex: 1,
+            height: 200,
+            justifyContent: "center",
+            marginRight: 16,
           }}
         >
           <View
@@ -50,27 +53,21 @@ export const Role: React.FC = () => {
           >
             <Image source={Images.Driver} style={styles.imageDriver} />
           </View>
-          <Button
-            title="Driver"
-            buttonStyle={{
-              marginTop: 10,
-              backgroundColor: "transparent",
-              paddingHorizontal: 20,
-            }}
-            titleStyle={{ color: "black" }}
-            onPress={() => handleChooseRole(EAccountType.Driver)}
-          />
-        </View>
+          <Text style={{ fontSize: 18, fontWeight: "700" }}>Driver</Text>
+        </TouchableOpacity>
 
-        <View
+        <TouchableOpacity
+          onPress={() => handleChooseRole(EAccountType.Customer)}
           style={{
             alignItems: "center",
-            paddingVertical: 60,
-            paddingHorizontal: 17,
             backgroundColor: "white",
             borderWidth: 2,
             borderColor: "black",
             borderRadius: 45,
+            flex: 1,
+            height: 200,
+            justifyContent: "center",
+            marginLeft: 16,
           }}
         >
           <View
@@ -82,17 +79,8 @@ export const Role: React.FC = () => {
           >
             <Image source={Images.Customer} style={styles.imageCustomer} />
           </View>
-          <Button
-            title="Customer"
-            buttonStyle={{
-              marginTop: 10,
-              backgroundColor: "transparent",
-              paddingHorizontal: 20,
-            }}
-            titleStyle={{ color: "black" }}
-            onPress={() => handleChooseRole(EAccountType.Customer)}
-          />
-        </View>
+          <Text style={{ fontSize: 18, fontWeight: "700" }}>Customer</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

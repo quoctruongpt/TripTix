@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 2.22,
 
     elevation: 3,
+    marginBottom: 50,
   },
   routeWrap: {
     flexDirection: "row",

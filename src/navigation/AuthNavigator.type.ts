@@ -8,7 +8,16 @@ type TAuthStackParamList = {
   Role: undefined;
   LoginOrRegisterForm: { rule: EAccountType };
   SignIn: { rule: EAccountType };
-  OTP: undefined;
+  OTP: {
+    fullName: string;
+    address: string;
+    birthday: number;
+    email: string;
+    phone: string;
+    gender: string;
+    password: string;
+    role: string;
+  };
   SignUp: undefined;
 };
 

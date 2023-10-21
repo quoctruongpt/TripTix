@@ -30,7 +30,7 @@ export default function AuthNavigator() {
       <Stack.Screen
         name={"OTP"}
         component={OTP}
-        options={{ headerShown: false }}
+        options={{ title: "Send OTP" }}
       />
       <Stack.Screen
         name={"LoginOrRegisterForm"}

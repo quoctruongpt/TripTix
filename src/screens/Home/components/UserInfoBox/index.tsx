@@ -1,13 +1,14 @@
 import { Avatar, Text } from "@rneui/themed";
 import React from "react";
-import { View } from "react-native";
+import { ImageBackground, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const UserInfoBox: React.FC<{ name: string }> = ({ name }) => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <View
+    <ImageBackground
+      source={require("@assets/images/background.jpg")}
       style={{
         backgroundColor: "red",
         flexDirection: "row",
@@ -19,6 +20,7 @@ export const UserInfoBox: React.FC<{ name: string }> = ({ name }) => {
         zIndex: 100,
       }}
     >
+      {/* <View> */}
       <Avatar
         source={require("@assets/images/bus/bus.png")}
         rounded
@@ -31,6 +33,7 @@ export const UserInfoBox: React.FC<{ name: string }> = ({ name }) => {
           {name}
         </Text>
       </View>
-    </View>
+      {/* </View> */}
+    </ImageBackground>
   );
 };

@@ -27,7 +27,7 @@ export const TicketInformation: React.FC = () => {
   const toast = useToast();
   const {
     route: { routeInfo, userInformation, seatSelected },
-    authentication: { userInfo },
+    authentication: { userInfo, synchUserInfo },
   } = useStore();
   const [confirmCancel, setConfirmCancel] = useState(false);
 
@@ -57,6 +57,7 @@ export const TicketInformation: React.FC = () => {
       const { data } = await postBookTicket(params);
 
       if (data.status === StatusApiCall.Success) {
+        synchUserInfo();
         Alert.alert(
           "Thành công",
           "Quý khách đã đặt vé thành công. Cảm ơn đã sử dụng dịch vụ đặt vé xe của TripTix",
