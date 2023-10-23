@@ -49,4 +49,25 @@ const PriceTypeArray = [
   },
 ];
 
-export { CarTypes, CarTypeArray, TimeFilterArray, PriceTypeArray, PriceTypeId };
+const BookingStatusId = {
+  Paid: "PAID",
+  Cancel: "CANCEL",
+  Run: "RUN",
+  Finish: "FINISH",
+};
+
+const CompletedStatus = [BookingStatusId.Finish, BookingStatusId.Cancel];
+const UnfinishedStatus = [BookingStatusId.Paid, BookingStatusId.Run];
+const CanCancelStatus = [BookingStatusId.Paid];
+
+export {
+  CarTypes,
+  CarTypeArray,
+  TimeFilterArray,
+  PriceTypeArray,
+  PriceTypeId,
+  BookingStatusId,
+  CompletedStatus,
+  UnfinishedStatus,
+  CanCancelStatus,
+};

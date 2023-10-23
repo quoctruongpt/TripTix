@@ -111,8 +111,6 @@ export const SelectRoute: React.FC = () => {
 
       throw new Error();
     } catch (er) {
-      console.log(er);
-
       toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
         type: "danger",
         placement: "top",

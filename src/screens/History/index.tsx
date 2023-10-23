@@ -1,13 +1,14 @@
 import { Button } from "@rneui/themed";
-import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { FlatList, RefreshControl, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, ScrollView } from "react-native";
-import { Header } from "../../components/Header";
+import { StyleSheet } from "react-native";
 import TabsComponent from "@components/Tabs";
 import TichketHistory from "./components/TichketHistory";
-import PerpareDepart from "./components/PerpareDepart";
 import dayjs from "dayjs";
+import { StatusApiCall } from "@constants/global";
+import { getBookings } from "@httpClient/trip.api";
+import { useStore } from "@store/index";
 
 const Tickets = [
   // staus
@@ -89,44 +90,76 @@ const Tickets = [
 
 export const History: React.FC = () => {
   const [listTicket, setListTicket] = useState(Tickets);
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
+  const tabRef = useRef<FlatList>();
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    authentication: { userInfo },
+  } = useStore();
+
+  useEffect(() => {
+    getHistory();
+  }, []);
 
   const handleTabPress = (index) => {
     setActiveTab(index);
+    tabRef.current.scrollToIndex({ animated: true, index });
+  };
+
+  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+    if (viewableItems.length > 0) {
+      const focusedIndex = viewableItems[0].index;
+      setActiveTab(focusedIndex);
+    }
+  }, []);
+
+  const getHistory = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await getBookings(userInfo.idUserSystem);
+      if (data.status === StatusApiCall.Success) {
+        setListTicket(data.data);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="History" color="red" colorText="white" />
-
-      <View>
+      <View style={{ flex: 1 }}>
         <TabsComponent
           tabs={["Lịch sử vé", "Sắp khởi hành"]}
-          initialTab={1}
+          initialTab={activeTab}
           onTabPress={handleTabPress}
         />
-        <ScrollView
-          style={{
-            padding: 10,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {activeTab === 0 && (
-            <TichketHistory listTicket={listTicket} type="history" />
+        <FlatList
+          ref={tabRef}
+          horizontal
+          data={["history", "perpare"]}
+          keyExtractor={(item, index) => item}
+          renderItem={({ item }) => (
+            <TichketHistory
+              listTicket={listTicket}
+              type={item}
+              onRefresh={getHistory}
+            />
           )}
-          {activeTab === 1 && (
-            <TichketHistory listTicket={listTicket} type="perpare" />
-          )}
-        </ScrollView>
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          initialScrollIndex={activeTab}
+          onViewableItemsChanged={onViewableItemsChanged}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={getHistory} />
+          }
+        />
       </View>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    flex: 1,
     padding: 0,
   },
 });

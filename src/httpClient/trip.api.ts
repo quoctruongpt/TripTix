@@ -29,4 +29,19 @@ const postBookTicket = (data: {
   seatName: string[];
 }) => httpClient.post(routes.trip.postBookTicket, data);
 
-export { getTrips, getRouteInfo, postBookTicket };
+const getBookings = (idCustomer: number) =>
+  httpClient.get(`${routes.trip.getBooking}?idCustomer=${idCustomer}`);
+
+const putCancelBooking = (idCustomer: number, codeBooking: string) =>
+  httpClient.put(routes.trip.cancelBooking, {
+    idCustomer,
+    idBooking: codeBooking,
+  });
+
+export {
+  getTrips,
+  getRouteInfo,
+  postBookTicket,
+  getBookings,
+  putCancelBooking,
+};

@@ -15,6 +15,8 @@ const routes = {
     getRouteInfo: url.baseUrl + "/route",
     getTrip: url.baseUrl + "/trips",
     postBookTicket: url.baseUrl + "/bookings",
+    getBooking: url.baseUrl + "/bookings",
+    cancelBooking: url.baseUrl + "/bookings/cancel",
   },
 };
 

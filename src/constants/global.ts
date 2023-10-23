@@ -1,3 +1,5 @@
+import { Dimensions } from "react-native";
+
 const StatusApiCall = {
   Success: true,
   Fail: false,
@@ -8,4 +10,6 @@ const StorageKeys = {
   userInfo: "user_info",
 };
 
-export { StatusApiCall, StorageKeys };
+const DeviceSize = Dimensions.get("screen");
+
+export { StatusApiCall, StorageKeys, DeviceSize };

@@ -1,11 +1,13 @@
 import { StorageKeys } from "@constants/global";
+import { deleteDataUser } from "@storage/common";
 import { storage } from "@storage/index";
 
 const HttpCodes = {
   Auth: 401,
+  Token: 403,
 };
 
-const onFulfill = (response: any) => {
+const onFulfill = async (response: any) => {
   return response;
 };
 
@@ -16,7 +18,8 @@ const errorInterceptor = async (error: any) => {
 
   switch (error.response.status) {
     case HttpCodes.Auth:
-      await storage.removeItem("token");
+    case HttpCodes.Token:
+      await deleteDataUser();
       break;
 
     default:
