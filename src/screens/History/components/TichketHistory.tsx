@@ -5,6 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  FlatList,
+  ImageBackground,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFA from "react-native-vector-icons/MaterialIcons";
@@ -23,6 +25,7 @@ import { putCancelBooking } from "@httpClient/trip.api";
 import { useStore } from "@store/index";
 import { useToast } from "react-native-toast-notifications";
 import { formatPrice } from "@utils/price";
+import { PopupCancel } from "./PopupCancel";
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
@@ -45,6 +48,7 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
   const [data, setData] = useState([]);
   const [detail, setDetail] = useState<Record<string, any> | null>(null);
   const [canceling, setCanceling] = useState<string | null>(null);
+  const [cancel, setCancel] = useState(null);
   const {
     authentication: { userInfo, synchUserInfo },
   } = useStore();
@@ -69,6 +73,7 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
 
   const handleCancelBooking = async (booking: any) => {
     try {
+      setCancel(null);
       setCanceling(booking.bookingCode);
       const now = dayjs().unix();
       const diff = dayjs(booking.tripDTO.startTimee * 1000).diff(
@@ -78,7 +83,7 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
 
       if (diff < 30) {
         toast.show(
-          "Xin lỗi, bạn không thể huỷ chuyến đi này do thời gian đến khi xe chạy chỉ còn 30 phút",
+          "Xin lỗi, bạn không thể huỷ chuyến đi này do thời điểm đến khi xe chạy chỉ còn 30 phút",
           { type: "error" }
         );
         return;
@@ -96,37 +101,6 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
     } finally {
       setCanceling(null);
     }
-  };
-
-  const handlePressCancel = (ticket: any) => {
-    const now = dayjs().unix();
-    const diff = dayjs(ticket.tripDTO.startTimee * 1000).diff(
-      now * 1000,
-      "days"
-    );
-
-    const percent = diff < 1 ? 0.85 : 0.95;
-    const refundedAmount = ticket.totalPrice * percent;
-    Alert.alert(
-      "Huỷ chuyến đi",
-      `Bạn có chắc chắn muốn huỷ chuyến đi từ (${ticket.pickUpPoint}) đến (${
-        ticket.dropOffPoint
-      })?\n\nSố tiền được hoàn lại: ${formatPrice(refundedAmount)} (${
-        percent * 100
-      }%)`,
-      [
-        {
-          text: "Tôi chắc chắn",
-          onPress: () => handleCancelBooking(ticket),
-        },
-        {
-          text: "Huỷ",
-          onPress: () => {},
-          isPreferred: true,
-          style: "cancel",
-        },
-      ]
-    );
   };
 
   return (
@@ -205,7 +179,7 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
                     />
                   </TouchableOpacity>
                   {CanCancelStatus.includes(ticket.bookingStatus) && (
-                    <TouchableOpacity onPress={() => handlePressCancel(ticket)}>
+                    <TouchableOpacity onPress={() => setCancel(ticket)}>
                       {canceling !== ticket.bookingCode && (
                         <Icon
                           name="book-cancel-outline"
@@ -223,9 +197,16 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
             ))}
         </ScrollView>
       )}
-
       {!!detail && (
         <TicketDetail booking={detail} show onClose={() => setDetail(null)} />
+      )}
+      {!!cancel && (
+        <PopupCancel
+          ticket={cancel}
+          show
+          onConfirm={() => handleCancelBooking(cancel)}
+          onClose={() => setCancel(null)}
+        />
       )}
     </View>
   );

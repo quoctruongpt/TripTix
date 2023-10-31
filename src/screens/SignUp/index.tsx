@@ -21,13 +21,25 @@ import { StatusApiCall } from "@constants/global";
 LogBox.ignoreAllLogs();
 
 const schema = yup.object().shape({
-  fullName: yup.string().required("require").min(5, "min 5"),
-  address: yup.string().required("require"),
-  dateOfBirth: yup.date().required("require"),
-  email: yup.string().required("require").email("email not valid"),
-  phone: yup.string().required("require").min(10, "min 10"),
-  gender: yup.string().required("require"),
-  password: yup.string().required("require").min(6, "min 6"),
+  fullName: yup
+    .string()
+    .required("Họ tên tối thiểu 5 ký tự")
+    .min(5, "Họ tên tối thiểu 5 ký tự"),
+  address: yup.string().required("Vui lòng nhập địa chỉ"),
+  dateOfBirth: yup.date().required("Vui lòng chọn ngày sinh"),
+  email: yup
+    .string()
+    .required("vui lòng nhập email")
+    .email("Địa chỉ email không hợp lệ"),
+  phone: yup
+    .string()
+    .required("Vui lòng nhập số điện thoại")
+    .min(10, "Số điện thoại tối thiểu 10 ký tự"),
+  gender: yup.string().required("Vui lòng chọn giới tinh"),
+  password: yup
+    .string()
+    .required("Vui lòng nhập mật khẩu")
+    .min(6, "Mật khẩu tối thiểu 6 ký tự"),
 });
 
 export const SignUp: React.FC = () => {

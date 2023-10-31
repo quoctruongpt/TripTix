@@ -7,12 +7,13 @@ import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { StyleSheet } from "react-native";
 import { useStore } from "@store/index";
 import { deleteDataUser } from "@storage/common";
-export const Content: React.FC = () => {
+import { observer } from "mobx-react-lite";
+export const Content: React.FC = observer(() => {
   const navigation = useNavigation<TAppNavigation<"Home">>();
   const {
-    authentication: { setIsLogin, isLogin },
+    authentication: { setIsLogin, userInfo },
   } = useStore();
-
+  console.log(userInfo);
   const onClickSettings = () => {
     navigation.navigate("Settings");
   };
@@ -44,10 +45,10 @@ export const Content: React.FC = () => {
             onPress={onClickInfo}
             style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}
           >
-            Hai Hung
+            {userInfo.fullName}
           </Text>
           <Text onPress={onClickInfo} style={{ color: "#000" }}>
-            0979221694
+            {userInfo.phone}
           </Text>
         </View>
         <Icon
@@ -163,7 +164,7 @@ export const Content: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   listProfileWrapper: {

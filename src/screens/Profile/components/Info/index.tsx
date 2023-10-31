@@ -1,372 +1,253 @@
 import { ButtonApp } from "@components/Button";
-import { Header } from "@components/Header";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text } from "@rneui/themed";
-import { deleteDataUser } from "@storage/common";
+import { Input } from "@rneui/themed";
+import { SelectGender } from "@screens/SignUp/components/SelectGender";
 import { useStore } from "@store/index";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   View,
   TouchableWithoutFeedback,
-  Button,
-  Modal,
   StyleSheet,
-  TextInput,
+  Keyboard,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/AntDesign";
+import { DatePicker } from "@components/DatePicker";
+import { putUpdateUserInfo } from "@httpClient/authentication.api";
+import dayjs from "dayjs";
+import { StatusApiCall } from "@constants/global";
+import { useToast } from "react-native-toast-notifications";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object().shape({
+  fullName: yup
+    .string()
+    .required("Họ tên tối thiểu 5 ký tự")
+    .min(5, "Họ tên tối thiểu 5 ký tự"),
+  address: yup.string().required("Vui lòng nhập địa chỉ"),
+  birthday: yup.date().required("Vui lòng chọn ngày sinh"),
+  email: yup
+    .string()
+    .required("vui lòng nhập email")
+    .email("Địa chỉ email không hợp lệ"),
+  phone: yup
+    .string()
+    .required("Vui lòng nhập số điện thoại")
+    .min(10, "Số điện thoại tối thiểu 10 ký tự"),
+  gender: yup.string().required("Vui lòng chọn giới tinh"),
+});
 
 export const Info: React.FC = () => {
   const {
-    authentication: { setIsLogin, userInfo },
+    authentication: { synchUserInfo, userInfo },
   } = useStore();
   const [isUpdate, setIsUpdate] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [valueInputModal, setValueInputModal] = useState("");
-  const [keyInputModal, setKeyInputModal] = useState(null);
-  const [userInformation, setUserInformation] = useState({
-    fullName: userInfo.fullName,
-    phone: userInfo.phone,
-    email: userInfo.email,
-    birthday: userInfo.birthday,
-    gender: userInfo.gender,
-    job: userInfo.job || "",
+  const toast = useToast();
+  const {
+    handleSubmit,
+    control,
+    formState: { isValid, isDirty, errors },
+    reset,
+  } = useForm({
+    defaultValues: {
+      fullName: userInfo.fullName,
+      phone: userInfo.phone,
+      address: userInfo.address,
+      birthday: new Date(userInfo.birthday * 1000),
+      gender: userInfo.gender,
+      email: userInfo.email,
+    },
+    resolver: yupResolver(schema),
+    mode: "onChange",
   });
 
-  const onClickUpdate = () => {
-    setIsUpdate(true);
-  };
+  const onClickUpdate = async (dataForm: any) => {
+    try {
+      setIsUpdate(true);
+      const { data } = await putUpdateUserInfo({
+        idUserSystem: userInfo.idUserSystem,
+        phone: dataForm.phone,
+        fullName: dataForm.fullName,
+        address: dataForm.address,
+        birthdayTimeStamp: dayjs(dataForm.birthday).unix(),
+        gender: dataForm.gender,
+        email: dataForm.email,
+      });
 
-  const onClickSave = () => {
-    setIsUpdate(false);
-  };
+      if (data.status === StatusApiCall.Success) {
+        await synchUserInfo();
+        toast.show("Cập nhật thông tin thành công", { type: "success" });
+        reset(dataForm);
+        return;
+      }
 
-  const onClickLogout = async () => {
-    await deleteDataUser();
-    setIsLogin(false);
+      throw new Error();
+    } catch {
+      toast.show("Cập nhật thông tin thất bại", { type: "error" });
+    } finally {
+      setIsUpdate(false);
+    }
   };
-
-  const toggleModal = () => {
-    setModalVisible(true);
-  };
-
-  const handleInputChange = (value) => {
-    setValueInputModal(value);
-  };
-  const handleSave = () => {
-    setUserInformation({
-      ...userInformation,
-      [keyInputModal]: valueInputModal,
-    });
-    setValueInputModal(null);
-    setKeyInputModal(null);
-    setModalVisible(false);
-    setModalVisible(false);
-  };
-
-  const ModalContent = (
-    <View style={{ backgroundColor: "white", padding: 20 }}>
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
-          paddingHorizontal: 8,
-          borderRadius: 5,
-        }}
-        value={valueInputModal}
-        onChangeText={handleInputChange}
-      />
-      <Button title="Save" onPress={handleSave} />
-    </View>
-  );
 
   return (
-    <SafeAreaView
-      style={{
-        marginTop: 0,
-        backgroundColor: "white",
-        display: "flex",
-        height: "100%",
-        width: "100%",
-        flexDirection: "column",
-        padding: 0,
-      }}
-    >
-      <View
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView
         style={{
+          marginTop: 0,
           backgroundColor: "white",
-          justifyContent: "center",
-          alignItems: "center",
-          paddingHorizontal: 10,
           display: "flex",
+          height: "100%",
+          width: "100%",
           flexDirection: "column",
+          padding: 0,
         }}
       >
         <View
           style={{
-            width: "100%",
-            display: "flex",
+            backgroundColor: "white",
             justifyContent: "center",
             alignItems: "center",
+            paddingHorizontal: 10,
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <Avatar
-            source={require("@assets/images/bus/bus.png")}
-            rounded
-            size={60}
-            containerStyle={{
-              backgroundColor: "#ccc",
-              position: "relative",
+          <View
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
+          >
+            <Avatar
+              source={require("@assets/images/bus/bus.png")}
+              rounded
+              size={60}
+              containerStyle={{
+                backgroundColor: "#ccc",
+                position: "relative",
+              }}
+            />
+          </View>
+        </View>
+        <View>
+          <Controller
+            control={control}
+            name="fullName"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                label="Họ tên"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors.fullName?.message}
+              />
+            )}
           />
-          {isUpdate && (
-            <Icon
-              name="camera"
-              style={{
-                position: "absolute",
-                bottom: -10,
-                right: 140,
-                padding: 5,
-                backgroundColor: "white",
-                borderRadius: 25,
-                elevation: 20,
-                shadowColor: "#52006A",
-              }}
-              size={20}
-            />
-          )}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                label="Email"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors.email?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                label="Số điện thoại"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors.phone?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="birthday"
+            render={({ field: { value, onChange } }) => (
+              <DatePicker
+                value={value}
+                onConfirm={onChange}
+                placeholder="Birthday"
+                maximumDate={new Date()}
+                label="Ngày sinh"
+                renderButton={(title, onPress) => (
+                  <TouchableOpacity
+                    onPress={onPress}
+                    style={{
+                      paddingVertical: 12,
+                      marginHorizontal: 12,
+                      borderBottomWidth: 2,
+                      borderColor: "#ccc",
+                      marginBottom: 20,
+                    }}
+                  >
+                    <Text style={{ fontSize: 18 }}>{title}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field: { value, onChange } }) => (
+              <SelectGender
+                value={value}
+                onChange={onChange}
+                label="Giới tính"
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="address"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                label="Địa chỉ"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors.address?.message}
+              />
+            )}
+          />
         </View>
         <View
           style={{
+            flex: 1,
             width: "100%",
-            marginTop: 20,
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: "column",
+            justifyContent: "flex-end",
             alignItems: "center",
+            padding: 10,
           }}
         >
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            Full name <Text style={{ color: "red" }}>*</Text>
-          </Text>
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            {userInfo.fullName}{" "}
-            {isUpdate && (
-              <Icon
-                name="edit"
-                size={16}
-                color="black"
-                onPress={() => {
-                  toggleModal();
-                  setKeyInputModal("fullName");
-                  setValueInputModal(userInfo.fullName);
-                }}
-              />
-            )}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            marginTop: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#000", fontSize: 14 }}>Phone</Text>
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            {userInfo.phone}{" "}
-            {isUpdate && (
-              <Icon
-                name="edit"
-                size={16}
-                color="black"
-                onPress={() => {
-                  toggleModal();
-                  setKeyInputModal("phone");
-                  setValueInputModal(userInfo.phone);
-                }}
-              />
-            )}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            marginTop: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#000", fontSize: 14 }}>Email</Text>
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            {userInfo.email}{" "}
-            {isUpdate && (
-              <Icon
-                name="edit"
-                size={16}
-                color="black"
-                onPress={() => {
-                  toggleModal();
-                  setKeyInputModal("email");
-                  setValueInputModal(userInfo.email);
-                }}
-              />
-            )}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            marginTop: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#000", fontSize: 14 }}>Birthday</Text>
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            {userInfo.birthday}{" "}
-            {isUpdate && (
-              <Icon
-                name="edit"
-                size={16}
-                color="black"
-                onPress={() => {
-                  toggleModal();
-                  setKeyInputModal("birthday");
-                  setValueInputModal(userInfo.birthday);
-                }}
-              />
-            )}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            marginTop: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#000", fontSize: 14 }}>Gender</Text>
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            {userInfo.gender}{" "}
-            {isUpdate && (
-              <Icon
-                name="edit"
-                size={16}
-                color="black"
-                onPress={() => {
-                  toggleModal();
-                  setKeyInputModal("gender");
-                  setValueInputModal(userInfo.gender);
-                }}
-              />
-            )}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            marginTop: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#000", fontSize: 14 }}>Job</Text>
-          <Text style={{ color: "#000", fontSize: 14 }}>
-            {userInfo.job || "unknow"}{" "}
-            {isUpdate && (
-              <Icon
-                name="edit"
-                size={16}
-                color="black"
-                onPress={() => {
-                  toggleModal();
-                  setKeyInputModal("job");
-                  setValueInputModal(userInfo.job);
-                }}
-              />
-            )}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          padding: 10,
-        }}
-      >
-        <View style={{ width: "100%", marginBottom: 10 }}>
-          {isUpdate ? (
-            <ButtonApp
-              title="Save"
-              onPress={onClickSave}
-              buttonStyle={{
-                backgroundColor: "red",
-                width: "100%",
-              }}
-            />
-          ) : (
+          <View style={{ width: "100%", marginBottom: 10 }}>
             <ButtonApp
               title="Update"
-              onPress={onClickUpdate}
+              onPress={handleSubmit(onClickUpdate)}
+              loading={isUpdate}
+              disabled={isUpdate || !isValid || !isDirty}
               buttonStyle={{
                 backgroundColor: "red",
                 width: "100%",
               }}
             />
-          )}
+          </View>
         </View>
-
-        <View
-          style={{
-            width: "100%",
-            borderColor: "red",
-            borderWidth: 1,
-            borderRadius: 20,
-          }}
-        >
-          <ButtonApp
-            titleStyle={{ color: "red" }}
-            title="Logout"
-            onPress={onClickLogout}
-            buttonStyle={{
-              backgroundColor: "white",
-              width: "100%",
-            }}
-          />
-        </View>
-      </View>
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={modalVisible}
-        onRequestClose={toggleModal}
-      >
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
-          {ModalContent}
-        </View>
-      </Modal>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

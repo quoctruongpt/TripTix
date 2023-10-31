@@ -10,6 +10,7 @@ const routes = {
     getUserInfo: url.baseUrl + "/usersystem/detail",
     sendOtp: url.baseUrl + "/otp/email/send",
     confirmOtp: url.baseUrl + "/otp/valid",
+    updateUserInfo: url.baseUrl + "/usersystem",
   },
   trip: {
     getRouteInfo: url.baseUrl + "/route",

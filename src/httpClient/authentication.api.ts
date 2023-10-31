@@ -23,4 +23,23 @@ const postConfirmOtp = (email: string, otp: string) => {
   );
 };
 
-export { postLogin, postRegister, getUserInfo, postSendOtp, postConfirmOtp };
+const putUpdateUserInfo = (data: {
+  idUserSystem: number;
+  phone: string;
+  fullName: string;
+  address: string;
+  birthdayTimeStamp: number;
+  gender: string;
+  email: string;
+  citizenIdentityCard?: string;
+  assignedRegions?: string;
+}) => httpClient.put(routes.authentication.updateUserInfo, data);
+
+export {
+  postLogin,
+  postRegister,
+  getUserInfo,
+  postSendOtp,
+  postConfirmOtp,
+  putUpdateUserInfo,
+};

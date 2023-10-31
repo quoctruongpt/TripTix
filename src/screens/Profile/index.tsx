@@ -8,7 +8,6 @@ import { Header } from "@components/Header";
 export const Profile: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Profile" color="red" colorText="white" />
       <ScrollView style={{ flex: 1, padding: 0 }}>
         <Content />
         <Footer />
