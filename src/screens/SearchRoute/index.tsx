@@ -13,7 +13,31 @@ import { Keys } from "@constants/storage";
 import { getRouteInfo } from "@httpClient/trip.api";
 import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
-import { Banner } from "@screens/Home/components/Banner";
+import { Banner } from "./components/Banner";
+
+const banners = [
+  {
+    from: { id: "1", title: "Thành phố Hà Nội" },
+    to: {
+      id: "33",
+      title: "Hưng Yên",
+    },
+  },
+  {
+    from: { id: "52", title: "Tỉnh Bình Định" },
+    to: {
+      id: "48",
+      title: "Thành phố Đà Nẵng",
+    },
+  },
+  {
+    from: { id: "75", title: "Tỉnh Đồng Nai" },
+    to: {
+      id: "87",
+      title: "Tỉnh Đồng Tháp",
+    },
+  },
+];
 
 export const SearchRoute: React.FC = () => {
   const toast = useToast();
@@ -27,6 +51,7 @@ export const SearchRoute: React.FC = () => {
 
   const [provinces, setProvinces] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  console.log(provinces);
 
   useEffect(() => {
     getProvinces();
@@ -86,6 +111,11 @@ export const SearchRoute: React.FC = () => {
     }
   });
 
+  const handleChooseBanner = (fromId: string, toId: string) => {
+    setValue("from", fromId);
+    setValue("to", toId);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrap}>
@@ -130,7 +160,9 @@ export const SearchRoute: React.FC = () => {
         />
       </View>
       <ScrollView>
-        <Banner />
+        {banners.map((item, index) => (
+          <Banner from={item.from} to={item.to} onPress={handleChooseBanner} />
+        ))}
       </ScrollView>
     </View>
   );

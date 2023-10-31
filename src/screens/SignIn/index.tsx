@@ -19,7 +19,6 @@ import { postLogin } from "@httpClient/authentication.api";
 import { EAccountType } from "@enums";
 import { StatusApiCall, StorageKeys } from "@constants/global";
 import { storage } from "@storage/index";
-import { setAuthorization } from "@httpClient";
 import { useToast } from "react-native-toast-notifications";
 
 const schema = yup.object().shape({
@@ -29,8 +28,6 @@ const schema = yup.object().shape({
 
 export const SignIn = () => {
   const navigation = useNavigation<TAuthNavigation<"SignIn">>();
-  const { rule } = useRoute<TAuthRoute<"LoginOrRegisterForm">>().params;
-  const hideButtonSignUp = rule === EAccountType.Driver;
   const {
     authentication: { setIsLogin, setUserInfo },
   } = useStore();
@@ -52,12 +49,6 @@ export const SignIn = () => {
       setIsLoading(true);
       const { data } = await postLogin(dataForm.email, dataForm.password);
       if (data.status === StatusApiCall.Success) {
-        if (data.data.user.role !== rule) {
-          toash.show("Xin lỗi, tài khoản không đúng role đăng nhâp", {
-            type: "error",
-          });
-          return;
-        }
         await Promise.all([
           storage.setItem(StorageKeys.Token, data.data.token),
           storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),
@@ -125,17 +116,15 @@ export const SignIn = () => {
           />
         </View>
         <View>
-          {!hideButtonSignUp && (
-            <View style={styles.footer}>
-              <Text>Not Registered yet?</Text>
-              <Button
-                title="Create an Account"
-                type="clear"
-                titleStyle={styles.btnSignUp}
-                onPress={handleSignUp}
-              />
-            </View>
-          )}
+          <View style={styles.footer}>
+            <Text>Not Registered yet?</Text>
+            <Button
+              title="Create an Account"
+              type="clear"
+              titleStyle={styles.btnSignUp}
+              onPress={handleSignUp}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

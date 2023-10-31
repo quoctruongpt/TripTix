@@ -36,6 +36,9 @@ export const SelectRoute: React.FC = () => {
   const toast = useToast();
   const {
     route: { setRouteInfo },
+    authentication: {
+      userInfo: { coins },
+    },
   } = useStore();
 
   const navigation = useNavigation<TAppNavigation<"SelectRoute">>();
@@ -96,13 +99,15 @@ export const SelectRoute: React.FC = () => {
         const routeData = data.data.map((item, index) => {
           return {
             ...item,
-            listtripStopDTO: item.listtripStopDTO.map((stopDTO, index) => ({
-              id: stopDTO.idStation,
-              title: stopDTO.stationDTO.name,
-              type: stopDTO.type,
-              time: dayjs(stopDTO.timeComes).format("HH:mm"),
-              icon: getIconStep(item.listtripStopDTO.length, index),
-            })),
+            listtripStopDTO: item.listtripStopDTO.map((stopDTO, index) => {
+              return {
+                id: stopDTO.idStation,
+                title: stopDTO.stationDTO.name,
+                type: stopDTO.type,
+                time: dayjs.unix(stopDTO.timeComess).utc().format("HH:mm"),
+                icon: getIconStep(item.listtripStopDTO.length, index),
+              };
+            }),
           };
         });
         setDataRoute(routeData);
@@ -195,6 +200,7 @@ export const SelectRoute: React.FC = () => {
                 padding: 10,
                 borderTopWidth: 1,
                 borderColor: "gray",
+                backgroundColor: coins >= d.fare ? "#fff" : "#fff7f5",
               }}
             >
               <View
@@ -261,6 +267,32 @@ export const SelectRoute: React.FC = () => {
                 {d.busDTO.description}
               </Text>
             </View>
+            {d.fare > coins && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 16,
+                }}
+              >
+                <Text style={{ color: "red" }}>
+                  Bạn còn thiếu {formatPrice(d.fare - coins)}
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    marginLeft: 4,
+                    backgroundColor: "orange",
+                    padding: 4,
+                    borderRadius: 4,
+                  }}
+                  onPress={() => navigation.navigate("TopUp")}
+                >
+                  <Text style={{ fontWeight: "700", color: "#fff" }}>
+                    Nạp tiền
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </TouchableOpacity>
         ))}
 

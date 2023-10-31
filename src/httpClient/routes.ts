@@ -19,6 +19,9 @@ const routes = {
     getBooking: url.baseUrl + "/bookings",
     cancelBooking: url.baseUrl + "/bookings/cancel",
   },
+  payment: {
+    topUp: url.baseUrl + "/payment/create_payment-url",
+  },
 };
 
 export { routes };

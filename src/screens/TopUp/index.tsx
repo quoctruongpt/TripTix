@@ -1,5 +1,5 @@
 import { Button, CheckBox, Chip, Divider, Input, Text } from "@rneui/themed";
-import React from "react";
+import React, { useState } from "react";
 import {
   Keyboard,
   SafeAreaView,
@@ -8,31 +8,66 @@ import {
 } from "react-native";
 import { styles } from "./styles";
 import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useStore } from "@store/index";
+import { formatPrice } from "@utils/price";
+import { topUp } from "@httpClient/payment.api";
+import { StatusApiCall } from "@constants/global";
+import { useToast } from "react-native-toast-notifications";
 
 const MoneySuggest = [100000, 200000, 300000];
 const Types = [
   { id: "momo", title: "MoMo", icon: "" },
   { id: "zalo", title: "ZaloPay", icon: "" },
 ];
+const schema = yup.object().shape({
+  money: yup
+    .number()
+    .required("Vui lòng nhập số tiền cần nạp")
+    .min(100000, "vui lòng nạp tối thiểu 50.000 đ")
+    .max(5000000, "Số tiền tối đa có thể nạp là 5.000.000đ")
+    .nullable(),
+  method: yup.string().required("Vui lòng chọn phương thức nạp tiền"),
+});
 
 export const TopUP: React.FC = () => {
   const {
     control,
     setValue,
-    formState: { isValid },
+    formState: { isValid, errors },
     handleSubmit,
   } = useForm({
     defaultValues: {
-      money: "",
+      money: 0,
       method: "",
     },
+    resolver: yupResolver(schema),
+    mode: "all",
   });
+  const toast = useToast();
+
+  const [link, setLink] = useState("");
+
+  const {
+    authentication: { userInfo },
+  } = useStore();
 
   const onChooseSuggest = (value: number) => {
-    setValue("money", value.toString());
+    setValue("money", value);
   };
 
-  const handleTopUp = (data) => {};
+  const handleTopUp = async (dataForm) => {
+    try {
+      const { data } = await topUp(userInfo.idUserSystem, dataForm.money);
+      if (data.status === StatusApiCall.Success) {
+        setLink(data.data);
+        return;
+      }
+
+      throw new Error();
+    } catch {}
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -41,7 +76,9 @@ export const TopUP: React.FC = () => {
           <View style={styles.body}>
             <Text style={styles.walletText}>
               <Text>Số dư trong ví:&nbsp;</Text>
-              <Text style={styles.walletNumber}>0đ</Text>
+              <Text style={styles.walletNumber}>
+                {formatPrice(userInfo.coins)}
+              </Text>
             </Text>
             <Controller
               control={control}
@@ -51,8 +88,11 @@ export const TopUP: React.FC = () => {
                   placeholder="Số tiền muốn nạp"
                   style={styles.input}
                   keyboardType="numeric"
-                  value={value}
-                  onChangeText={onChange}
+                  value={String(value)}
+                  onChangeText={(text) => {
+                    onChange(text ? Number(text) : 0);
+                  }}
+                  errorMessage={errors.money?.message}
                 />
               )}
             />
@@ -99,6 +139,7 @@ export const TopUP: React.FC = () => {
                 </>
               )}
             />
+            <Text style={{ color: "red" }}>{errors.method?.message}</Text>
           </View>
           <Button
             title={"Xác nhận"}
