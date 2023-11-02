@@ -1,4 +1,4 @@
-import { EGender } from "@enums";
+import { EGender } from '@enums';
 
 const ListGender = [
   { label: "Male", value: EGender.Male },

@@ -5,7 +5,9 @@ import { History } from "@screens/History";
 import { Notification } from "@screens/Notification";
 import { Profile } from "@screens/Profile";
 import { RouteProp, ParamListBase } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/AntDesign";
+import { useStore } from "@store/index";
+import { HomeDriver } from "@screens/Modules/Driver/Home";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,21 +24,30 @@ const Colors = {
 };
 
 export const BottomTabNavigator: React.FC = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarIcon: ({ focused }) => tabBarIcon(focused, route),
-        tabBarActiveTintColor: Colors.Active,
-        tabBarInactiveTintColor: Colors.Inactive,
-      })}
-    >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="History" component={History} />
-      <Tab.Screen name="Notification" component={Notification} />
-      <Tab.Screen name="Profile" component={Profile} />
-    </Tab.Navigator>
-  );
+  const {
+    authentication: { userInfo },
+  } = useStore();
+
+  console.log("userInfo bottom", userInfo.role);
+  if (userInfo.role !== "ROLE_CUSTOMER") {
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused }) => tabBarIcon(focused, route),
+          tabBarActiveTintColor: Colors.Active,
+          tabBarInactiveTintColor: Colors.Inactive,
+        })}
+      >
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="History" component={History} />
+        <Tab.Screen name="Notification" component={Notification} />
+        <Tab.Screen name="Profile" component={Profile} />
+      </Tab.Navigator>
+    );
+  } else {
+    return <HomeDriver />;
+  }
 };
 
 const tabBarIcon = (
