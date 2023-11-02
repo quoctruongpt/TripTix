@@ -28,28 +28,26 @@ export const BottomTabNavigator: React.FC = () => {
     authentication: { userInfo },
   } = useStore();
 
-  // console.log("userInfo bottom", userInfo.role);
-  // if (userInfo.role !== "ROLE_CUSTOMER") {
-  //   return (
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarIcon: ({ focused }) => tabBarIcon(focused, route),
-        tabBarActiveTintColor: Colors.Active,
-        tabBarInactiveTintColor: Colors.Inactive,
-      })}
-    >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="History" component={History} />
-      <Tab.Screen name="Notification" component={Notification} />
-      <Tab.Screen name="Profile" component={Profile} />
-    </Tab.Navigator>
-  );
-  //   );
-  // } else {
-  //   return <HomeDriver />;
-  // }
+  console.log("userInfo bottom", userInfo.role);
+  if (userInfo.role == "ROLE_CUSTOMER") {
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused }) => tabBarIcon(focused, route),
+          tabBarActiveTintColor: Colors.Active,
+          tabBarInactiveTintColor: Colors.Inactive,
+        })}
+      >
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="History" component={History} />
+        <Tab.Screen name="Notification" component={Notification} />
+        <Tab.Screen name="Profile" component={Profile} />
+      </Tab.Navigator>
+    );
+  } else {
+    return <HomeDriver />;
+  }
 };
 
 const tabBarIcon = (
