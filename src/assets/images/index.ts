@@ -8,4 +8,5 @@ export const Images = {
   SeatDisable: require("./bus/SeatDisable.png"),
   SeatAvaiable: require("./bus/SeatAvaiable.png"),
   SeatSelected: require("./bus/SeatSelected.png"),
+  Support: require("./user/support.png"),
 };

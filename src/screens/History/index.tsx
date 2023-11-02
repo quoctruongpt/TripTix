@@ -11,11 +11,6 @@ import { getBookings } from "@httpClient/trip.api";
 import { useStore } from "@store/index";
 
 const Tickets = [
-  // staus
-  // 1: finish
-  // 2: cancle
-  // 3: paid
-  // 4: run
   {
     id: 1,
     code: "QƯEQRA",

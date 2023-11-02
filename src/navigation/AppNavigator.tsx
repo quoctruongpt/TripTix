@@ -13,6 +13,9 @@ import { SearchRoute } from "@screens/SearchRoute";
 import { DepartureInformation } from "@screens/DepartureInformation";
 import { TicketInformation } from "@screens/TicketInformation";
 import { SelectSeat } from "@screens/SelectSeat";
+import { HomeDriver } from "@screens/Modules/Driver/Home";
+import { HistoryDriver } from "@screens/Modules/Driver/History";
+import { DetailRoute } from "@screens/Modules/Driver/History/components/DetailRoute";
 
 const Stack = createNativeStackNavigator<TAppStackParamList>();
 
@@ -34,6 +37,7 @@ export default function AppNavigator() {
         component={TopUP}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name={"SelectRoute"}
         component={SelectRoute}
@@ -73,6 +77,22 @@ export default function AppNavigator() {
         name={"TicketInformation"}
         component={TicketInformation}
         options={{ title: "Thông tin đặt vé" }}
+      />
+      {/* Driver */}
+      <Stack.Screen
+        name={"HomeDriver"}
+        component={HomeDriver}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"HistoryDriver"}
+        component={HistoryDriver}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"DetailRoute"}
+        component={DetailRoute}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
