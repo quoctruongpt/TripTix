@@ -16,6 +16,7 @@ import { SelectSeat } from "@screens/SelectSeat";
 import { HomeDriver } from "@screens/Modules/Driver/Home";
 import { HistoryDriver } from "@screens/Modules/Driver/History";
 import { DetailRoute } from "@screens/Modules/Driver/History/components/DetailRoute";
+import { Home } from "@screens/Home";
 
 const Stack = createNativeStackNavigator<TAppStackParamList>();
 
@@ -34,7 +35,7 @@ export default function AppNavigator() {
       />
       <Stack.Screen
         name={"Home"}
-        component={TopUP}
+        component={Home}
         options={{ headerShown: false }}
       />
 

@@ -1,5 +1,5 @@
 import { Button, CheckBox, Chip, Divider, Input, Text } from "@rneui/themed";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   SafeAreaView,
@@ -15,11 +15,15 @@ import { formatPrice } from "@utils/price";
 import { topUp } from "@httpClient/payment.api";
 import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
+import ReactNativeModal from "react-native-modal";
+import { WebView } from "react-native-webview";
+import { PopupStatus } from "./components/PopupStatus";
 
 const MoneySuggest = [100000, 200000, 300000];
 const Types = [
-  { id: "momo", title: "MoMo", icon: "" },
-  { id: "zalo", title: "ZaloPay", icon: "" },
+  // { id: "momo", title: "MoMo", icon: "" },
+  // { id: "zalo", title: "ZaloPay", icon: "" },
+  { id: "vnpay", title: "VN Pay", icon: "" },
 ];
 const schema = yup.object().shape({
   money: yup
@@ -28,7 +32,7 @@ const schema = yup.object().shape({
     .min(100000, "vui lòng nạp tối thiểu 50.000 đ")
     .max(5000000, "Số tiền tối đa có thể nạp là 5.000.000đ")
     .nullable(),
-  method: yup.string().required("Vui lòng chọn phương thức nạp tiền"),
+  method: yup.string(),
 });
 
 export const TopUP: React.FC = () => {
@@ -37,17 +41,26 @@ export const TopUP: React.FC = () => {
     setValue,
     formState: { isValid, errors },
     handleSubmit,
+    trigger,
+    getValues,
   } = useForm({
     defaultValues: {
       money: 0,
-      method: "",
+      method: "vnpay",
     },
     resolver: yupResolver(schema),
-    mode: "all",
+    mode: "onChange",
   });
   const toast = useToast();
+  const {
+    authentication: { synchUserInfo },
+  } = useStore();
 
   const [link, setLink] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<"success" | "fail" | "pending">(
+    "pending"
+  );
 
   const {
     authentication: { userInfo },
@@ -55,10 +68,12 @@ export const TopUP: React.FC = () => {
 
   const onChooseSuggest = (value: number) => {
     setValue("money", value);
+    trigger();
   };
 
   const handleTopUp = async (dataForm) => {
     try {
+      setIsLoading(true);
       const { data } = await topUp(userInfo.idUserSystem, dataForm.money);
       if (data.status === StatusApiCall.Success) {
         setLink(data.data);
@@ -66,7 +81,32 @@ export const TopUP: React.FC = () => {
       }
 
       throw new Error();
-    } catch {}
+    } catch (e) {
+      toast.show("Không thể khởi động thanh toán", { type: "error" });
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleNavigationStateChange = (navState) => {
+    if (
+      navState.url ===
+      "http://btbs.ap-southeast-1.elasticbeanstalk.com/payment/result?status=success"
+    ) {
+      synchUserInfo();
+      setLink("");
+      setStatus("success");
+      return;
+    }
+    if (
+      navState.url ===
+      "http://btbs.ap-southeast-1.elasticbeanstalk.com/payment/result?status=fail"
+    ) {
+      setLink("");
+      setStatus("fail");
+      return;
+    }
   };
 
   return (
@@ -146,8 +186,27 @@ export const TopUP: React.FC = () => {
             buttonStyle={{ borderRadius: 20 }}
             disabled={!isValid}
             onPress={handleSubmit(handleTopUp)}
+            loading={isLoading}
           />
         </View>
+        {!!link && (
+          <ReactNativeModal isVisible style={{ margin: 0 }}>
+            <WebView
+              style={{ flex: 1 }}
+              source={{ uri: link }}
+              onNavigationStateChange={handleNavigationStateChange}
+            />
+          </ReactNativeModal>
+        )}
+        {status !== "pending" && (
+          <PopupStatus
+            status={status}
+            money={getValues("money")}
+            onClose={() => {
+              setStatus("pending");
+            }}
+          />
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
