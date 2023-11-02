@@ -29,7 +29,7 @@ export const BottomTabNavigator: React.FC = () => {
   } = useStore();
 
   console.log("userInfo bottom", userInfo.role);
-  if (userInfo.role !== "ROLE_CUSTOMER") {
+  if (userInfo.role == "ROLE_CUSTOMER") {
     return (
       <Tab.Navigator
         screenOptions={({ route }) => ({
