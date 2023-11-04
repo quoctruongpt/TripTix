@@ -21,11 +21,13 @@ import {
   UnfinishedStatus,
 } from "@constants/route";
 import { ActivityIndicator } from "react-native";
-import { putCancelBooking } from "@httpClient/trip.api";
+import { putCancelBooking, putFeedback } from "@httpClient/trip.api";
 import { useStore } from "@store/index";
 import { useToast } from "react-native-toast-notifications";
 import { formatPrice } from "@utils/price";
 import { PopupCancel } from "./PopupCancel";
+import { PopupFeedback } from "./PopupFeedback";
+import { set } from "mobx";
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
@@ -49,6 +51,7 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
   const [detail, setDetail] = useState<Record<string, any> | null>(null);
   const [canceling, setCanceling] = useState<string | null>(null);
   const [cancel, setCancel] = useState(null);
+  const [feedback, setFeedback] = useState(null);
   const {
     authentication: { userInfo, synchUserInfo },
   } = useStore();
@@ -103,6 +106,26 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
     }
   };
 
+  const handleFeedback = async (bookingId: number, star: number) => {
+    setFeedback(null);
+    putFeedback(bookingId, star);
+  };
+
+  const getBackground = (status: string) => {
+    switch (status) {
+      case BookingStatusId.Cancel:
+        return "#f5bfce";
+      case BookingStatusId.Paid:
+        return "#f5e8bf";
+      case BookingStatusId.Finish:
+        return "#bff5d5";
+      case BookingStatusId.Run:
+        return "#d2e6ef";
+      default:
+        return "#fff";
+    }
+  };
+
   return (
     <View
       style={{
@@ -130,7 +153,13 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
         <ScrollView style={{ flex: 1, paddingBottom: 120, width: "100%" }}>
           {data &&
             data.map((ticket, index) => (
-              <View key={index} style={styles.ticket}>
+              <View
+                key={index}
+                style={[
+                  styles.ticket,
+                  { backgroundColor: getBackground(ticket.bookingStatus) },
+                ]}
+              >
                 <View style={styles.ticketHeader}>
                   <Text style={{ color: "gray", fontSize: 16 }}>
                     Giờ xuất bến
@@ -178,6 +207,18 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
                       color={"orange"}
                     />
                   </TouchableOpacity>
+                  {ticket.bookingStatus === BookingStatusId.Finish && (
+                    <TouchableOpacity
+                      style={{ marginBottom: 16 }}
+                      onPress={() => setFeedback(ticket)}
+                    >
+                      <Icon
+                        name="file-certificate-outline"
+                        size={24}
+                        color={"orange"}
+                      />
+                    </TouchableOpacity>
+                  )}
                   {CanCancelStatus.includes(ticket.bookingStatus) && (
                     <TouchableOpacity onPress={() => setCancel(ticket)}>
                       {canceling !== ticket.bookingCode && (
@@ -206,6 +247,14 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
           show
           onConfirm={() => handleCancelBooking(cancel)}
           onClose={() => setCancel(null)}
+        />
+      )}
+      {feedback && (
+        <PopupFeedback
+          show={true}
+          onConfirm={handleFeedback}
+          onClose={() => setFeedback(false)}
+          ticket={feedback}
         />
       )}
     </View>

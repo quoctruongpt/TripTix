@@ -18,6 +18,7 @@ const routes = {
     postBookTicket: url.baseUrl + "/bookings",
     getBooking: url.baseUrl + "/bookings",
     cancelBooking: url.baseUrl + "/bookings/cancel",
+    feedback: url.baseUrl + "/bookings/vote-star",
   },
   payment: {
     topUp: url.baseUrl + "/payment/create_payment-url",

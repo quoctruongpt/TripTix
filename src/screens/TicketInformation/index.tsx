@@ -87,6 +87,22 @@ export const TicketInformation: React.FC = () => {
     }
   };
 
+  const handlePressPayment = () => {
+    Alert.alert(
+      "Thanh toán",
+      `Quý khách vui lòng kiểm tra kĩ thông tin đặt vé. Ấn "Xác nhận" để tiến hành thanh toán`,
+      [
+        {
+          text: "Huỷ",
+        },
+        {
+          text: "Xác nhận",
+          onPress: handlePayment,
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ccc" }}>
       <Box
@@ -140,7 +156,7 @@ export const TicketInformation: React.FC = () => {
       </View>
       <ButtonApp
         title="Thanh toán"
-        onPress={handlePayment}
+        onPress={handlePressPayment}
         buttonStyle={{
           backgroundColor: "red",
           margin: 10,

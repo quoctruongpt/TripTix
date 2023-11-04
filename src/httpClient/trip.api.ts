@@ -38,10 +38,18 @@ const putCancelBooking = (idCustomer: number, codeBooking: string) =>
     idBooking: codeBooking,
   });
 
+const putFeedback = (idBooking: number, star: number) => {
+  return httpClient.put(routes.trip.feedback, {
+    idBooking,
+    star,
+  });
+};
+
 export {
   getTrips,
   getRouteInfo,
   postBookTicket,
   getBookings,
   putCancelBooking,
+  putFeedback,
 };
