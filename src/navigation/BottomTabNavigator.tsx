@@ -5,7 +5,7 @@ import { History } from "@screens/History";
 import { Notification } from "@screens/Notification";
 import { Profile } from "@screens/Profile";
 import { RouteProp, ParamListBase } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useStore } from "@store/index";
 import { HomeDriver } from "@screens/Modules/Driver/Home";
 
