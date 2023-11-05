@@ -28,7 +28,6 @@ export const BottomTabNavigator: React.FC = () => {
     authentication: { userInfo },
   } = useStore();
 
-  console.log("userInfo bottom", userInfo.role);
   if (userInfo.role == "ROLE_CUSTOMER") {
     return (
       <Tab.Navigator

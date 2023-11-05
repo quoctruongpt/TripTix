@@ -6,18 +6,24 @@ import { Text } from "@rneui/base";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
+import { deleteDataUser } from "@storage/common";
 
 export const ContentSidebar = ({ handleToggleSidebar }) => {
   const navigation = useNavigation<TAppNavigation<"HomeDriver">>();
 
   const {
-    authentication: { userInfo },
+    authentication: { setIsLogin, userInfo },
   } = useStore();
 
   const handleRedirect = () => {};
   const handleRedirectHistory = () => {
     handleToggleSidebar();
     navigation.navigate("HistoryDriver");
+  };
+
+  const OnLogout = async () => {
+    await deleteDataUser();
+    setIsLogin(false);
   };
 
   return (
@@ -369,6 +375,41 @@ export const ContentSidebar = ({ handleToggleSidebar }) => {
               <Icon size={16} style={{ marginRight: 10 }} name="hearto" />
               <Text style={{ fontWeight: "200", fontSize: 16, color: "black" }}>
                 Điểm tín nhiệm
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={OnLogout}>
+        <View
+          style={{
+            width: "100%",
+            borderTopColor: "black",
+            borderTopWidth: 1,
+            paddingHorizontal: 5,
+            paddingVertical: 15,
+            backgroundColor: "white",
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginLeft: 15,
+              }}
+            >
+              <Icon size={16} style={{ marginRight: 10 }} name="poweroff" />
+              <Text style={{ fontWeight: "200", fontSize: 16, color: "black" }}>
+                Đăng xuất
               </Text>
             </View>
           </View>
