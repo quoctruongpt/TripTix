@@ -35,6 +35,13 @@ const putUpdateUserInfo = (data: {
   assignedRegions?: string;
 }) => httpClient.put(routes.authentication.updateUserInfo, data);
 
+const putExchangeCoins = (idCustomer: number, voucherCoins: number) => {
+  return httpClient.put(routes.authentication.changeCoin, {
+    idCustomer,
+    voucherCoins,
+  });
+};
+
 export {
   postLogin,
   postRegister,
@@ -42,4 +49,5 @@ export {
   postSendOtp,
   postConfirmOtp,
   putUpdateUserInfo,
+  putExchangeCoins,
 };

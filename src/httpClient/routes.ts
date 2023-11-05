@@ -11,6 +11,7 @@ const routes = {
     sendOtp: url.baseUrl + "/otp/email/send",
     confirmOtp: url.baseUrl + "/otp/valid",
     updateUserInfo: url.baseUrl + "/usersystem",
+    changeCoin: url.baseUrl + "/usersystem/exchange-voucher-coins",
   },
   trip: {
     getRouteInfo: url.baseUrl + "/route",

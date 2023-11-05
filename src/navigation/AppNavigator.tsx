@@ -57,7 +57,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"Point"}
         component={Point}
-        options={{ title: "Point" }}
+        options={{ title: "Đổi xu khuyến mãi" }}
       />
       <Stack.Screen
         name={"Info"}

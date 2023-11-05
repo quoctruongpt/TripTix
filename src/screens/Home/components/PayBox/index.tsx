@@ -56,9 +56,12 @@ export const PayBox: React.FC<{ coins: number; voucherCoins: number }> = ({
           justifyContent: "space-between",
         }}
       >
-        <WalletItem icon="folder-plus" title="Top up" onPress={handleTopUp} />
-        <WalletItem icon="dollar-sign" title="Withdraw" />
-        <WalletItem icon="wallet" title="Pay" />
+        <WalletItem icon="folder-plus" title="Nạp tiền" onPress={handleTopUp} />
+        <WalletItem
+          icon="coins"
+          title="Đổi xu khuyến mãi"
+          onPress={() => navigation.navigate("Point")}
+        />
       </View>
     </View>
   );
