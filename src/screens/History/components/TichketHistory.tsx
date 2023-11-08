@@ -28,6 +28,7 @@ import { formatPrice } from "@utils/price";
 import { PopupCancel } from "./PopupCancel";
 import { PopupFeedback } from "./PopupFeedback";
 import { set } from "mobx";
+import { TicketItem } from "./TicketItem";
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
@@ -36,6 +37,7 @@ export const getColorStatus = (status: string) => {
     case BookingStatusId.Cancel:
       return "red";
     case BookingStatusId.Paid:
+    case BookingStatusId.Ready:
       return "orange";
     case BookingStatusId.Run:
       return "blue";
@@ -111,21 +113,6 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
     putFeedback(bookingId, star);
   };
 
-  const getBackground = (status: string) => {
-    switch (status) {
-      case BookingStatusId.Cancel:
-        return "#f5bfce";
-      case BookingStatusId.Paid:
-        return "#f5e8bf";
-      case BookingStatusId.Finish:
-        return "#bff5d5";
-      case BookingStatusId.Run:
-        return "#d2e6ef";
-      default:
-        return "#fff";
-    }
-  };
-
   return (
     <View
       style={{
@@ -153,88 +140,18 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
         <ScrollView style={{ flex: 1, paddingBottom: 120, width: "100%" }}>
           {data &&
             data.map((ticket, index) => (
-              <View
+              <TicketItem
                 key={index}
-                style={[
-                  styles.ticket,
-                  { backgroundColor: getBackground(ticket.bookingStatus) },
-                ]}
-              >
-                <View style={styles.ticketHeader}>
-                  <Text style={{ color: "gray", fontSize: 16 }}>
-                    Giờ xuất bến
-                  </Text>
-                  <Text style={{ color: "orange", fontSize: 30 }}>
-                    {dayjs.unix(ticket.tripDTO.startTimee).format("HH:mm")}
-                  </Text>
-                  <Text style={{ fontSize: 18, color: "gray" }}>
-                    {dayjs.unix(ticket.tripDTO.startTimee).format("DD-MM-YYYY")}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      color: getColorStatus(ticket.bookingStatus),
-                      marginTop: 10,
-                      fontWeight: "800",
-                    }}
-                  >
-                    {ticket.bookingStatus}
-                  </Text>
-                </View>
-                <View style={styles.ticketContent}>
-                  <InfoItem label="Mã đặt vé" value={ticket.bookingCode} />
-                  <InfoItem
-                    icon={{ name: "my-location", color: "green" }}
-                    value={ticket.tripDTO.routeDTO.departurePoint}
-                  />
-                  <InfoItem
-                    icon={{ name: "location-on", color: "orange" }}
-                    value={ticket.tripDTO.routeDTO.destination}
-                  />
-                  <InfoItem
-                    label="Tổng số vé"
-                    value={ticket.listTicket.length}
-                  />
-                </View>
-                <View>
-                  <TouchableOpacity
-                    style={{ marginBottom: 16 }}
-                    onPress={() => setDetail(ticket)}
-                  >
-                    <Icon
-                      name="information-outline"
-                      size={24}
-                      color={"orange"}
-                    />
-                  </TouchableOpacity>
-                  {ticket.bookingStatus === BookingStatusId.Finish && (
-                    <TouchableOpacity
-                      style={{ marginBottom: 16 }}
-                      onPress={() => setFeedback(ticket)}
-                    >
-                      <Icon
-                        name="file-certificate-outline"
-                        size={24}
-                        color={"orange"}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  {CanCancelStatus.includes(ticket.bookingStatus) && (
-                    <TouchableOpacity onPress={() => setCancel(ticket)}>
-                      {canceling !== ticket.bookingCode && (
-                        <Icon
-                          name="book-cancel-outline"
-                          size={24}
-                          color={"red"}
-                        />
-                      )}
-                      {canceling === ticket.bookingCode && (
-                        <ActivityIndicator size={24} />
-                      )}
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
+                ticket={ticket}
+                onPressCancel={(t: any) => setCancel(t)}
+                onPressFeedback={(t: any) => setFeedback(t)}
+                onPressInfo={(t: any) => setDetail(t)}
+                canceling={canceling}
+                timeStart={ticket.tripDTO?.startTimee}
+                departurePoint={ticket.tripDTO?.routeDTO?.departurePoint}
+                destination={ticket.tripDTO?.routeDTO?.destination}
+                status={ticket.bookingStatus}
+              />
             ))}
         </ScrollView>
       )}
@@ -260,78 +177,3 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
     </View>
   );
 }
-
-const InfoItem = ({
-  label,
-  value,
-  icon,
-}: {
-  label?: string;
-  value: string | number;
-  icon?: { name: string; color: string };
-}) => {
-  return (
-    <View
-      style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}
-    >
-      {!!label && <Text style={{ color: "gray" }}>{label}: </Text>}
-      {!!icon && (
-        <IconFA
-          name={icon.name}
-          color={icon.color}
-          size={20}
-          style={{ marginRight: 6 }}
-        />
-      )}
-      <Text style={styles.ticketValue}>{value}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  ticket: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    marginBottom: 24,
-    backgroundColor: "#fff",
-    display: "flex",
-    flexDirection: "row",
-    padding: 15,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-    width: "100%",
-  },
-  ticketHeader: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    marginBottom: 15,
-    borderRightWidth: 1,
-    borderStyle: "dotted",
-    paddingRight: 10,
-    alignItems: "center",
-    flex: 1,
-  },
-  ticketContent: {
-    marginBottom: 10,
-    flex: 2,
-    paddingLeft: 12,
-  },
-  ticketLabel: {
-    fontWeight: "400",
-    marginBottom: 5,
-    color: "gray",
-  },
-  ticketValue: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  ticketValueTime: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "orange",
-  },
-});

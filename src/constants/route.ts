@@ -54,7 +54,28 @@ const BookingStatusId = {
   Cancel: "CANCEL",
   Run: "RUN",
   Finish: "FINISH",
+  Ready: "READY",
+  Checkin: "CHECKIN",
 };
+
+const StatusArray = [
+  {
+    value: null,
+    label: "Tất cả",
+  },
+  {
+    value: BookingStatusId.Ready,
+    label: "Chuẩn bị",
+  },
+  {
+    value: BookingStatusId.Run,
+    label: "Đang chạy",
+  },
+  {
+    value: BookingStatusId.Finish,
+    label: "Đã xong",
+  },
+];
 
 const CompletedStatus = [BookingStatusId.Finish, BookingStatusId.Cancel];
 const UnfinishedStatus = [BookingStatusId.Paid, BookingStatusId.Run];
@@ -70,4 +91,5 @@ export {
   CompletedStatus,
   UnfinishedStatus,
   CanCancelStatus,
+  StatusArray,
 };

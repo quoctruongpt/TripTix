@@ -20,6 +20,11 @@ const routes = {
     getBooking: url.baseUrl + "/bookings",
     cancelBooking: url.baseUrl + "/bookings/cancel",
     feedback: url.baseUrl + "/bookings/vote-star",
+    getHistoryDriver: url.baseUrl + "/trips/history-driver",
+    putCheckin: url.baseUrl + "/bookings/check-in-by-driver",
+    startTrip: url.baseUrl + "/trips/start-trip-by-driver",
+    getTripDetail: url.baseUrl + "/trips/detail",
+    confirmFinishTrip: url.baseUrl + "/trips/confirm-finish-trip-by-driver",
   },
   payment: {
     topUp: url.baseUrl + "/payment/create_payment-url",

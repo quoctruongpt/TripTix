@@ -45,6 +45,30 @@ const putFeedback = (idBooking: number, star: number) => {
   });
 };
 
+const getHistoryDriver = (driverId: number, time: number) => {
+  return httpClient.get(
+    `${routes.trip.getHistoryDriver}?driverId=${driverId}&startTime=${time}`
+  );
+};
+
+const putCheckin = (idTrip: number, bookingCode: string) => {
+  return httpClient.put(
+    `${routes.trip.putCheckin}?idTrip=${idTrip}&bookingCode=${bookingCode}`
+  );
+};
+
+const putStartTrip = (idTrip: number) => {
+  return httpClient.put(`${routes.trip.startTrip}?idTrip=${idTrip}`);
+};
+
+const getTripDetail = (idTrip: number) => {
+  return httpClient.get(`${routes.trip.getTripDetail}?id=${idTrip}`);
+};
+
+const putConfirmSuccessTrip = (idTrip: number) => {
+  return httpClient.put(routes.trip.confirmFinishTrip, { idTrip });
+};
+
 export {
   getTrips,
   getRouteInfo,
@@ -52,4 +76,9 @@ export {
   getBookings,
   putCancelBooking,
   putFeedback,
+  getHistoryDriver,
+  putCheckin,
+  putStartTrip,
+  getTripDetail,
+  putConfirmSuccessTrip,
 };

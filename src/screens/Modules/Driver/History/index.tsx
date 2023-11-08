@@ -1,56 +1,73 @@
-import { Button } from "@rneui/themed";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { FlatList, RefreshControl, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-elements";
-import { Header } from "@components/Header";
-import Icon from "react-native-vector-icons/AntDesign";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { DatePicker } from "@components/DatePicker";
-import {
-  CarTypeArray,
-  CarTypes,
-  PriceTypeArray,
-  PriceTypeId,
-} from "@constants/route";
+import { PriceTypeArray, StatusArray } from "@constants/route";
 import { Select } from "@components/Select";
-import { ScrollView } from "react-native";
+import { getHistoryDriver } from "@httpClient/trip.api";
+import { useStore } from "@store/index";
+import { StatusApiCall } from "@constants/global";
+import { TicketItem } from "@screens/History/components/TicketItem";
+import { TicketDetail } from "./components/TicketDetail";
 import dayjs from "dayjs";
-import { Routes } from "./components/Routes";
-import { DetailRoute } from "./components/DetailRoute";
 
 export const HistoryDriver: React.FC = () => {
-  const navigation = useNavigation<TAppNavigation<"HistoryDriver">>();
-  const [dateSelected, setDateSelected] = useState<Date>(new Date());
+  const [histories, setHistories] = useState([]);
+  const [detail, setDetail] = useState();
+  const [loading, setLoading] = useState(false);
+  const [isReload, setReload] = useState(true);
+  const [filter, setFilter] = useState({ status: null, time: new Date() });
+  const {
+    authentication: { userInfo },
+  } = useStore();
 
-  const handleTurnBack = () => {
-    navigation.navigate("HomeDriver");
+  const data = useMemo(() => {
+    if (!filter.status) {
+      return histories;
+    }
+
+    return histories.filter((item) => item.status === filter.status);
+  }, [histories, filter.status]);
+
+  useEffect(() => {
+    isReload && getHistory();
+  }, [isReload]);
+
+  useEffect(() => {
+    !isReload && getHistory();
+  }, [filter.time]);
+
+  const getHistory = async () => {
+    try {
+      setLoading(true);
+      const { data } = await getHistoryDriver(
+        userInfo.idUserSystem,
+        dayjs(filter.time).unix()
+      );
+      if (data.status === StatusApiCall.Success) {
+        setHistories(data.data);
+        return;
+      }
+
+      throw new Error();
+    } catch {
+    } finally {
+      setLoading(false);
+      setReload(false);
+    }
   };
-  const [filter, setFilter] = useState({ price: null, type: null, time: null });
 
   const updateFilter = (data: any) => {
     setFilter((pre) => ({ ...pre, ...data }));
   };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header color="#6495ED">
-        <View style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-          <TouchableOpacity onPress={handleTurnBack}>
-            <Icon
-              size={18}
-              style={{ color: "white", marginRight: 100 }}
-              name="arrowleft"
-            />
-          </TouchableOpacity>
-
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Lịch sử chuyến đi
-          </Text>
-        </View>
-      </Header>
       <View
         style={{
           width: "100%",
@@ -59,12 +76,11 @@ export const HistoryDriver: React.FC = () => {
           justifyContent: "space-between",
         }}
       >
-        <View style={{ width: "30%", marginRight: 5, marginVertical: 12 }}>
+        <View style={{ width: "40%", marginRight: 5, marginVertical: 12 }}>
           <DatePicker
-            value={dateSelected}
-            onConfirm={(date) => setDateSelected(date)}
-            placeholder="Birthday"
-            minimumDate={new Date()}
+            value={filter.time}
+            onConfirm={(date) => updateFilter({ time: date })}
+            placeholder="Ngày"
             renderButton={(title, onPress) => (
               <TouchableOpacity
                 onPress={onPress}
@@ -81,26 +97,54 @@ export const HistoryDriver: React.FC = () => {
             )}
           />
         </View>
-        <View style={{ width: "30%", marginRight: 5 }}>
+        <View style={{ width: "40%", marginRight: 5 }}>
           <Select
-            placeholder="Price"
-            items={PriceTypeArray}
-            value={filter.price}
-            onSelectItem={(e) => updateFilter({ price: e.value })}
-          />
-        </View>
-        <View style={{ width: "30%", marginRight: 5 }}>
-          <Select
-            placeholder="Seat Type"
-            items={CarTypeArray}
-            value={filter.type}
-            onSelectItem={(e) => updateFilter({ type: e.value })}
+            placeholder="Trạng thái"
+            items={StatusArray}
+            value={filter.status}
+            onSelectItem={(e) => updateFilter({ status: e.value })}
           />
         </View>
       </View>
-      <ScrollView style={{ paddingBottom: 120, width: "100%" }}>
-        <Routes />
-      </ScrollView>
+      <FlatList
+        data={data}
+        keyExtractor={(_, index) => String(index)}
+        refreshControl={
+          <RefreshControl onRefresh={getHistory} refreshing={loading} />
+        }
+        renderItem={({ item }) => (
+          <TicketItem
+            ticket={item}
+            onPressInfo={(trip: any) => {
+              setDetail(trip);
+            }}
+            timeStart={item.startTimee}
+            departurePoint={item.routeDTO.departurePoint}
+            destination={item.routeDTO.destination}
+            status={item.status}
+          />
+        )}
+        ListEmptyComponent={
+          <View style={{ alignItems: "center" }}>
+            <Image
+              source={require("@assets/images/empty.png")}
+              style={{ width: 200, height: 200 }}
+            />
+            <Text style={{ textAlign: "center" }}>
+              Bạn không có chuyến đi nào vào ngày này
+            </Text>
+          </View>
+        }
+      />
+
+      {!!detail && (
+        <TicketDetail
+          show={!!detail}
+          booking={detail}
+          onClose={() => setDetail(undefined)}
+          onReload={() => setReload(true)}
+        />
+      )}
     </SafeAreaView>
   );
 };
