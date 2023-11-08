@@ -13,7 +13,6 @@ export const Content: React.FC = observer(() => {
   const {
     authentication: { setIsLogin, userInfo },
   } = useStore();
-  console.log(userInfo);
   const onClickSettings = () => {
     navigation.navigate("Settings");
   };
