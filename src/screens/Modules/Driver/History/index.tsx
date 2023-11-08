@@ -4,10 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { DatePicker } from "@components/DatePicker";
-import { PriceTypeArray, StatusArray } from "@constants/route";
+import { StatusArray } from "@constants/route";
 import { Select } from "@components/Select";
 import { getHistoryDriver } from "@httpClient/trip.api";
 import { useStore } from "@store/index";
@@ -15,6 +13,10 @@ import { StatusApiCall } from "@constants/global";
 import { TicketItem } from "@screens/History/components/TicketItem";
 import { TicketDetail } from "./components/TicketDetail";
 import dayjs from "dayjs";
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const HistoryDriver: React.FC = () => {
   const [histories, setHistories] = useState([]);
@@ -45,10 +47,13 @@ export const HistoryDriver: React.FC = () => {
   const getHistory = async () => {
     try {
       setLoading(true);
-      const { data } = await getHistoryDriver(
-        userInfo.idUserSystem,
-        dayjs(filter.time).unix()
-      );
+      const time = dayjs(filter.time)
+        .set("hour", 0)
+        .set("minute", 0)
+        .add(7, "hour")
+        .unix();
+
+      const { data } = await getHistoryDriver(userInfo.idUserSystem, time);
       if (data.status === StatusApiCall.Success) {
         setHistories(data.data);
         return;
