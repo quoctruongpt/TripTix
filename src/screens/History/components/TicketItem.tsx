@@ -3,15 +3,12 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFA from "react-native-vector-icons/MaterialIcons";
 import { Text } from "@rneui/base";
-import dayjs from "dayjs";
 import { BookingStatusId, CanCancelStatus } from "@constants/route";
 import { ActivityIndicator } from "react-native";
 import { getColorStatus } from "./TichketHistory";
 import { useStore } from "@store/index";
 import { EAccountType } from "@enums";
-
-const utc = require("dayjs/plugin/utc");
-dayjs.extend(utc);
+import { timeStampToUtc } from "@utils/time";
 
 export const TicketItem: React.FC<{
   ticket: any;
@@ -60,10 +57,10 @@ export const TicketItem: React.FC<{
       <View style={styles.ticketHeader}>
         <Text style={{ color: "gray", fontSize: 16 }}>Giờ xuất bến</Text>
         <Text style={{ color: "orange", fontSize: 30 }}>
-          {dayjs.unix(timeStart).format("HH:mm")}
+          {timeStampToUtc(timeStart).format("HH:mm")}
         </Text>
         <Text style={{ fontSize: 18, color: "gray" }}>
-          {dayjs.unix(timeStart).format("DD-MM-YYYY")}
+          {timeStampToUtc(timeStart).format("DD-MM-YYYY")}
         </Text>
         <Text
           style={{

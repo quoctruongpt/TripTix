@@ -24,7 +24,7 @@ export const ListCustomer: React.FC<{
       const position = index + 1;
       const seatName = position < 10 ? `A0${position}` : `A${position}`;
       const customer = listCustomer.find((item) => {
-        return item.listTicket.some((ticket) => ticket.seatName === seatName);
+        return item.listTicket?.some((ticket) => ticket.seatName === seatName);
       });
 
       return [

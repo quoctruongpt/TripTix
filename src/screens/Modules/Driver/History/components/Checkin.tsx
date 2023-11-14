@@ -1,21 +1,9 @@
 import ReactNativeModal from "react-native-modal";
 import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  Text,
-  View,
-  TextInput,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
-import QRCode from "react-native-qrcode-svg";
+import { ScrollView, Text, View, TextInput, SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatPrice } from "@utils/price";
-import { CarTypes } from "@constants/route";
-import { getColorStatus } from "./TichketHistory";
-import { Steps } from "@components/Steps";
-import dayjs from "dayjs";
 import { Button } from "@rneui/themed";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useToast } from "react-native-toast-notifications";

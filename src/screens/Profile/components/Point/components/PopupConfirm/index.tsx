@@ -1,7 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import ReactNativeModal from "react-native-modal";
-import { useMemo } from "react";
-import dayjs from "dayjs";
 import { formatPrice } from "@utils/price";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Image } from "expo-image";

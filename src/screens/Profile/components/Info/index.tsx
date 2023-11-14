@@ -72,7 +72,7 @@ export const Info: React.FC = () => {
         phone: dataForm.phone,
         fullName: dataForm.fullName,
         address: dataForm.address,
-        birthdayTimeStamp: dayjs(dataForm.birthday).unix(),
+        birthdayTimeStamp: dayjs(dataForm.birthday, { utc: true }).unix(),
         gender: dataForm.gender,
         email: dataForm.email,
       });

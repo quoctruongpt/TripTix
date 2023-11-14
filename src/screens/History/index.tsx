@@ -5,86 +5,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import TabsComponent from "@components/Tabs";
 import TichketHistory from "./components/TichketHistory";
-import dayjs from "dayjs";
 import { StatusApiCall } from "@constants/global";
 import { getBookings } from "@httpClient/trip.api";
 import { useStore } from "@store/index";
 
-const Tickets = [
-  {
-    id: 1,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 1,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-  {
-    id: 1,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 1,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-  {
-    id: 1,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 1,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-  {
-    id: 2,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 2,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-  {
-    id: 3,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 3,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-  {
-    id: 4,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 4,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-  {
-    id: 5,
-    code: "QƯEQRA",
-    startTime: dayjs().format("DD-MM-YYYY HH:mm"),
-    status: 1,
-    departurePoint: "Lâm Đồng",
-    destination: "Hồ chí mình",
-    bookedSeat: "A4,A15",
-    timeDestination: dayjs().format("HH:mm"),
-  },
-];
-
 export const History: React.FC = () => {
-  const [listTicket, setListTicket] = useState(Tickets);
+  const [listTicket, setListTicket] = useState();
   const [activeTab, setActiveTab] = useState(0);
   const tabRef = useRef<FlatList>();
   const [isLoading, setIsLoading] = useState(false);
@@ -101,12 +27,12 @@ export const History: React.FC = () => {
     tabRef.current.scrollToIndex({ animated: true, index });
   };
 
-  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+  const onViewableItemsChanged = useRef(({ viewableItems, changed }) => {
     if (viewableItems.length > 0) {
       const focusedIndex = viewableItems[0].index;
       setActiveTab(focusedIndex);
     }
-  }, []);
+  });
 
   const getHistory = async () => {
     try {
@@ -132,7 +58,7 @@ export const History: React.FC = () => {
           ref={tabRef}
           horizontal
           data={["history", "perpare"]}
-          keyExtractor={(item, index) => item}
+          keyExtractor={(item, index) => String(index)}
           renderItem={({ item }) => (
             <TichketHistory
               listTicket={listTicket}
@@ -143,7 +69,7 @@ export const History: React.FC = () => {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           initialScrollIndex={activeTab}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onViewableItemsChanged={onViewableItemsChanged.current}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={getHistory} />
           }

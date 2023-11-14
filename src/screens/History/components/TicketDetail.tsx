@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatPrice } from "@utils/price";
 import { CarTypes } from "@constants/route";
 import { getColorStatus } from "./TichketHistory";
+import { timeStampToUtc } from "@utils/time";
 
 export const TicketDetail = ({
   onClose = () => {},
@@ -107,7 +108,12 @@ export const TicketDetail = ({
             label="Tuyến xe"
             value={`${booking.tripDTO.routeDTO.departurePoint} - ${booking.tripDTO.routeDTO.destination}`}
           />
-          <InfoItem label="Giờ khởi hành" value={"19:00 - 21/11/2023"} />
+          <InfoItem
+            label="Giờ khởi hành"
+            value={timeStampToUtc(booking?.tripDTO?.startTimee).format(
+              "HH:mm - DD/MM/YYYY"
+            )}
+          />
           <InfoItem label="Tổng số ghế" value={booking.listTicket.length} />
           <InfoItem
             label="Mã số ghế"

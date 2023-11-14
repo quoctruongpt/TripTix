@@ -27,10 +27,9 @@ import {
 import { Steps } from "@components/Steps";
 import { useStore } from "@store/index";
 import { DatePicker } from "@components/DatePicker";
+import { timeStampToUtc } from "@utils/time";
 const utc = require("dayjs/plugin/utc");
-const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export const SelectRoute: React.FC = () => {
   const toast = useToast();
@@ -92,7 +91,10 @@ export const SelectRoute: React.FC = () => {
       setIsLoading(true);
       const params = {
         routeId,
-        startTime: dayjs(dateSelected).add(7, "hour").unix(),
+        startTime: dayjs(dateSelected, { utc: true })
+          .set("hour", 0)
+          .set("minute", 0)
+          .unix(),
       };
       const { data } = await getTrips(params);
       if (data.status === StatusApiCall.Success) {
@@ -104,7 +106,7 @@ export const SelectRoute: React.FC = () => {
                 id: stopDTO.idStation,
                 title: stopDTO.stationDTO.name,
                 type: stopDTO.type,
-                time: dayjs.unix(stopDTO.timeComess).utc().format("HH:mm"),
+                time: timeStampToUtc(stopDTO.timeComess).format("HH:mm"),
                 icon: getIconStep(item.listtripStopDTO.length, index),
               };
             }),
@@ -217,8 +219,9 @@ export const SelectRoute: React.FC = () => {
                   }}
                 >
                   <Text style={{ fontWeight: "700" }}>
-                    {dayjs.unix(d.startTimee).utc().format("HH:mm")} -{" "}
-                    {dayjs.unix(d.endTimee).utc().format("HH:mm")}
+                    {`${timeStampToUtc(d.startTimee).format(
+                      "HH:mm"
+                    )} - ${timeStampToUtc(d.endTimee).format("HH:mm")}`}
                   </Text>
                 </View>
                 <View

@@ -80,9 +80,9 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
     try {
       setCancel(null);
       setCanceling(booking.bookingCode);
-      const now = dayjs().unix();
+      const now = dayjs().utc().format();
       const diff = dayjs(booking.tripDTO.startTimee * 1000).diff(
-        now * 1000,
+        now,
         "minutes"
       );
 

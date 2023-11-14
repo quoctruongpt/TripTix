@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import { formatPrice } from "@utils/price";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Image } from "expo-image";
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 export const PopupCancel = ({
   ticket,
@@ -13,11 +15,10 @@ export const PopupCancel = ({
   show,
 }) => {
   const diff = useMemo(() => {
-    const now = dayjs().unix();
-    const diff = dayjs(ticket?.tripDTO?.startTimee * 1000).diff(
-      now * 1000,
-      "days"
-    );
+    const now = dayjs().utc().format();
+    const timeStart = dayjs(ticket?.tripDTO?.startTimee * 1000, { utc: true });
+    const diff = timeStart.diff(now, "day");
+    console.log(now, ticket?.tripDTO?.startTimee, diff);
 
     return diff;
   }, [ticket]);

@@ -2,8 +2,8 @@ import { Images } from "@assets/images";
 import { ButtonApp } from "@components/Button";
 import { Avatar, Text } from "@rneui/themed";
 import React, { useState } from "react";
-import { View, SafeAreaView, LogBox, Alert } from "react-native";
-import { StyleSheet, TextInput, KeyboardAvoidingView } from "react-native";
+import { View, SafeAreaView, LogBox } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KeyboardAwareScrollView } from "@pietile-native-kit/keyboard-aware-scrollview";
@@ -13,10 +13,8 @@ import { Controller, useForm } from "react-hook-form";
 import { TAuthNavigation } from "@navigation/AuthNavigator.type";
 import { useNavigation } from "@react-navigation/native";
 import { SelectGender } from "./components/SelectGender";
-import { postSendOtp } from "@httpClient/authentication.api";
 import { EAccountType } from "@enums";
 import dayjs from "dayjs";
-import { StatusApiCall } from "@constants/global";
 
 LogBox.ignoreAllLogs();
 
@@ -66,7 +64,7 @@ export const SignUp: React.FC = () => {
   const handleContinue = handleSubmit(async (dataForm: any) => {
     navigation.navigate("OTP", {
       ...dataForm,
-      birthday: dayjs(dataForm.dayOfBirth).unix(),
+      birthday: dayjs(dataForm.dayOfBirth, { utc: true }).unix(),
       role: EAccountType.Customer,
     });
   });

@@ -1,10 +1,10 @@
 import ReactNativeModal from "react-native-modal";
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatPrice } from "@utils/price";
-import { BookingStatusId, CarTypes } from "@constants/route";
+import { BookingStatusId } from "@constants/route";
 import { Steps } from "@components/Steps";
 import dayjs from "dayjs";
 import { Button } from "@rneui/themed";
@@ -16,6 +16,7 @@ import {
 } from "@httpClient/trip.api";
 import { StatusApiCall } from "@constants/global";
 import { ListCustomer } from "./ListCustomer";
+import { timeStampToUtc } from "@utils/time";
 
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
@@ -38,11 +39,11 @@ export const TicketDetail = ({
       (customer) => customer.dropOffPoint === item.stationDTO.name
     );
     const total = customers.reduce(
-      (acc, currentValue) => acc + currentValue.listTicket.length,
+      (acc, currentValue) => acc + currentValue.listTicket?.length,
       0
     );
     return {
-      time: dayjs.unix(item.timeComess).format("HH:mm"),
+      time: timeStampToUtc(item.timeComess).format("HH:mm"),
       title: item.stationDTO.name,
       icon: {
         name: item.type === "DROPOFF" ? "location-on" : "location-searching",
@@ -52,9 +53,9 @@ export const TicketDetail = ({
     };
   });
 
-  const timeStart = dayjs(booking.startTimee * 1000);
-  const timeEnd = dayjs.unix(booking.endTimee);
-  const now = dayjs();
+  const timeStart = dayjs(booking.startTimee * 1000, { utc: true });
+  const timeEnd = dayjs(booking.endTimee, { utc: true });
+  const now = dayjs().utc().format();
 
   const nowToStart = timeStart.diff(now, "minute");
   const nowToEnd = timeEnd.diff(now, "minute");
@@ -118,7 +119,7 @@ export const TicketDetail = ({
         maxHeight: "80%",
       }}
     >
-      <ScrollView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <TouchableOpacity
           onPress={onClose}
           style={{
@@ -135,79 +136,85 @@ export const TicketDetail = ({
           Thông tin chuyến đi
         </Text>
 
-        <View style={{ marginVertical: 16 }}>
-          <InfoItem
-            label="Chuyến xe"
-            value={
-              trip.routeDTO.departurePoint + " - " + trip.routeDTO.destination
-            }
-          />
-          <InfoItem
-            label="Số xe"
-            value={trip.busDTO.licensePlates + " - " + trip.busDTO.name}
-          />
-          <InfoItem
-            label="Số lượng khách"
-            value={`${trip.seatNameBooking.length}/${trip.busDTO.capacity}`}
-          />
-          <InfoItem
-            label="Tổng tiền"
-            value={formatPrice(
-              trip.seatNameBooking.length * trip.routeDTO.baseFare
-            )}
-          />
-          <Text style={{ flex: 1 }}>{"Danh sách trạm"}</Text>
-          <View style={{ marginBottom: 4 }}>
-            <Steps data={steps} />
+        <ScrollView style={{ flex: 1 }}>
+          <View style={{ marginVertical: 16 }}>
+            <InfoItem
+              label="Chuyến xe"
+              value={
+                trip.routeDTO.departurePoint + " - " + trip.routeDTO.destination
+              }
+            />
+            <InfoItem
+              label="Số xe"
+              value={trip.busDTO.licensePlates + " - " + trip.busDTO.name}
+            />
+            <InfoItem
+              label="Số lượng khách"
+              value={`${trip.seatNameBooking?.length}/${trip.busDTO.capacity}`}
+            />
+            <InfoItem
+              label="Tổng tiền"
+              value={formatPrice(
+                trip.seatNameBooking?.length * trip.routeDTO.baseFare
+              )}
+            />
+            <Text style={{ flex: 1 }}>{"Danh sách trạm"}</Text>
+            <View style={{ marginBottom: 4 }}>
+              <Steps data={steps} />
+            </View>
           </View>
-        </View>
-      </ScrollView>
-      <TouchableOpacity
-        style={{ paddingVertical: 8, marginBottom: 4 }}
-        onPress={() => setShowListCustomer(true)}
-      >
-        <Text style={{ color: "blue", fontStyle: "italic" }}>
-          Danh sách khách hàng
-        </Text>
-      </TouchableOpacity>
-      {trip.status === BookingStatusId.Ready &&
-        (nowToStart <= 30 ? (
-          <Button title={"Xuất phát"} onPress={handleReady} loading={loading} />
-        ) : (
-          <Text>
-            Còn {Math.floor(nowToStart / (24 * 60))} ngày{" "}
-            {Math.floor((nowToStart % (24 * 60)) / 60)} giờ{" "}
-            {(nowToStart % (24 * 60)) % 60} phút
+        </ScrollView>
+        <TouchableOpacity
+          style={{ paddingVertical: 8, marginBottom: 4 }}
+          onPress={() => setShowListCustomer(true)}
+        >
+          <Text style={{ color: "blue", fontStyle: "italic" }}>
+            Danh sách khách hàng
           </Text>
-        ))}
-      {trip.status === BookingStatusId.Run && (
-        <Button
-          title={"Checkin"}
-          onPress={() => setShowCheckin(true)}
-          loading={loading}
-        />
-      )}
-      {trip.status === BookingStatusId.Run && nowToEnd <= 30 && (
-        <Button
-          title={"Hoàn thành chuyến"}
-          onPress={handleSuccessTrip}
-          buttonStyle={{ marginTop: 12, backgroundColor: "orange" }}
-          loading={loading}
-        />
-      )}
+        </TouchableOpacity>
+        {trip.status === BookingStatusId.Ready &&
+          (nowToStart <= 30 ? (
+            <Button
+              title={"Xuất phát"}
+              onPress={handleReady}
+              loading={loading}
+            />
+          ) : (
+            <Text>
+              Còn {Math.floor(nowToStart / (24 * 60))} ngày{" "}
+              {Math.floor((nowToStart % (24 * 60)) / 60)} giờ{" "}
+              {(nowToStart % (24 * 60)) % 60} phút
+            </Text>
+          ))}
+        {trip.status === BookingStatusId.Run && (
+          <Button
+            title={"Checkin"}
+            onPress={() => setShowCheckin(true)}
+            loading={loading}
+          />
+        )}
+        {trip.status === BookingStatusId.Run && nowToEnd <= 30 && (
+          <Button
+            title={"Hoàn thành chuyến"}
+            onPress={handleSuccessTrip}
+            buttonStyle={{ marginTop: 12, backgroundColor: "orange" }}
+            loading={loading}
+          />
+        )}
 
-      <Checkin
-        show={showCheckin}
-        onClose={() => setShowCheckin(false)}
-        idTrip={trip.idTrip}
-        onCheckinSuccess={getTrip}
-      />
-      <ListCustomer
-        show={showListCustomer}
-        onClose={() => setShowListCustomer(false)}
-        totalSeats={trip.busDTO.capacity}
-        listCustomer={trip.listBooking}
-      />
+        <Checkin
+          show={showCheckin}
+          onClose={() => setShowCheckin(false)}
+          idTrip={trip.idTrip}
+          onCheckinSuccess={getTrip}
+        />
+        <ListCustomer
+          show={showListCustomer}
+          onClose={() => setShowListCustomer(false)}
+          totalSeats={trip.busDTO.capacity}
+          listCustomer={trip.listBooking}
+        />
+      </SafeAreaView>
     </ReactNativeModal>
   );
 };

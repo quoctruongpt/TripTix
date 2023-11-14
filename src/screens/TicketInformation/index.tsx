@@ -2,10 +2,9 @@ import { ButtonApp } from "@components/Button";
 import { ButtonBack } from "@components/ButtonBack";
 import { TAppNavigation } from "@navigation/AppNavigator.type";
 import { useNavigation } from "@react-navigation/native";
-import { Chip, Dialog, Divider, Text } from "@rneui/themed";
+import { Dialog, Divider, Text } from "@rneui/themed";
 import { useStore } from "@store/index";
 import { formatPrice } from "@utils/price";
-import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
@@ -19,8 +18,7 @@ import {
 import { postBookTicket } from "@httpClient/trip.api";
 import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
-const utc = require("dayjs/plugin/utc");
-dayjs.extend(utc);
+import { timeStampToUtc } from "@utils/time";
 
 export const TicketInformation: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"TicketInformation">>();
@@ -121,10 +119,9 @@ export const TicketInformation: React.FC = () => {
           },
           {
             label: "Thời gian",
-            value: dayjs
-              .unix(routeInfo.startTimee)
-              .utc()
-              .format("HH:mm - DD/MM/YYYY"),
+            value: timeStampToUtc(routeInfo?.startTimee).format(
+              "HH:mm - DD/MM/YYYY"
+            ),
           },
           { label: "Số vé", value: seatSelected.length },
           { label: "Số ghế", value: seatSelected.join(" ,") },

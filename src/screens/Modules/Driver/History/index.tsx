@@ -47,7 +47,7 @@ export const HistoryDriver: React.FC = () => {
   const getHistory = async () => {
     try {
       setLoading(true);
-      const time = dayjs(filter.time)
+      const time = dayjs(filter.time, { utc: true })
         .set("hour", 0)
         .set("minute", 0)
         .add(7, "hour")
