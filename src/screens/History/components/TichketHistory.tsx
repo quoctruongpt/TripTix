@@ -62,15 +62,19 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
   useEffect(() => {
     if (listTicket) {
       if (type == "history") {
-        const history = listTicket.filter((item) =>
-          CompletedStatus.includes(item.bookingStatus)
-        );
+        const history = listTicket
+          .filter((item) => CompletedStatus.includes(item.bookingStatus))
+          .sort((a, b) => {
+            return b.tripDTO?.startTimee - a.tripDTO?.startTimee;
+          });
         setData(history);
       }
       if (type == "perpare") {
-        const perpare = listTicket.filter((item) =>
-          UnfinishedStatus.includes(item.bookingStatus)
-        );
+        const perpare = listTicket
+          .filter((item) => UnfinishedStatus.includes(item.bookingStatus))
+          .sort((a, b) => {
+            return a.tripDTO?.startTimee - b.tripDTO?.startTimee;
+          });
         setData(perpare);
       }
     }
@@ -81,7 +85,7 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
       setCancel(null);
       setCanceling(booking.bookingCode);
       const now = dayjs().utc().format();
-      const diff = dayjs(booking.tripDTO.startTimee * 1000).diff(
+      const diff = dayjs(booking.tripDTO?.startTimee * 1000).diff(
         now,
         "minutes"
       );
@@ -102,7 +106,8 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
         onRefresh();
         synchUserInfo();
       }
-    } catch {
+    } catch (e) {
+      console.log(e);
     } finally {
       setCanceling(null);
     }

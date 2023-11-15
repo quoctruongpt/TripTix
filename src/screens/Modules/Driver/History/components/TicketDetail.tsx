@@ -150,7 +150,7 @@ export const TicketDetail = ({
             />
             <InfoItem
               label="Số lượng khách"
-              value={`${trip.seatNameBooking?.length}/${trip.busDTO.capacity}`}
+              value={`${trip.bookedSeat}/${trip.busDTO.capacity}`}
             />
             <InfoItem
               label="Tổng tiền"
@@ -213,6 +213,7 @@ export const TicketDetail = ({
           onClose={() => setShowListCustomer(false)}
           totalSeats={trip.busDTO.capacity}
           listCustomer={trip.listBooking}
+          listSeat={trip.seatNameBooking}
         />
       </SafeAreaView>
     </ReactNativeModal>

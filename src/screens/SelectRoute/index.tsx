@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   RefreshControl,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -300,9 +301,15 @@ export const SelectRoute: React.FC = () => {
         ))}
 
         {dataRouteFilter.length <= 0 && (
-          <Text style={{ textAlign: "center", color: "#ccc" }}>
-            Không tìm thấy tuyến đường phù hợp
-          </Text>
+          <View style={{ alignItems: "center" }}>
+            <Image
+              source={require("@assets/images/notFound1.png")}
+              style={{ width: 200, height: 200 }}
+            />
+            <Text style={{ textAlign: "center", color: "#ccc" }}>
+              Không tìm thấy tuyến đường phù hợp
+            </Text>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>

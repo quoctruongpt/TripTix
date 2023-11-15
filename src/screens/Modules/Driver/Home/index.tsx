@@ -1,6 +1,6 @@
 import { useStore } from "@store/index";
 import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, ImageBackground } from "react-native";
 import { StyleSheet, ScrollView } from "react-native";
 import { Avatar } from "react-native-elements";
 import { Text } from "@rneui/base";
@@ -19,131 +19,175 @@ export const HomeDriver: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          width: "100%",
-          height: "100%",
-          padding: 10,
-          backgroundColor: "#6495ED",
-        }}
-      >
-        <TouchableOpacity onPress={toggleSidebar}>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              paddingHorizontal: 10,
-              display: "flex",
-              flexDirection: "column",
-              position: "absolute",
-              top: 20,
-              left: 15,
-            }}
-          >
+      <ImageBackground source={require("@assets/images/map.png")}>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            padding: 10,
+          }}
+        >
+          <TouchableOpacity onPress={toggleSidebar}>
             <View
               style={{
-                width: "100%",
-                display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                paddingHorizontal: 10,
+                display: "flex",
+                flexDirection: "column",
+                position: "absolute",
+                top: 20,
+                left: 15,
               }}
             >
-              <Avatar
-                source={require("@assets/images/user/Customer.png")}
-                rounded
-                size={50}
-                containerStyle={{
-                  backgroundColor: "#DEB887",
-                  position: "relative",
-                  padding: 8,
+              <View
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
+              >
+                <Avatar
+                  source={require("@assets/images/user/Customer.png")}
+                  rounded
+                  size={50}
+                  containerStyle={{
+                    backgroundColor: "#DEB887",
+                    position: "relative",
+                    padding: 8,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
 
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-            position: "absolute",
-            bottom: 55,
-            right: 15,
-          }}
-        >
-          <View
+                    elevation: 5,
+                  }}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+          <Text
             style={{
-              width: 60,
-              height: 60,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 30,
-              backgroundColor: "white",
+              color: "#000",
+              fontSize: 26,
+              fontWeight: "bold",
+              textAlign: "center",
+              marginTop: 100,
+              textShadowColor: "orange",
+              textShadowOffset: { width: -1, height: 1 },
+              textShadowRadius: 10,
             }}
           >
-            <Avatar
-              source={require("@assets/images/user/support.png")}
-              rounded
-              size={25}
-              containerStyle={{
-                backgroundColor: "white",
-                position: "relative",
-                padding: 0,
-              }}
-            />
-            <Text style={{ color: "green" }}>Support</Text>
-          </View>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-            position: "absolute",
-            bottom: "50%",
-            right: "10%",
-          }}
-        >
-          <Text style={{ color: "white", fontSize: 26, fontWeight: "bold" }}>
             Welcome tài xế{" "}
             <Text
-              style={{ color: "#00BFFF", fontSize: 26, fontWeight: "bold" }}
+              style={{
+                color: "red",
+                fontSize: 26,
+                fontWeight: "bold",
+                textShadowColor: "yellow",
+                textShadowOffset: { width: -1, height: 1 },
+                textShadowRadius: 10,
+              }}
             >
               {userInfo.fullName}
             </Text>
           </Text>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-            position: "absolute",
-            bottom: 30,
-            left: 15,
-          }}
-        >
-          <ButtonApp
-            title="Xe hợp đồng"
-            titleStyle={{ color: "red" }}
-            buttonStyle={{
-              backgroundColor: "white",
-              margin: 10,
+
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "column",
+              position: "absolute",
+              bottom: 55,
+              right: 15,
             }}
-          />
+          >
+            <View
+              style={{
+                width: 60,
+                height: 60,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 30,
+                backgroundColor: "white",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+
+                elevation: 5,
+              }}
+            >
+              <Avatar
+                source={require("@assets/images/user/support.png")}
+                rounded
+                size={25}
+                containerStyle={{
+                  backgroundColor: "white",
+                  position: "relative",
+                  padding: 0,
+                }}
+              />
+              <Text style={{ color: "green" }}>Support</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "column",
+              position: "absolute",
+              bottom: "50%",
+              right: "10%",
+            }}
+          ></View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "column",
+              position: "absolute",
+              bottom: 30,
+              left: 15,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+
+              elevation: 5,
+            }}
+          >
+            <ButtonApp
+              title="Xe hợp đồng"
+              titleStyle={{ color: "red" }}
+              buttonStyle={{
+                backgroundColor: "white",
+                margin: 10,
+              }}
+            />
+          </View>
+          <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}>
+            <ContentSidebar handleToggleSidebar={toggleSidebar} />
+          </Sidebar>
         </View>
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}>
-          <ContentSidebar handleToggleSidebar={toggleSidebar} />
-        </Sidebar>
-      </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };

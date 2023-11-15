@@ -16,15 +16,15 @@ export const ListCustomer: React.FC<{
   onClose: () => void;
   totalSeats: number;
   listCustomer: Record<string, any>[];
-}> = ({ show, onClose, totalSeats, listCustomer }) => {
+  listSeat: Record<string, any>[];
+}> = ({ show, onClose, totalSeats, listCustomer, listSeat }) => {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    const l = Array.from({ length: totalSeats }, (_, index) => {
-      const position = index + 1;
-      const seatName = position < 10 ? `A0${position}` : `A${position}`;
+    const l = listSeat.map((seat) => {
+      const seatName = seat.seatName;
       const customer = listCustomer.find((item) => {
-        return item.listTicket?.some((ticket) => ticket.seatName === seatName);
+        return item.idBooking === seat.idBooking;
       });
 
       return [

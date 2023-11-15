@@ -120,35 +120,47 @@ export const SearchRoute: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.wrap}>
         <View style={styles.routeWrap}>
-          <Controller
-            control={control}
-            name="from"
-            render={({ field: { value, onChange } }) => (
-              <ChooseProvince
-                value={value}
-                renderButton={(title, onPress) => (
-                  <Item label="Điểm đi" value={title} onPress={onPress} />
-                )}
-                data={provinces}
-                onChange={onChange}
-              />
-            )}
-          />
-          <ButtonSwitch onPress={handleSwitch} />
-          <Controller
-            control={control}
-            name="to"
-            render={({ field: { value, onChange } }) => (
-              <ChooseProvince
-                value={value}
-                renderButton={(title, onPress) => (
-                  <Item label="Điểm đến" value={title} onPress={onPress} />
-                )}
-                data={provinces}
-                onChange={onChange}
-              />
-            )}
-          />
+          <View style={{ flex: 1 }}>
+            <Controller
+              control={control}
+              name="from"
+              render={({ field: { value, onChange } }) => (
+                <ChooseProvince
+                  value={value}
+                  renderButton={(title, onPress) => (
+                    <Item label="Điểm đi" value={title} onPress={onPress} />
+                  )}
+                  data={provinces}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </View>
+          <View style={{ marginHorizontal: 8 }}>
+            <ButtonSwitch onPress={handleSwitch} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Controller
+              control={control}
+              name="to"
+              render={({ field: { value, onChange } }) => (
+                <ChooseProvince
+                  value={value}
+                  renderButton={(title, onPress) => (
+                    <Item
+                      label="Điểm đến"
+                      value={title}
+                      onPress={onPress}
+                      style={{ alignItems: "flex-end" }}
+                      textStyle={{ textAlign: "right" }}
+                    />
+                  )}
+                  data={provinces}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </View>
         </View>
 
         <Chip
