@@ -16,6 +16,20 @@ const getTrips = ({
   );
 };
 
+const getSearchTrips = ({
+  fromId,
+  toId,
+  startTime,
+}: {
+  fromId: string;
+  toId: string;
+  startTime: number;
+}) => {
+  return httpClient.get(
+    `${routes.trip.getSearchTrip}?codeDeparturePoint=${fromId}&codeDestination=${toId}&startTime=${startTime}`
+  );
+};
+
 const getRouteInfo = (departurePoint: string, destination: string) =>
   httpClient.get(
     `${routes.trip.getRouteInfo}?codeDeparturePoint=${departurePoint}&codeDestination=${destination}`
@@ -81,4 +95,5 @@ export {
   putStartTrip,
   getTripDetail,
   putConfirmSuccessTrip,
+  getSearchTrips,
 };

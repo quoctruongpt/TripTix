@@ -60,6 +60,16 @@ export const DepartureInformation: React.FC = () => {
     setUserInformation(dataForm);
     navigation.navigate("TicketInformation");
   };
+  const isSubTrip = routeInfo.subTrip;
+  const listLength = routeInfo.listtripStopDTO.length;
+
+  const listPickup = routeInfo.listtripStopDTO.filter((item) =>
+    isSubTrip ? item.index !== listLength - 1 : item.type === "PICKUP"
+  );
+
+  const listDropOff = routeInfo.listtripStopDTO.filter((item) =>
+    isSubTrip ? item.index !== 0 : item.type === "DROPOFF"
+  );
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -95,9 +105,7 @@ export const DepartureInformation: React.FC = () => {
                 <ChooseProvince
                   title="Chọn điểm đón"
                   placeholder="Điểm đón"
-                  data={routeInfo.listtripStopDTO.filter(
-                    (item) => item.type === "PICKUP"
-                  )}
+                  data={listPickup}
                   onChange={onChange}
                   value={value}
                   renderButton={(title, onPress) => (
@@ -133,9 +141,7 @@ export const DepartureInformation: React.FC = () => {
                 <ChooseProvince
                   title="Chọn điểm đến"
                   placeholder="Điểm đến"
-                  data={routeInfo.listtripStopDTO.filter(
-                    (item) => item.type === "DROPOFF"
-                  )}
+                  data={listDropOff}
                   onChange={onChange}
                   value={value}
                   renderButton={(title, onPress) => (

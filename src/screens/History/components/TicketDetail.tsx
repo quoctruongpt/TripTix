@@ -106,7 +106,7 @@ export const TicketDetail = ({
           <InfoItem label="Mã đặt vé" value={booking.bookingCode} />
           <InfoItem
             label="Tuyến xe"
-            value={`${booking.tripDTO.routeDTO.departurePoint} - ${booking.tripDTO.routeDTO.destination}`}
+            value={`${booking.tripDTO?.routeDTO.departurePoint} - ${booking.tripDTO?.routeDTO.destination}`}
           />
           <InfoItem
             label="Giờ khởi hành"
@@ -127,21 +127,24 @@ export const TicketDetail = ({
           />
         </View>
         <View style={{ marginBottom: 16 }}>
-          <InfoItem label="Tên xe" value={booking.tripDTO.busDTO.name} />
+          <InfoItem label="Tên xe" value={booking.tripDTO?.busDTO.name} />
           <InfoItem
             label="Biển số xe"
-            value={booking.tripDTO.busDTO.licensePlates}
+            value={booking.tripDTO?.busDTO.licensePlates}
           />
           <InfoItem
             label="Loại xe"
-            value={CarTypes[booking.tripDTO.busDTO.type]}
+            value={CarTypes[booking.tripDTO?.busDTO.type]}
           />
           <InfoItem
             label="Ghi chú"
-            value={booking.tripDTO.busDTO.description}
+            value={booking.tripDTO?.busDTO.description}
           />
-          <InfoItem label="Tài xế" value={booking.tripDTO.driverDTO.fullName} />
-          <InfoItem label="SĐT" value={booking.tripDTO.driverDTO.phone} />
+          <InfoItem
+            label="Tài xế"
+            value={booking.tripDTO?.driverDTO.fullName}
+          />
+          <InfoItem label="SĐT" value={booking.tripDTO?.driverDTO.phone} />
         </View>
       </ScrollView>
     </ReactNativeModal>

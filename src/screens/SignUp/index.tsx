@@ -64,7 +64,7 @@ export const SignUp: React.FC = () => {
   const handleContinue = handleSubmit(async (dataForm: any) => {
     navigation.navigate("OTP", {
       ...dataForm,
-      birthday: dayjs(dataForm.dayOfBirth, { utc: true }).unix(),
+      birthdayTimeStamp: dayjs(dataForm.dayOfBirth, { utc: true }).unix(),
       role: EAccountType.Customer,
     });
   });

@@ -1,5 +1,5 @@
 import { Button, Input, Text } from "@rneui/themed";
-import React, { useDeferredValue, useMemo, useState } from "react";
+import React, { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { View, FlatList, TouchableOpacity, SafeAreaView } from "react-native";
 import ReactNativeModal from "react-native-modal";
 
@@ -11,12 +11,26 @@ export const ChooseProvince: React.FC<{
   title?: string;
   placeholder?: string;
 }> = ({ data = [], value, onChange, renderButton, title, placeholder }) => {
+  const dataNew = useMemo(() => {
+    return data.map((item) => {
+      const textSearch = item.title
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      return { ...item, textSearch };
+    });
+  }, [data]);
   const [showPopup, setShowPopup] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
   const defferedValue = useDeferredValue(valueSearch);
   const dataFilter = useMemo(() => {
-    return data.filter((item) => item.title.includes(defferedValue));
-  }, [defferedValue, data]);
+    const search = defferedValue
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    return dataNew.filter((item) => item.textSearch.includes(search));
+  }, [defferedValue, dataNew]);
   const selected = useMemo(() => {
     return data.find((item) => item.id === value);
   }, [value, dataFilter]);

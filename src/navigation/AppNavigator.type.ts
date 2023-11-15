@@ -8,7 +8,7 @@ type TAppStackParamList = {
   Settings: undefined;
   Point: undefined;
   Info: undefined;
-  SelectRoute: { routeId: string };
+  SelectRoute: { fromId: string; toId: string };
   SelectSeat: undefined;
   SearchRoute: undefined;
   DepartureInformation: undefined;

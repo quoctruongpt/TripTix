@@ -14,7 +14,7 @@ const getUserInfo = (id: number) => {
 };
 
 const postSendOtp = (email: string) => {
-  return httpClient.post(`${routes.authentication.sendOtp}?email=${email}`);
+  return httpClient.post(`${routes.authentication.sendOtp}?phone=${email}`);
 };
 
 const postConfirmOtp = (email: string, otp: string) => {

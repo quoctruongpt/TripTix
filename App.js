@@ -16,7 +16,7 @@ export default function App() {
   const getListProvince = async () => {
     try {
       const { data } = await getProvinces();
-      storage.setItem(Keys.Provinces, JSON.stringify(data));
+      storage.setItem(Keys.Provinces, JSON.stringify(data.data));
     } catch (e) {
       console.error(e);
     }

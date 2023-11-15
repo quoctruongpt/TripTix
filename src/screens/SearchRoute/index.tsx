@@ -59,10 +59,11 @@ export const SearchRoute: React.FC = () => {
 
   const getProvinces = async () => {
     const jsonProvinces = await storage.getItem(Keys.Provinces);
+
     const _provinces = JSON.parse(jsonProvinces ?? "");
     const _provincesConvert = _provinces
       ? _provinces.map((item) => ({
-          id: item.code.toString(),
+          id: item.idProvince.toString(),
           title: item.name,
         }))
       : [];
@@ -77,38 +78,10 @@ export const SearchRoute: React.FC = () => {
   };
 
   const handleSearch = handleSubmit(async (dataForm: any) => {
-    try {
-      setIsLoading(true);
-      const { data } = await getRouteInfo(dataForm.from, dataForm.to);
-
-      if (data.status === StatusApiCall.Success) {
-        const route = data.data[0];
-        if (route) {
-          navigation.navigate("SelectRoute", {
-            routeId: route.idRoute,
-          });
-
-          return;
-        }
-
-        toast.show("Không tìm thấy thông tin tuyến đường", {
-          type: "warning",
-          placement: "top",
-          duration: 2000,
-        });
-        return;
-      }
-
-      throw new Error();
-    } catch {
-      toast.show("Có lỗi xảy ra. Vui lòng thử lại", {
-        type: "danger",
-        placement: "top",
-        duration: 2000,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    navigation.navigate("SelectRoute", {
+      fromId: dataForm.from,
+      toId: dataForm.to,
+    });
   });
 
   const handleChooseBanner = (fromId: string, toId: string) => {

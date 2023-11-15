@@ -42,6 +42,16 @@ export const TicketInformation: React.FC = () => {
     (item) => String(item.id) === String(userInformation.dropOffId)
   );
 
+  const listOfPassingStations = routeInfo.listtripStopDTO.filter((item) => {
+    return item.index >= pickup.index && item.index <= dropOff.index;
+  });
+
+  const totalPrice =
+    listOfPassingStations.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.costsIncurred;
+    }, 0) * seatSelected.length;
+  console.log(listOfPassingStations);
+
   const handlePayment = async () => {
     try {
       const params = {
@@ -129,7 +139,7 @@ export const TicketInformation: React.FC = () => {
           { label: "Điểm trả", value: dropOff?.title },
           {
             label: "Tổng",
-            value: formatPrice(seatSelected.length * routeInfo.fare),
+            value: formatPrice(totalPrice),
             styleValue: { fontSize: 16, fontWeight: "700" },
           },
         ]}
@@ -138,15 +148,12 @@ export const TicketInformation: React.FC = () => {
         <View
           style={{ padding: 16, backgroundColor: "#f9f9f9", borderRadius: 12 }}
         >
-          <Item
-            label="Giá"
-            value={formatPrice(seatSelected.length * routeInfo.fare)}
-          />
+          <Item label="Giá" value={formatPrice(totalPrice)} />
           <Item label="Khuyễn mại" value="0đ" />
           <Divider style={{ marginVertical: 12 }} />
           <Item
             label="Thành tiền"
-            value={formatPrice(seatSelected.length * routeInfo.fare)}
+            value={formatPrice(totalPrice)}
             styleValue={{ fontSize: 16, fontWeight: "700" }}
           />
         </View>

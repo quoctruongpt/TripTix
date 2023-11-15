@@ -56,7 +56,7 @@ export const OTP = () => {
 
   const sendOtp = async () => {
     setTime(60);
-    const { data } = await postSendOtp(params.email);
+    const { data } = await postSendOtp(params.phone);
     if (data.status === StatusApiCall.Success) {
       toast.show("OTP has been sent successfully", { type: "success" });
     }
@@ -64,7 +64,7 @@ export const OTP = () => {
 
   const handleVerify = async () => {
     try {
-      const { data } = await postConfirmOtp(params.email, otp);
+      const { data } = await postConfirmOtp(params.phone, otp);
       if (data.status === StatusApiCall.Success) {
         await handleRegister();
         return;
@@ -110,7 +110,7 @@ export const OTP = () => {
               Enter OTP
             </Text>
             <Text h4 h4Style={styles.titleDes}>
-              An 6 digit code has been sent to {"\n"} {params.email}
+              An 6 digit code has been sent to {"\n"} {params.phone}
             </Text>
           </View>
           <View style={{ marginTop: 24 }}>

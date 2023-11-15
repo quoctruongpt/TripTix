@@ -153,8 +153,8 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
                 onPressInfo={(t: any) => setDetail(t)}
                 canceling={canceling}
                 timeStart={ticket.tripDTO?.startTimee}
-                departurePoint={ticket.tripDTO?.routeDTO?.departurePoint}
-                destination={ticket.tripDTO?.routeDTO?.destination}
+                departurePoint={ticket.pickUpPoint}
+                destination={ticket.dropOffPoint}
                 status={ticket.bookingStatus}
               />
             ))}

@@ -11,6 +11,11 @@ import { useStore } from "@store/index";
 import { formatPrice } from "@utils/price";
 import { useToast } from "react-native-toast-notifications";
 
+const SeatStatus = {
+  Available: "AVAILABLE",
+  UnAvailable: "UNAVAILABLE",
+};
+
 export const SelectSeat: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SelectSeat">>();
   const {
@@ -38,7 +43,7 @@ export const SelectSeat: React.FC = () => {
   };
 
   const onActiveSeat = (seat) => {
-    const seatId = seat.id;
+    const seatId = seat.seatName;
     if (listSelectSeat.includes(seatId)) {
       setListSelectSeat(listSelectSeat.filter((item) => item !== seatId));
       return;
@@ -76,8 +81,8 @@ export const SelectSeat: React.FC = () => {
         }}
       >
         {listSeat &&
-          listSeat.map((seat) => {
-            if (seat.avaiable == 1) {
+          routeInfo.seatNameBooking?.map((seat) => {
+            if (seat.status == SeatStatus.Available) {
               return (
                 <TouchableOpacity onPress={() => onActiveSeat(seat)}>
                   <View
@@ -94,10 +99,12 @@ export const SelectSeat: React.FC = () => {
                       borderRadius: 10,
                       padding: 5,
                       borderColor: `${
-                        listSelectSeat.includes(seat.id) ? "green" : "white"
+                        listSelectSeat.includes(seat.seatName)
+                          ? "green"
+                          : "white"
                       }`,
                       backgroundColor: `${
-                        listSelectSeat.includes(seat.id)
+                        listSelectSeat.includes(seat.seatName)
                           ? "green"
                           : "transparent"
                       }`,
@@ -106,13 +113,15 @@ export const SelectSeat: React.FC = () => {
                     <Text
                       style={{
                         color: `${
-                          listSelectSeat.includes(seat.id) ? "white" : "green"
+                          listSelectSeat.includes(seat.seatName)
+                            ? "white"
+                            : "green"
                         }`,
                       }}
                     >
-                      {seat.name}
+                      {seat.seatName}
                     </Text>
-                    {listSelectSeat.includes(seat.id) ? (
+                    {listSelectSeat.includes(seat.seatName) ? (
                       <Image
                         source={Images.SeatSelected}
                         style={{ width: 22, height: 20 }}
@@ -153,7 +162,7 @@ export const SelectSeat: React.FC = () => {
                       color: "gray",
                     }}
                   >
-                    {seat.name}
+                    {seat.seatName}
                   </Text>
                   <Image
                     source={Images.SeatDisable}

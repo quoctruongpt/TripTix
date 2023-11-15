@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
 import { TAppNavigation, TAppRoute } from "@navigation/AppNavigator.type";
 import { useRoute } from "@react-navigation/native";
-import { getTrips } from "@httpClient/trip.api";
+import { getSearchTrips } from "@httpClient/trip.api";
 import { useToast } from "react-native-toast-notifications";
 import { StatusApiCall } from "@constants/global";
 import { formatPrice } from "@utils/price";
@@ -60,7 +60,7 @@ export const SelectRoute: React.FC = () => {
     return dataFilterByType;
   }, [filter, dataRoute]);
 
-  const { routeId } = useRoute<TAppRoute<"SelectRoute">>().params;
+  const { fromId, toId } = useRoute<TAppRoute<"SelectRoute">>().params;
 
   const handleChooseRoute = (item) => {
     setRouteInfo(item);
@@ -91,26 +91,35 @@ export const SelectRoute: React.FC = () => {
     try {
       setIsLoading(true);
       const params = {
-        routeId,
+        fromId,
+        toId,
         startTime: dayjs(dateSelected, { utc: true })
           .set("hour", 0)
           .set("minute", 0)
           .unix(),
       };
-      const { data } = await getTrips(params);
+      const { data } = await getSearchTrips(params);
       if (data.status === StatusApiCall.Success) {
         const routeData = data.data.map((item, index) => {
           return {
             ...item,
-            listtripStopDTO: item.listtripStopDTO.map((stopDTO, index) => {
-              return {
-                id: stopDTO.idStation,
-                title: stopDTO.stationDTO.name,
-                type: stopDTO.type,
-                time: timeStampToUtc(stopDTO.timeComess).format("HH:mm"),
-                icon: getIconStep(item.listtripStopDTO.length, index),
-              };
-            }),
+            listtripStopDTO: item.listtripStopDTO
+              .sort((a, b) => {
+                return a.timeComess - b.timeComess;
+              })
+              .map((stopDTO, index) => {
+                return {
+                  id: stopDTO.idStation,
+                  title: stopDTO.stationDTO.name,
+                  type: stopDTO.type,
+                  time: timeStampToUtc(stopDTO.timeComess).format("HH:mm"),
+                  icon: getIconStep(item.listtripStopDTO.length, index),
+                  timeStamp: stopDTO.timeComess,
+                  index: index,
+                  costsIncurred: stopDTO.costsIncurred,
+                };
+              }),
+            unitPrice: item.fare / (item.listtripStopDTO.length - 1),
           };
         });
         setDataRoute(routeData);
