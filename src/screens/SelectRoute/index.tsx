@@ -117,6 +117,7 @@ export const SelectRoute: React.FC = () => {
                   timeStamp: stopDTO.timeComess,
                   index: index,
                   costsIncurred: stopDTO.costsIncurred,
+                  description: stopDTO.stationDTO.address,
                 };
               }),
             unitPrice: item.fare / (item.listtripStopDTO.length - 1),
@@ -248,6 +249,18 @@ export const SelectRoute: React.FC = () => {
                   <Icon name="wifi" size={12} color="gray" />
                 </View>
               </View>
+              {!!d.subTrip && (
+                <Text
+                  style={{
+                    fontStyle: "italic",
+                    color: "blue",
+                    fontSize: 14,
+                    marginTop: 4,
+                  }}
+                >
+                  {d.subTrip}
+                </Text>
+              )}
               <View style={{ alignItems: "flex-start" }}>
                 <View
                   style={{
@@ -263,6 +276,7 @@ export const SelectRoute: React.FC = () => {
                   </Text>
                 </View>
               </View>
+
               <Steps
                 data={[
                   d?.listtripStopDTO[0],

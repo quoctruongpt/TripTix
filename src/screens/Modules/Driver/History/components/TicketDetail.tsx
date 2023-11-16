@@ -55,7 +55,7 @@ export const TicketDetail = ({
 
   const timeStart = dayjs(booking.startTimee * 1000, { utc: true });
   const timeEnd = dayjs(booking.endTimee, { utc: true });
-  const now = dayjs().utc().format();
+  const now = dayjs().add(7, "hour").utc().format();
 
   const nowToStart = timeStart.diff(now, "minute");
   const nowToEnd = timeEnd.diff(now, "minute");

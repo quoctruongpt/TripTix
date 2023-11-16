@@ -34,6 +34,7 @@ export const ChooseProvince: React.FC<{
   const selected = useMemo(() => {
     return data.find((item) => item.id === value);
   }, [value, dataFilter]);
+  console.log(data);
 
   const onClose = () => {
     setShowPopup(false);
@@ -86,19 +87,30 @@ export const ChooseProvince: React.FC<{
                 key={index}
                 style={{
                   padding: 12,
-                  alignItems: "center",
                   borderBottomWidth: 1,
                   borderColor: "#ccc",
                 }}
               >
                 <Text
                   style={{
-                    fontWeight: "500",
+                    fontWeight: "600",
                     color: item.id === value ? "red" : "#4b4b4b",
+                    textAlign: "center",
                   }}
                 >
                   {item.title}
                 </Text>
+                {!!item.description && (
+                  <Text
+                    style={{
+                      color: "grey",
+                      fontSize: 12,
+                      textAlign: "center",
+                    }}
+                  >
+                    {item.description}
+                  </Text>
+                )}
               </TouchableOpacity>
             )}
           />

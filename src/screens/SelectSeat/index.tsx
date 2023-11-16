@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "@rneui/base";
@@ -66,113 +66,84 @@ export const SelectSeat: React.FC = () => {
 
   const selectedSeatsText = listSelectSeat.join(", ");
 
+  const numberFloor = routeInfo.busDTO?.floor;
+
+  const map = useMemo(() => {
+    if (numberFloor === 1) {
+      return [routeInfo.seatNameBooking];
+    }
+
+    const indexCenter = Math.floor(routeInfo.seatNameBooking.length / 2);
+
+    return [
+      routeInfo.seatNameBooking.slice(0, indexCenter),
+      routeInfo.seatNameBooking.slice(indexCenter),
+    ];
+  }, [numberFloor]);
+
+  console.log(map);
+
+  const chunkArray = (array, chunkSize) => {
+    return Array.from({ length: Math.ceil(array.length / chunkSize) }, (v, i) =>
+      array.slice(i * chunkSize, i * chunkSize + chunkSize)
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          paddingHorizontal: 10,
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          flexWrap: "wrap",
           flexDirection: "row",
-          borderBottomColor: "transparent",
           flex: 1,
+          borderWidth: 1,
+          marginHorizontal: 24,
+          padding: 16,
+          borderRadius: 16,
         }}
       >
-        {listSeat &&
-          routeInfo.seatNameBooking?.map((seat) => {
-            if (seat.status == SeatStatus.Available) {
-              return (
-                <TouchableOpacity onPress={() => onActiveSeat(seat)}>
-                  <View
-                    style={{
-                      marginRight: 10,
-                      maxHeight: 50,
-                      maxWidth: 50,
-                      marginTop: 10,
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderWidth: 1,
-                      borderRadius: 10,
-                      padding: 5,
-                      borderColor: `${
-                        listSelectSeat.includes(seat.seatName)
-                          ? "green"
-                          : "white"
-                      }`,
-                      backgroundColor: `${
-                        listSelectSeat.includes(seat.seatName)
-                          ? "green"
-                          : "transparent"
-                      }`,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: `${
-                          listSelectSeat.includes(seat.seatName)
-                            ? "white"
-                            : "green"
-                        }`,
-                      }}
-                    >
-                      {seat.seatName}
-                    </Text>
-                    {listSelectSeat.includes(seat.seatName) ? (
-                      <Image
-                        source={Images.SeatSelected}
-                        style={{ width: 22, height: 20 }}
-                      />
-                    ) : (
-                      <Image
-                        source={Images.SeatAvaiable}
-                        style={{
-                          width: 22,
-                          height: 20,
-                        }}
-                      />
-                    )}
-                  </View>
-                </TouchableOpacity>
-              );
-            }
-            return (
-              <TouchableOpacity disabled>
-                <View
-                  style={{
-                    marginRight: 10,
-                    maxHeight: 50,
-                    maxWidth: 50,
-                    marginTop: 10,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    padding: 5,
-                    borderColor: "gray",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "gray",
-                    }}
-                  >
-                    {seat.seatName}
-                  </Text>
-                  <Image
-                    source={Images.SeatDisable}
-                    style={{ width: 22, height: 20 }}
+        {map.map((item, index) => (
+          <ScrollView
+            key={index}
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 16,
+              marginHorizontal: 4,
+              paddingHorizontal: 16,
+              paddingVertical: 16,
+            }}
+          >
+            <Text>{`Tầng ${index + 1}`}</Text>
+            {chunkArray(item, 2).map((row, index2) => (
+              <View
+                key={index2}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                {row.map((seat, index3) => (
+                  <SeatItem
+                    key={index3}
+                    seatName={seat.seatName}
+                    seatAvailable={seat.status == SeatStatus.Available}
+                    selected={listSelectSeat.includes(seat.seatName)}
+                    onSeatPress={() => onActiveSeat(seat)}
                   />
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                ))}
+              </View>
+            ))}
+          </ScrollView>
+        ))}
       </View>
+      {/* {listSeat &&
+          routeInfo.seatNameBooking?.map((seat) => (
+            <SeatItem
+              seatName={seat.seatName}
+              seatAvailable={seat.status == SeatStatus.Available}
+              selected={listSelectSeat.includes(seat.seatName)}
+              onSeatPress={() => onActiveSeat(seat)}
+            />
+          ))} */}
       {showError && (
         <Text
           style={{
@@ -332,3 +303,91 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
   },
 });
+
+const SeatItem = ({
+  seatAvailable,
+  onSeatPress,
+  selected,
+  seatName,
+}: {
+  seatAvailable: boolean;
+  onSeatPress: () => void;
+  selected: boolean;
+  seatName: string;
+}) => {
+  if (seatAvailable) {
+    return (
+      <TouchableOpacity onPress={onSeatPress}>
+        <View
+          style={{
+            marginRight: 10,
+            maxHeight: 50,
+            maxWidth: 50,
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            borderWidth: 1,
+            borderRadius: 10,
+            padding: 5,
+            borderColor: `${selected ? "green" : "white"}`,
+            backgroundColor: `${selected ? "green" : "transparent"}`,
+          }}
+        >
+          <Text
+            style={{
+              color: `${selected ? "white" : "green"}`,
+            }}
+          >
+            {seatName}
+          </Text>
+          {selected ? (
+            <Image
+              source={Images.SeatSelected}
+              style={{ width: 22, height: 20 }}
+            />
+          ) : (
+            <Image
+              source={Images.SeatAvaiable}
+              style={{
+                width: 22,
+                height: 20,
+              }}
+            />
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <TouchableOpacity disabled>
+      <View
+        style={{
+          marginRight: 10,
+          maxHeight: 50,
+          maxWidth: 50,
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          borderWidth: 1,
+          borderRadius: 10,
+          padding: 5,
+          borderColor: "gray",
+        }}
+      >
+        <Text
+          style={{
+            color: "gray",
+          }}
+        >
+          {seatName}
+        </Text>
+        <Image source={Images.SeatDisable} style={{ width: 22, height: 20 }} />
+      </View>
+    </TouchableOpacity>
+  );
+};

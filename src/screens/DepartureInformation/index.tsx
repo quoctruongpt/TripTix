@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Chip, Input, Text } from "@rneui/themed";
 import { useStore } from "@store/index";
 import { formatPrice } from "@utils/price";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -46,6 +46,7 @@ export const DepartureInformation: React.FC = () => {
     control,
     formState: { isValid },
     handleSubmit,
+    getValues,
   } = useForm({
     defaultValues: {
       pickUpId: "",
@@ -54,7 +55,11 @@ export const DepartureInformation: React.FC = () => {
       phone: userInfo.phone,
     },
     resolver: yupResolver(schema),
+    mode: "onChange",
   });
+
+  const [pickUpId, setPickUpId] = useState("");
+  const [dropOffId, setDropOffId] = useState("");
 
   const handleConfirm = (dataForm) => {
     setUserInformation(dataForm);
@@ -63,13 +68,28 @@ export const DepartureInformation: React.FC = () => {
   const isSubTrip = routeInfo.subTrip;
   const listLength = routeInfo.listtripStopDTO.length;
 
-  const listPickup = routeInfo.listtripStopDTO.filter((item) =>
-    isSubTrip ? item.index !== listLength - 1 : item.type === "PICKUP"
-  );
+  const listPickup = useMemo(() => {
+    const indexDropOff = routeInfo.listtripStopDTO.findIndex(
+      (item) => item.id === dropOffId
+    );
+    const conditionIndex = indexDropOff >= 0 ? indexDropOff : listLength - 1;
+    console.log(indexDropOff);
 
-  const listDropOff = routeInfo.listtripStopDTO.filter((item) =>
-    isSubTrip ? item.index !== 0 : item.type === "DROPOFF"
-  );
+    return routeInfo.listtripStopDTO.filter((item) =>
+      isSubTrip ? item.index < conditionIndex : item.type === "PICKUP"
+    );
+  }, [dropOffId]);
+
+  const listDropOff = useMemo(() => {
+    const indexPickup =
+      routeInfo.listtripStopDTO.findIndex((item) => item.id === pickUpId) || 0;
+
+    const conditionIndex = indexPickup >= 0 ? indexPickup : 0;
+
+    return routeInfo.listtripStopDTO.filter((item) =>
+      isSubTrip ? item.index > conditionIndex : item.type === "DROPOFF"
+    );
+  }, [pickUpId]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -106,7 +126,10 @@ export const DepartureInformation: React.FC = () => {
                   title="Chọn điểm đón"
                   placeholder="Điểm đón"
                   data={listPickup}
-                  onChange={onChange}
+                  onChange={(value: string) => {
+                    onChange(value);
+                    setPickUpId(value);
+                  }}
                   value={value}
                   renderButton={(title, onPress) => (
                     <TouchableOpacity
@@ -142,7 +165,10 @@ export const DepartureInformation: React.FC = () => {
                   title="Chọn điểm đến"
                   placeholder="Điểm đến"
                   data={listDropOff}
-                  onChange={onChange}
+                  onChange={(value: string) => {
+                    onChange(value);
+                    setDropOffId(value);
+                  }}
                   value={value}
                   renderButton={(title, onPress) => (
                     <TouchableOpacity
