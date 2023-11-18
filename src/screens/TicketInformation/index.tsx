@@ -12,13 +12,14 @@ import {
   View,
   StyleProp,
   TextStyle,
-  TouchableOpacity,
+  ScrollView,
   Alert,
 } from "react-native";
 import { postBookTicket } from "@httpClient/trip.api";
 import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
 import { timeStampToUtc } from "@utils/time";
+import { Steps } from "@components/Steps";
 
 export const TicketInformation: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"TicketInformation">>();
@@ -46,11 +47,11 @@ export const TicketInformation: React.FC = () => {
     return item.index >= pickup.index && item.index <= dropOff.index;
   });
 
-  const totalPrice =
-    listOfPassingStations.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.costsIncurred;
-    }, 0) * seatSelected.length;
-  console.log(listOfPassingStations);
+  // const totalPrice =
+  //   listOfPassingStations.reduce((accumulator, currentValue) => {
+  //     return accumulator + currentValue.costsIncurred;
+  //   }, 0) * seatSelected.length;
+  const totalPrice = seatSelected.length * routeInfo.fare;
 
   const handlePayment = async () => {
     try {
@@ -113,51 +114,94 @@ export const TicketInformation: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ccc" }}>
-      <Box
-        title="Thông tin người đặt vé"
-        data={[
-          { label: "Họ tên", value: userInformation.name },
-          { label: "Số điện thoại", value: userInformation.phone },
-          { label: "Email", value: userInfo.email },
-        ]}
-      />
-      <Box
-        data={[
-          {
-            label: "Tuyến",
-            value: `${routeInfo.routeDTO.departurePoint} - ${routeInfo.routeDTO.destination}`,
-          },
-          {
-            label: "Thời gian",
-            value: timeStampToUtc(routeInfo?.startTimee).format(
-              "HH:mm - DD/MM/YYYY"
-            ),
-          },
-          { label: "Số vé", value: seatSelected.length },
-          { label: "Số ghế", value: seatSelected.join(" ,") },
-          { label: "Điểm đón", value: pickup?.title },
-          { label: "Điểm trả", value: dropOff?.title },
-          {
-            label: "Tổng",
-            value: formatPrice(totalPrice),
-            styleValue: { fontSize: 16, fontWeight: "700" },
-          },
-        ]}
-      />
-      <View style={{ flex: 1, backgroundColor: "#fff", padding: 16 }}>
-        <View
-          style={{ padding: 16, backgroundColor: "#f9f9f9", borderRadius: 12 }}
-        >
-          <Item label="Giá" value={formatPrice(totalPrice)} />
-          <Item label="Khuyễn mại" value="0đ" />
-          <Divider style={{ marginVertical: 12 }} />
-          <Item
-            label="Thành tiền"
-            value={formatPrice(totalPrice)}
-            styleValue={{ fontSize: 16, fontWeight: "700" }}
-          />
+      <ScrollView style={{ flex: 1 }}>
+        <Box
+          title="Thông tin người đặt vé"
+          data={[
+            { label: "Họ tên", value: userInformation.name },
+            { label: "Số điện thoại", value: userInformation.phone },
+            { label: "Email", value: userInfo.email },
+          ]}
+        />
+        <View style={{ backgroundColor: "#fff", marginBottom: 8 }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "800",
+              marginLeft: 16,
+              marginTop: 16,
+            }}
+          >
+            Lộ trình
+          </Text>
+          <Steps data={routeInfo.listtripStopDTO} />
         </View>
-      </View>
+        <Box
+          title="Thông tin chuyến xe"
+          data={[
+            {
+              label: "Tuyến",
+              value: `${routeInfo.routeDTO.departurePoint} - ${routeInfo.routeDTO.destination}`,
+            },
+            {
+              label: "Nhà xe",
+              value: `${routeInfo.busDTO.name}`,
+            },
+            {
+              label: "Thời gian",
+              value: timeStampToUtc(routeInfo?.startTimee).format(
+                "HH:mm - DD/MM/YYYY"
+              ),
+            },
+            { label: "Số vé", value: seatSelected.length },
+            { label: "Số ghế", value: seatSelected.join(" ,") },
+            { label: "Điểm đón", value: pickup?.title },
+            { label: "Điểm trả", value: dropOff?.title },
+          ]}
+        />
+        <View style={{ flex: 1, backgroundColor: "#fff", padding: 16 }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "800",
+              marginBottom: 20,
+            }}
+          >
+            Thông tin thanh toán
+          </Text>
+          <View
+            style={{
+              padding: 16,
+              backgroundColor: "#f9f9f9",
+              borderRadius: 12,
+            }}
+          >
+            <Item label="Giá" value={formatPrice(totalPrice)} />
+            <Item label="Khuyễn mại" value="0đ" />
+            <Divider style={{ marginVertical: 12 }} />
+            <Item
+              label="Thành tiền"
+              value={formatPrice(totalPrice)}
+              styleValue={{ fontSize: 16, fontWeight: "700" }}
+            />
+          </View>
+        </View>
+
+        <Dialog
+          isVisible={confirmCancel}
+          onBackdropPress={() => setConfirmCancel(false)}
+        >
+          <Dialog.Title title="TripTix" />
+          <Text>Bạn có muốn huỷ đặt vé không?</Text>
+          <Dialog.Actions>
+            <Dialog.Button
+              title="Huỷ"
+              onPress={() => setConfirmCancel(false)}
+            />
+            <Dialog.Button title="OK" onPress={navigation.goBack} />
+          </Dialog.Actions>
+        </Dialog>
+      </ScrollView>
       <ButtonApp
         title="Thanh toán"
         onPress={handlePressPayment}
@@ -166,18 +210,6 @@ export const TicketInformation: React.FC = () => {
           margin: 10,
         }}
       />
-
-      <Dialog
-        isVisible={confirmCancel}
-        onBackdropPress={() => setConfirmCancel(false)}
-      >
-        <Dialog.Title title="TripTix" />
-        <Text>Bạn có muốn huỷ đặt vé không?</Text>
-        <Dialog.Actions>
-          <Dialog.Button title="Huỷ" onPress={() => setConfirmCancel(false)} />
-          <Dialog.Button title="OK" onPress={navigation.goBack} />
-        </Dialog.Actions>
-      </Dialog>
     </SafeAreaView>
   );
 };

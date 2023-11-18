@@ -56,6 +56,17 @@ const BookingStatusId = {
   Finish: "FINISH",
   Ready: "READY",
   Checkin: "CHECKIN",
+  NoCheckin: "NO_CHECKIN",
+};
+
+export const BookingStatusLabel = {
+  [BookingStatusId.Paid]: "Đã thanh toán",
+  [BookingStatusId.Cancel]: "Huỷ",
+  [BookingStatusId.Run]: "Đang chạy",
+  [BookingStatusId.Finish]: "Đã hoàn thành",
+  [BookingStatusId.Ready]: "Chuẩn bị",
+  [BookingStatusId.Checkin]: "Đã checkin",
+  [BookingStatusId.NoCheckin]: "Chờ checkin",
 };
 
 const StatusArray = [
@@ -65,19 +76,47 @@ const StatusArray = [
   },
   {
     value: BookingStatusId.Ready,
-    label: "Chuẩn bị",
+    label: BookingStatusLabel[BookingStatusId.Ready],
   },
   {
     value: BookingStatusId.Run,
-    label: "Đang chạy",
+    label: BookingStatusLabel[BookingStatusId.Run],
   },
   {
     value: BookingStatusId.Finish,
-    label: "Đã xong",
+    label: BookingStatusLabel[BookingStatusId.Finish],
   },
 ];
 
-const CompletedStatus = [BookingStatusId.Finish, BookingStatusId.Cancel];
+export const StatusCustomerArray = [
+  {
+    value: null,
+    label: "Tất cả",
+  },
+  {
+    value: BookingStatusId.Finish,
+    label: BookingStatusLabel[BookingStatusId.Finish],
+  },
+  {
+    value: BookingStatusId.Cancel,
+    label: BookingStatusLabel[BookingStatusId.Cancel],
+  },
+  {
+    value: BookingStatusId.Checkin,
+    label: BookingStatusLabel[BookingStatusId.Checkin],
+  },
+  {
+    value: BookingStatusId.NoCheckin,
+    label: BookingStatusLabel[BookingStatusId.NoCheckin],
+  },
+];
+
+const CompletedStatus = [
+  BookingStatusId.Finish,
+  BookingStatusId.Cancel,
+  BookingStatusId.Checkin,
+  BookingStatusId.NoCheckin,
+];
 const UnfinishedStatus = [BookingStatusId.Paid, BookingStatusId.Run];
 const CanCancelStatus = [BookingStatusId.Paid];
 

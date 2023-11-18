@@ -42,7 +42,7 @@ export const TicketDetail = ({
         >
           <Icon name="close-circle" size={24} color={"#ccc"} />
         </TouchableOpacity>
-        <View
+        {/* <View
           style={{
             width: 60,
             height: 60,
@@ -94,7 +94,7 @@ export const TicketDetail = ({
               {booking.bookingStatus}
             </Text>
           </View>
-        </View>
+        </View> */}
         <Text style={{ fontSize: 18, fontWeight: "800", textAlign: "center" }}>
           Thông tin chuyến đi
         </Text>

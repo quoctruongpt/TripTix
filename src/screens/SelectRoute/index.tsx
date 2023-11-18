@@ -117,7 +117,7 @@ export const SelectRoute: React.FC = () => {
                   timeStamp: stopDTO.timeComess,
                   index: index,
                   costsIncurred: stopDTO.costsIncurred,
-                  description: stopDTO.stationDTO.address,
+                  desc: stopDTO.stationDTO.address,
                 };
               }),
             unitPrice: item.fare / (item.listtripStopDTO.length - 1),

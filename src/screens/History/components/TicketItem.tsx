@@ -3,9 +3,13 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFA from "react-native-vector-icons/MaterialIcons";
 import { Text } from "@rneui/base";
-import { BookingStatusId, CanCancelStatus } from "@constants/route";
+import {
+  BookingStatusId,
+  BookingStatusLabel,
+  CanCancelStatus,
+} from "@constants/route";
 import { ActivityIndicator } from "react-native";
-import { getColorStatus } from "./TichketHistory";
+import { getColorStatus, getStatusLabel } from "./TichketHistory";
 import { useStore } from "@store/index";
 import { EAccountType } from "@enums";
 import { timeStampToUtc } from "@utils/time";
@@ -37,6 +41,8 @@ export const TicketItem: React.FC<{
         return "#f5bfce";
       case BookingStatusId.Paid:
       case BookingStatusId.Ready:
+      case BookingStatusId.NoCheckin:
+      case BookingStatusId.Checkin:
         return "#f5e8bf";
       case BookingStatusId.Finish:
         return "#bff5d5";
@@ -64,13 +70,14 @@ export const TicketItem: React.FC<{
         </Text>
         <Text
           style={{
-            fontSize: 18,
+            fontSize: 14,
             color: getColorStatus(status),
             marginTop: 10,
             fontWeight: "800",
+            textAlign: "center",
           }}
         >
-          {status}
+          {BookingStatusLabel[status]}
         </Text>
       </View>
       <View style={styles.ticketContent}>

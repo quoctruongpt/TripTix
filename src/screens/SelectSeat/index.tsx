@@ -19,7 +19,8 @@ const SeatStatus = {
 export const SelectSeat: React.FC = () => {
   const navigation = useNavigation<TAppNavigation<"SelectSeat">>();
   const {
-    route: { routeInfo, setSeatSelected },
+    route: { routeInfo, setSeatSelected, setUserInformation },
+    authentication: { userInfo },
   } = useStore();
   const [listSeat, setListSeat] = useState([]);
   const [listSelectSeat, setListSelectSeat] = useState([]);
@@ -58,10 +59,19 @@ export const SelectSeat: React.FC = () => {
 
     setListSelectSeat([...listSelectSeat, seatId]);
   };
+  console.log(routeInfo);
 
   const onDepartureInfo = () => {
     setSeatSelected(listSelectSeat);
-    navigation.navigate("DepartureInformation");
+    const pickUp = routeInfo.listtripStopDTO.find((item) => item.index === 0);
+    const dropOff = routeInfo.listtripStopDTO.find((item) => item.index === 1);
+    setUserInformation({
+      pickUpId: pickUp.id,
+      dropOffId: dropOff.id,
+      name: userInfo.fullName,
+      phone: userInfo.phone,
+    });
+    navigation.navigate("TicketInformation");
   };
 
   const selectedSeatsText = listSelectSeat.join(", ");
@@ -80,8 +90,6 @@ export const SelectSeat: React.FC = () => {
       routeInfo.seatNameBooking.slice(indexCenter),
     ];
   }, [numberFloor]);
-
-  console.log(map);
 
   const chunkArray = (array, chunkSize) => {
     return Array.from({ length: Math.ceil(array.length / chunkSize) }, (v, i) =>
@@ -135,15 +143,6 @@ export const SelectSeat: React.FC = () => {
           </ScrollView>
         ))}
       </View>
-      {/* {listSeat &&
-          routeInfo.seatNameBooking?.map((seat) => (
-            <SeatItem
-              seatName={seat.seatName}
-              seatAvailable={seat.status == SeatStatus.Available}
-              selected={listSelectSeat.includes(seat.seatName)}
-              onSeatPress={() => onActiveSeat(seat)}
-            />
-          ))} */}
       {showError && (
         <Text
           style={{

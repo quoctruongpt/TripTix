@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -16,8 +16,12 @@ import { DeviceSize, StatusApiCall } from "@constants/global";
 import { TicketDetail } from "./TicketDetail";
 import {
   BookingStatusId,
+  BookingStatusLabel,
   CanCancelStatus,
   CompletedStatus,
+  PriceTypeArray,
+  StatusArray,
+  StatusCustomerArray,
   UnfinishedStatus,
 } from "@constants/route";
 import { ActivityIndicator } from "react-native";
@@ -29,6 +33,7 @@ import { PopupCancel } from "./PopupCancel";
 import { PopupFeedback } from "./PopupFeedback";
 import { set } from "mobx";
 import { TicketItem } from "./TicketItem";
+import { Select } from "@components/Select";
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
@@ -38,7 +43,11 @@ export const getColorStatus = (status: string) => {
       return "red";
     case BookingStatusId.Paid:
     case BookingStatusId.Ready:
+    case BookingStatusId.Checkin:
+    case BookingStatusId.Ready:
       return "orange";
+    case BookingStatusId.NoCheckin:
+      return "blue";
     case BookingStatusId.Run:
       return "blue";
     case BookingStatusId.Finish:
@@ -48,16 +57,28 @@ export const getColorStatus = (status: string) => {
   }
 };
 
+export const getStatusLabel = (status: string) => {
+  const info = StatusArray.find((item) => item.value === status);
+
+  return info.label;
+};
+
 export default function TichketHistory({ listTicket, type, onRefresh }) {
   const [data, setData] = useState([]);
   const [detail, setDetail] = useState<Record<string, any> | null>(null);
   const [canceling, setCanceling] = useState<string | null>(null);
   const [cancel, setCancel] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("");
   const {
     authentication: { userInfo, synchUserInfo },
   } = useStore();
   const toast = useToast();
+  const dataFilter = useMemo(() => {
+    return data.filter((item) => {
+      return statusFilter ? item.bookingStatus === statusFilter : true;
+    });
+  }, [data, statusFilter]);
 
   useEffect(() => {
     if (listTicket) {
@@ -124,14 +145,22 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
         display: "flex",
         width: DeviceSize.width,
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
         padding: 10,
         flex: 1,
       }}
     >
-      {data.length === 0 ? (
-        <>
+      {type === "history" && (
+        <Select
+          placeholder="Lọc theo trạng thái"
+          items={StatusCustomerArray}
+          value={statusFilter}
+          onSelectItem={(e) => setStatusFilter(e.value)}
+        />
+      )}
+      {dataFilter.length === 0 ? (
+        <View
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+        >
           <Icon
             name={`${
               type == "history" ? "ticket-confirmation-outline" : "ticket"
@@ -139,12 +168,23 @@ export default function TichketHistory({ listTicket, type, onRefresh }) {
             size={80}
             style={{ color: "red" }}
           />
-          <Text style={{ color: "orange" }}>Lịch sử vé trống</Text>
-        </>
+          <Text style={{ color: "orange" }}>
+            {statusFilter ? (
+              <Text style={{ color: "orange" }}>
+                Bạn không có chuyến đi nào ở trạng thái{" "}
+                <Text style={{ color: "red" }}>
+                  {BookingStatusLabel[statusFilter]}
+                </Text>
+              </Text>
+            ) : (
+              "Lịch sử vé trống"
+            )}
+          </Text>
+        </View>
       ) : (
         <ScrollView style={{ flex: 1, paddingBottom: 120, width: "100%" }}>
-          {data &&
-            data.map((ticket, index) => (
+          {dataFilter &&
+            dataFilter.map((ticket, index) => (
               <TicketItem
                 key={index}
                 ticket={ticket}

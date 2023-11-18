@@ -68,8 +68,10 @@ const Item = ({
           }}
         />
 
-        <Text style={{ fontWeight: "800", marginBottom: 8 }}>{title}</Text>
-        <Text>{desc}</Text>
+        <Text style={{ fontWeight: "800", marginBottom: 4 }}>{title}</Text>
+        <Text style={{ fontSize: 12, color: "grey", marginBottom: 4 }}>
+          {desc}
+        </Text>
       </View>
     </View>
   );
