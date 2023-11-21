@@ -12,14 +12,16 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ButtonApp } from "@components/Button";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { TAuthNavigation, TAuthRoute } from "@navigation/AuthNavigator.type";
 import { useStore } from "@store/index";
-import { postLogin } from "@httpClient/authentication.api";
-import { EAccountType } from "@enums";
+import {
+  postLogin,
+  putTokenNotification,
+} from "@httpClient/authentication.api";
 import { StatusApiCall, StorageKeys } from "@constants/global";
 import { storage } from "@storage/index";
-import { useToast } from "react-native-toast-notifications";
+import { registerForPushNotificationsAsync } from "@utils/app";
 
 const schema = yup.object().shape({
   email: yup.string().required("require").min(4, "min 4"),
@@ -32,7 +34,6 @@ export const SignIn = () => {
     authentication: { setIsLogin, setUserInfo },
   } = useStore();
   const [isLoading, setIsLoading] = useState(false);
-  const toash = useToast();
 
   const {
     control,
@@ -53,9 +54,11 @@ export const SignIn = () => {
           storage.setItem(StorageKeys.Token, data.data.token),
           storage.setItem(StorageKeys.userInfo, JSON.stringify(data.data.user)),
         ]);
-
         setUserInfo(data.data.user);
         setIsLogin(true);
+
+        const token = await registerForPushNotificationsAsync();
+        putTokenNotification(data.data.user.idUserSystem, token);
       }
     } catch (e) {
       setError("password", { message: "Đăng nhập thất bại. Vui lòng thử lại" });

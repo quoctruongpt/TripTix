@@ -2,7 +2,7 @@ import { ButtonApp } from "@components/Button";
 import { Input } from "@rneui/themed";
 import { SelectGender } from "@screens/SignUp/components/SelectGender";
 import { useStore } from "@store/index";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   View,
@@ -21,6 +21,8 @@ import { StatusApiCall } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { registerForPushNotificationsAsync } from "@utils/app";
+import * as Clipboard from "expo-clipboard";
 
 const schema = yup.object().shape({
   fullName: yup
@@ -45,7 +47,15 @@ export const Info: React.FC = () => {
     authentication: { synchUserInfo, userInfo },
   } = useStore();
   const [isUpdate, setIsUpdate] = useState(false);
+  const [token, setToken] = useState("");
   const toast = useToast();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((value) => {
+      setToken(value);
+    });
+  });
+
   const {
     handleSubmit,
     control,
@@ -221,6 +231,9 @@ export const Info: React.FC = () => {
               />
             )}
           />
+          <TouchableOpacity onPress={() => Clipboard.setStringAsync(token)}>
+            <Text style={{ fontSize: 10, color: "grey" }}>{token}</Text>
+          </TouchableOpacity>
         </View>
         <View
           style={{

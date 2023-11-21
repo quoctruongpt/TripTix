@@ -42,6 +42,13 @@ const putExchangeCoins = (idCustomer: number, voucherCoins: number) => {
   });
 };
 
+const putTokenNotification = (idCustomer: number, token: string) => {
+  return httpClient.put(routes.authentication.putNotificationToken, {
+    fcmTokenDevide: token,
+    idCustomer: idCustomer,
+  });
+};
+
 export {
   postLogin,
   postRegister,
@@ -50,4 +57,5 @@ export {
   postConfirmOtp,
   putUpdateUserInfo,
   putExchangeCoins,
+  putTokenNotification,
 };

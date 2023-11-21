@@ -12,6 +12,7 @@ const routes = {
     confirmOtp: url.baseUrl + "/otp/valid",
     updateUserInfo: url.baseUrl + "/usersystem",
     changeCoin: url.baseUrl + "/usersystem/exchange-voucher-coins",
+    putNotificationToken: url.baseUrl + "/usersystem/fcm-token-device",
   },
   trip: {
     getRouteInfo: url.baseUrl + "/route",
