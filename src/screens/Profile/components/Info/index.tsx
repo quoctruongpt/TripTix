@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableOpacity,
   Text,
+  ScrollView,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -115,129 +116,130 @@ export const Info: React.FC = () => {
           padding: 0,
         }}
       >
-        <View
-          style={{
-            backgroundColor: "white",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingHorizontal: 10,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <ScrollView style={{ flex: 1 }}>
           <View
             style={{
-              width: "100%",
-              display: "flex",
+              backgroundColor: "white",
               justifyContent: "center",
               alignItems: "center",
+              paddingHorizontal: 10,
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Avatar
-              source={require("@assets/images/bus/bus.png")}
-              rounded
-              size={60}
-              containerStyle={{
-                backgroundColor: "#ccc",
-                position: "relative",
+            <View
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-            />
+            >
+              <Avatar
+                source={require("@assets/images/bus/bus.png")}
+                rounded
+                size={60}
+                containerStyle={{
+                  backgroundColor: "#ccc",
+                  position: "relative",
+                }}
+              />
+            </View>
           </View>
-        </View>
-        <View>
-          <Controller
-            control={control}
-            name="fullName"
-            render={({ field: { value, onChange } }) => (
-              <Input
-                label="Họ tên"
-                value={value}
-                onChangeText={onChange}
-                errorMessage={errors.fullName?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { value, onChange } }) => (
-              <Input
-                label="Email"
-                value={value}
-                onChangeText={onChange}
-                errorMessage={errors.email?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="phone"
-            render={({ field: { value, onChange } }) => (
-              <Input
-                label="Số điện thoại"
-                value={value}
-                onChangeText={onChange}
-                errorMessage={errors.phone?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="birthday"
-            render={({ field: { value, onChange } }) => (
-              <DatePicker
-                value={value}
-                onConfirm={onChange}
-                placeholder="Birthday"
-                maximumDate={new Date()}
-                label="Ngày sinh"
-                renderButton={(title, onPress) => (
-                  <TouchableOpacity
-                    onPress={onPress}
-                    style={{
-                      paddingVertical: 12,
-                      marginHorizontal: 12,
-                      borderBottomWidth: 2,
-                      borderColor: "#ccc",
-                      marginBottom: 20,
-                    }}
-                  >
-                    <Text style={{ fontSize: 18 }}>{title}</Text>
-                  </TouchableOpacity>
-                )}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="gender"
-            render={({ field: { value, onChange } }) => (
-              <SelectGender
-                value={value}
-                onChange={onChange}
-                label="Giới tính"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="address"
-            render={({ field: { value, onChange } }) => (
-              <Input
-                label="Địa chỉ"
-                value={value}
-                onChangeText={onChange}
-                errorMessage={errors.address?.message}
-              />
-            )}
-          />
-          <TouchableOpacity onPress={() => Clipboard.setStringAsync(token)}>
-            <Text style={{ fontSize: 10, color: "grey" }}>{token}</Text>
-          </TouchableOpacity>
-        </View>
+          <View>
+            <Controller
+              control={control}
+              name="fullName"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  label="Họ tên"
+                  value={value}
+                  onChangeText={onChange}
+                  errorMessage={errors.fullName?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  label="Email"
+                  value={value}
+                  onChangeText={onChange}
+                  errorMessage={errors.email?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="phone"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  label="Số điện thoại"
+                  value={value}
+                  onChangeText={onChange}
+                  errorMessage={errors.phone?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="birthday"
+              render={({ field: { value, onChange } }) => (
+                <DatePicker
+                  value={value}
+                  onConfirm={onChange}
+                  placeholder="Birthday"
+                  maximumDate={new Date()}
+                  label="Ngày sinh"
+                  renderButton={(title, onPress) => (
+                    <TouchableOpacity
+                      onPress={onPress}
+                      style={{
+                        paddingVertical: 12,
+                        marginHorizontal: 12,
+                        borderBottomWidth: 2,
+                        borderColor: "#ccc",
+                        marginBottom: 20,
+                      }}
+                    >
+                      <Text style={{ fontSize: 18 }}>{title}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="gender"
+              render={({ field: { value, onChange } }) => (
+                <SelectGender
+                  value={value}
+                  onChange={onChange}
+                  label="Giới tính"
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="address"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  label="Địa chỉ"
+                  value={value}
+                  onChangeText={onChange}
+                  errorMessage={errors.address?.message}
+                />
+              )}
+            />
+            <TouchableOpacity onPress={() => Clipboard.setStringAsync(token)}>
+              <Text style={{ fontSize: 10, color: "grey" }}>{token}</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
         <View
           style={{
-            flex: 1,
             width: "100%",
             display: "flex",
             flexDirection: "column",
