@@ -16,6 +16,7 @@ type TAppStackParamList = {
   HomeDriver: undefined;
   HistoryDriver: undefined;
   DetailRoute: undefined;
+  TransactionHistory: undefined;
 };
 
 type TAppNavigation<T extends keyof TAppStackParamList> =

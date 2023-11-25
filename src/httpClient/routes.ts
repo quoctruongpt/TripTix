@@ -30,6 +30,7 @@ const routes = {
   },
   payment: {
     topUp: url.baseUrl + "/payment/create_payment-url",
+    transactionHistory: url.baseUrl + "/payment-transaction",
   },
 };
 

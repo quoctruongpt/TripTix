@@ -17,6 +17,7 @@ import { HomeDriver } from "@screens/Modules/Driver/Home";
 import { HistoryDriver } from "@screens/Modules/Driver/History";
 import { DetailRoute } from "@screens/Modules/Driver/History/components/DetailRoute";
 import { Home } from "@screens/Home";
+import { TransactionHistory } from "@screens/TransactionHistory";
 
 const Stack = createNativeStackNavigator<TAppStackParamList>();
 
@@ -63,6 +64,11 @@ export default function AppNavigator() {
         name={"Info"}
         component={Info}
         options={{ title: "User Information" }}
+      />
+      <Stack.Screen
+        name={"TransactionHistory"}
+        component={TransactionHistory}
+        options={{ title: "Lịch sử giao dịch" }}
       />
       <Stack.Screen
         name={"SearchRoute"}

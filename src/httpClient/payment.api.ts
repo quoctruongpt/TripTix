@@ -5,4 +5,10 @@ const topUp = (idCustomer: number, coin: number) => {
   return httpClient.post(routes.payment.topUp, { idCustomer, amount: coin });
 };
 
-export { topUp };
+const getTransaction = (idCustomer: number) => {
+  return httpClient.get(
+    `${routes.payment.transactionHistory}?isCustomer=${idCustomer}`
+  );
+};
+
+export { topUp, getTransaction };
