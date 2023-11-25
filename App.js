@@ -31,9 +31,10 @@ export default function App() {
 
   const getTokenNotification = async () => {
     const token = await registerForPushNotificationsAsync();
+    console.log(token);
     const userInfo = await storage.getItem(StorageKeys.userInfo);
 
-    if (token && userInfo.idUserSystem) {
+    if (token && userInfo?.idUserSystem) {
       putTokenNotification(userInfo.idUserSystem, token);
     }
   };
