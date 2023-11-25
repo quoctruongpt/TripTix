@@ -13,8 +13,20 @@ export const ListActions: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Action title="Đặt vé" onPress={goToSearchRoute} />
+    <View style={{ padding: 16 }}>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "bold",
+          flex: 1,
+          marginBottom: 16,
+        }}
+      >
+        Hành động
+      </Text>
+      <View style={styles.container}>
+        <Action title="Đặt vé" onPress={goToSearchRoute} />
+      </View>
     </View>
   );
 };
@@ -34,7 +46,7 @@ const Action: React.FC<{ title: string; onPress: () => void }> = ({
 };
 
 const styles = StyleSheet.create({
-  container: { flexDirection: "row", marginBottom: 16 },
+  container: { flexDirection: "row" },
   iconWrap: {
     backgroundColor: "#ccc",
     borderRadius: 200,

@@ -3,4 +3,6 @@ import { routes } from "./routes";
 
 const getProvinces = () => httpClient.get(routes.global.getProvinces);
 
-export { getProvinces };
+const getNews = () => httpClient.get(routes.global.news);
+
+export { getProvinces, getNews };

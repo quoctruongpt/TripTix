@@ -1,13 +1,43 @@
 import { Divider, Text } from "@rneui/themed";
 import { Image } from "expo-image";
-import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity, View, Dimensions } from "react-native";
+import { getNews } from "@httpClient/global.api";
+import { StatusApiCall } from "@constants/global";
+import { useNavigation } from "@react-navigation/native";
+import { TAppNavigation } from "@navigation/AppNavigator.type";
+import Carousel from "react-native-snap-carousel";
+
+const { width } = Dimensions.get("screen");
+const banner = [
+  "https://www.hyundaivna.com/wp-content/uploads/2019/02/11.jpg",
+  "https://homepage.momocdn.net/img/momo-upload-api-220617171025-637910826257791159.jpg",
+  "https://homepage.momocdn.net/blogscontents/momo-upload-api-220803151053-637951362531172965.jpg",
+];
 
 export const Banner: React.FC = () => {
-  return (
-    <View style={{ marginBottom: 60 }}>
+  const [data, setData] = useState([]);
+  const navigation = useNavigation<TAppNavigation<"Home">>();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const { data } = await getNews();
+
+      if (data.status === StatusApiCall.Success) {
+        setData(data.data?.slice(0, 3));
+      }
+    } finally {
+    }
+  };
+
+  const renderItem = ({ item, index }) => {
+    return (
       <Image
-        source={require("@assets/images/banner/Banner01.png")}
+        source={{ uri: item }}
         style={{
           width: "100%",
           height: 150,
@@ -15,32 +45,71 @@ export const Banner: React.FC = () => {
           borderRadius: 16,
         }}
       />
-      <View style={{ flexDirection: "row", marginTop: 24, marginBottom: 16 }}>
-        <Text
+    );
+  };
+
+  return (
+    <View style={{ marginBottom: 60 }}>
+      <Carousel
+        data={banner}
+        renderItem={renderItem}
+        sliderWidth={width}
+        itemWidth={width * 0.8}
+        loop
+        autoplay
+      />
+      <View style={{ paddingHorizontal: 16 }}>
+        <View
           style={{
-            fontSize: 16,
-            fontWeight: "bold",
-            flex: 1,
+            flexDirection: "row",
+            marginTop: 24,
+            marginBottom: 16,
           }}
         >
-          Title
-        </Text>
-        <TouchableOpacity>
-          <Text style={{ color: "#e4613b" }}>Xem tất cả</Text>
-        </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "bold",
+              flex: 1,
+            }}
+          >
+            Tin tức
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("News")}>
+            <Text style={{ color: "#e4613b" }}>Xem tất cả</Text>
+          </TouchableOpacity>
+        </View>
+        {data.map((item, index) => {
+          return (
+            <Item
+              key={index}
+              title={item.title}
+              content={item.description}
+              showLine={index !== 0}
+              image={item.listImg[0]}
+            />
+          );
+        })}
       </View>
-      <Item showLine={false} />
-      <Item />
-      <Item />
     </View>
   );
 };
 
-const Item: React.FC<{ showLine?: boolean }> = ({ showLine = true }) => {
+const Item: React.FC<{
+  showLine?: boolean;
+  title: string;
+  content: string;
+  image: string;
+}> = ({ showLine = true, title, content, image }) => {
+  const navigation = useNavigation<TAppNavigation<"Home">>();
+
   return (
-    <View style={{ flexDirection: "row", marginBottom: 16 }}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("News")}
+      style={{ flexDirection: "row", marginBottom: 16 }}
+    >
       <Image
-        source={require("@assets/images/banner/Banner01.png")}
+        source={{ uri: image }}
         style={{
           backgroundColor: "red",
           width: 70,
@@ -51,14 +120,11 @@ const Item: React.FC<{ showLine?: boolean }> = ({ showLine = true }) => {
       />
       <View style={{ flex: 1, marginLeft: 8 }}>
         {showLine && <Divider style={{ marginBottom: 10 }} />}
-        <Text style={{ fontWeight: "600" }}>Title</Text>
+        <Text style={{ fontWeight: "900" }}>{title}</Text>
         <Text style={{ fontSize: 12 }} numberOfLines={3}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex eveniet
-          neque aliquid sed praesentium odio cupiditate sit, numquam sapiente
-          labore, delectus vero omnis molestiae ad ut suscipit ratione nostrum
-          dolorem.
+          {content}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

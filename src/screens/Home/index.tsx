@@ -16,10 +16,8 @@ export const Home: React.FC = observer(() => {
     <View style={styles.container}>
       <UserInfoBox name={userInfo.fullName} />
       <PayBox coins={userInfo.coins} voucherCoins={userInfo.voucherCoins} />
-      <ScrollView style={{ flex: 1, padding: 16 }}>
+      <ScrollView style={{ flex: 1 }}>
         <ListActions />
-        <Banner />
-        <Banner />
         <Banner />
       </ScrollView>
     </View>

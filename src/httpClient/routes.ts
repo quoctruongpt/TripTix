@@ -3,6 +3,7 @@ import { url } from "./url";
 const routes = {
   global: {
     getProvinces: url.baseUrl + "/province-city",
+    news: url.baseUrl + "/news",
   },
   authentication: {
     login: url.baseUrl + "/usersystem/login",
