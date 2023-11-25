@@ -22,7 +22,13 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.TripTix",
-      "permissions": ["NOTIFICATIONS"]
+      "permissions": ["NOTIFICATIONS"],
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyDTFCNPEpdgH_DK753KU6DPSgwcVOdZSac"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
