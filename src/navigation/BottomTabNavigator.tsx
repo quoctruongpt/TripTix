@@ -42,13 +42,26 @@ export const BottomTabNavigator: React.FC = () => {
         tabBarInactiveTintColor: Colors.Inactive,
       })}
     >
-      <Tab.Screen name="Home" component={isDriver ? HomeDriver : Home} />
+      <Tab.Screen
+        name="Home"
+        component={isDriver ? HomeDriver : Home}
+        options={{ title: "Trang chủ" }}
+      />
       <Tab.Screen
         name="History"
         component={isDriver ? HistoryDriver : History}
+        options={{ title: "Lịch sử" }}
       />
-      <Tab.Screen name="Notification" component={Notification} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen
+        name="Notification"
+        component={Notification}
+        options={{ title: "Thông báo" }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{ title: "Tài khoản" }}
+      />
     </Tab.Navigator>
   );
   // } else {

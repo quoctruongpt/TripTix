@@ -2,8 +2,8 @@ import { ECarTypeId } from "@enums/route";
 
 const CarTypes = {
   [ECarTypeId.Limousine]: "Limousine",
-  [ECarTypeId.Bed]: "Bed",
-  [ECarTypeId.Chair]: "Chair",
+  [ECarTypeId.Bed]: "Giường",
+  [ECarTypeId.Chair]: "Ghế",
 };
 
 const CarTypeArray = [

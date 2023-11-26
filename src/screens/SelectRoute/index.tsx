@@ -175,7 +175,7 @@ export const SelectRoute: React.FC = () => {
           </View>
           <View style={{ width: "30%", marginRight: 5 }}>
             <Select
-              placeholder="Price"
+              placeholder="Giá"
               items={PriceTypeArray}
               value={filter.price}
               onSelectItem={(e) => updateFilter({ price: e.value })}
@@ -183,7 +183,7 @@ export const SelectRoute: React.FC = () => {
           </View>
           <View style={{ width: "30%", marginRight: 5 }}>
             <Select
-              placeholder="Seat Type"
+              placeholder="Loại xe"
               items={CarTypeArray}
               value={filter.type}
               onSelectItem={(e) => updateFilter({ type: e.value })}
@@ -271,8 +271,8 @@ export const SelectRoute: React.FC = () => {
                   }}
                 >
                   <Text style={{ fontWeight: "700" }}>
-                    {formatPrice(d.fare)} - {CarTypes[d.busDTO.type]} -{" "}
-                    {d.availableSeat} Seat(s) availabel
+                    {formatPrice(d.fare)} - {CarTypes[d.busDTO.type]} - Còn{" "}
+                    {d.availableSeat} chỗ trống
                   </Text>
                 </View>
               </View>

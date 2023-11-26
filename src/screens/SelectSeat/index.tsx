@@ -51,7 +51,7 @@ export const SelectSeat: React.FC = () => {
     }
 
     if (listSelectSeat.length >= 5) {
-      toast.show("You can only book a maximum of 5 tickets", {
+      toast.show("Bạn chỉ được đặt tối đa 5 vé", {
         type: "danger",
       });
       return;
@@ -150,7 +150,7 @@ export const SelectSeat: React.FC = () => {
             paddingHorizontal: 15,
           }}
         >
-          Use can't select Seat UnAvaiable
+          Bạn không thể chọn ghế đã được đặt
         </Text>
       )}
 
@@ -184,8 +184,8 @@ export const SelectSeat: React.FC = () => {
               alignItems: "stretch",
             }}
           >
-            <Text style={{ marginBottom: 10 }}>Selected Seat(s)</Text>
-            <Text>Final price</Text>
+            <Text style={{ marginBottom: 10 }}>Ghế đang chọn</Text>
+            <Text>Giá vé dự kiến</Text>
           </View>
           <View
             style={{
@@ -230,7 +230,7 @@ export const SelectSeat: React.FC = () => {
               marginRight: 5,
             }}
           ></View>
-          <Text>Avaiable</Text>
+          <Text>Trống</Text>
         </View>
         <View
           style={{
@@ -251,7 +251,7 @@ export const SelectSeat: React.FC = () => {
               marginRight: 5,
             }}
           ></View>
-          <Text>Selecting</Text>
+          <Text>Đang chọn</Text>
         </View>
         <View
           style={{
@@ -272,7 +272,7 @@ export const SelectSeat: React.FC = () => {
               marginRight: 5,
             }}
           ></View>
-          <Text>Bought</Text>
+          <Text>Đã đặt</Text>
         </View>
       </View>
       <View
@@ -283,7 +283,7 @@ export const SelectSeat: React.FC = () => {
         }}
       >
         <ButtonApp
-          title="Continue"
+          title="Tiếp tục"
           onPress={onDepartureInfo}
           disabled={listSelectSeat.length === 0}
         />

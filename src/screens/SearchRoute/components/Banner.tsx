@@ -5,7 +5,9 @@ export const Banner: React.FC<{
   from: { id: string; title: string };
   to: { id: string; title: string };
   onPress: (fromId: string, toId: string) => void;
-}> = ({ from = {}, to = {}, onPress = () => {} }) => {
+  image: string;
+  desc: string;
+}> = ({ from = {}, to = {}, onPress = () => {}, image, desc }) => {
   return (
     <TouchableOpacity
       onPress={() => onPress(from.id, to.id)}
@@ -22,20 +24,16 @@ export const Banner: React.FC<{
         backgroundColor: "#fff",
         borderRadius: 12,
         marginBottom: 24,
+        overflow: "hidden",
+        marginHorizontal: 16,
       }}
     >
-      <Image
-        source={require("@assets/images/banner/Banner01.png")}
-        style={{ width: "100%", height: 150 }}
-      />
+      <Image source={{ uri: image }} style={{ width: "100%", height: 150 }} />
       <View style={{ padding: 12 }}>
         <Text style={{ fontSize: 16, fontWeight: "800", marginVertical: 8 }}>
           {from.title} - {to.title}
         </Text>
-        <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam
-          laudantium id ipsam repellendus eveniet,
-        </Text>
+        <Text numberOfLines={3}>{desc}</Text>
       </View>
     </TouchableOpacity>
   );

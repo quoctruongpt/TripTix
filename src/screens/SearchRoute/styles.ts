@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 16 },
+  container: { flex: 1, backgroundColor: "#fff" },
   wrap: {
     backgroundColor: "#fff7f5",
     borderRadius: 20,
@@ -17,6 +17,8 @@ export const styles = StyleSheet.create({
 
     elevation: 3,
     marginBottom: 50,
+    marginHorizontal: 16,
+    marginTop: 16,
   },
   routeWrap: {
     flexDirection: "row",

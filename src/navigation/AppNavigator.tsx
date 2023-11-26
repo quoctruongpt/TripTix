@@ -44,12 +44,12 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"SelectRoute"}
         component={SelectRoute}
-        options={{ title: "Select Route" }}
+        options={{ title: "Chọn chuyến" }}
       />
       <Stack.Screen
         name={"SelectSeat"}
         component={SelectSeat}
-        options={{ title: "Select Seat" }}
+        options={{ title: "Vui lòng chọn ghế" }}
       />
       <Stack.Screen
         name={"Settings"}

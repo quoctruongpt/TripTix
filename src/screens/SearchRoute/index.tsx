@@ -22,6 +22,9 @@ const banners = [
       id: "33",
       title: "Hưng Yên",
     },
+    image:
+      "https://limody.vn/wp-content/uploads/2021/08/xe-hung-yen-ha-noi-1.jpg",
+    desc: "Bạn đang muốn di chuyển tới Hưng Yên. Bạn lo lắng không biết lựa chọn nhà xe nào cho chuyến đi hành trình của mình. Bạn muốn tìm hiểu thông tin nhà xe khách Hà Nội Hưng Yên limousine giường nằm",
   },
   {
     from: { id: "52", title: "Tỉnh Bình Định" },
@@ -29,6 +32,9 @@ const banners = [
       id: "48",
       title: "Thành phố Đà Nẵng",
     },
+    image:
+      "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2018/06/ben-xe-da-nang-vntrip.jpg",
+    desc: "Đến Đà Nẵng, ngoài việc đi bằng máy bay, tàu hỏa thì xe khách cũng là phương tiện được rất nhiều du khách lựa chọn, ở các bến xe Đà Nẵng bạn có thể tìm cho mình rất nhiều các nhà xe với những lộ trình đi tới nhiều tỉnh thành trên cả nước, điều đó khiến xe khách trở thành một trong những phương tiện đem lại sự thuận tiện cho những chuyến đi xa",
   },
   {
     from: { id: "75", title: "Tỉnh Đồng Nai" },
@@ -36,6 +42,9 @@ const banners = [
       id: "87",
       title: "Tỉnh Đồng Tháp",
     },
+    image:
+      "https://toquoc.mediacdn.vn/upload/oldcinetvn/userfiles/image/2014/dong%20thap%201.jpg",
+    desc: "Bạn đang tìm xe khách Đồng Nai đi Đồng Tháp truy cập ngay tại đây để xem số điện thoại lịch trình di chuyển của các nhà xe qua các địa điểm như Gành Hào, Giá Rai, Phước Long, Hòa Bình, Vĩnh Lợi hoàn toàn miễn phí.",
   },
 ];
 
@@ -146,7 +155,14 @@ export const SearchRoute: React.FC = () => {
       </View>
       <ScrollView>
         {banners.map((item, index) => (
-          <Banner from={item.from} to={item.to} onPress={handleChooseBanner} />
+          <Banner
+            key={index}
+            from={item.from}
+            to={item.to}
+            onPress={handleChooseBanner}
+            image={item.image}
+            desc={item.desc}
+          />
         ))}
       </ScrollView>
     </View>

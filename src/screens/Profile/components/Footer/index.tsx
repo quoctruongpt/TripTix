@@ -35,7 +35,7 @@ export const Footer: React.FC = () => {
             textAlign: "center",
           }}
         >
-          Công ty TNHH MeiJa JongPin
+          Công ty TNHH TripTix
         </Text>
         <Text
           style={{
@@ -45,9 +45,8 @@ export const Footer: React.FC = () => {
             textAlign: "center",
           }}
         >
-          Tầng 21, tòa nhà Center Building, Hapulico Complex, số 1 Nguyễn Huy
-          Tưởng, p. Thanh Xuân Trung, quận Thanh Xuân, Hà Nội. Điện thoại: 024
-          7309 5555, máy lẻ 370.
+          Lô E2a-7, Đường D1, Đ. D1, Long Thạnh Mỹ, Thành Phố Thủ Đức, Thành phố
+          Hồ Chí Minh 700000
         </Text>
         <Text
           style={{
@@ -70,7 +69,7 @@ export const Footer: React.FC = () => {
             textAlign: "center",
           }}
         >
-          0979221694
+          0961234567
         </Text>
         <Text
           style={{
@@ -93,7 +92,7 @@ export const Footer: React.FC = () => {
             textAlign: "center",
           }}
         >
-          bettermad.com
+          triptix.com
         </Text>
       </View>
     </View>

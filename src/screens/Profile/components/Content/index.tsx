@@ -60,7 +60,7 @@ export const Content: React.FC = observer(() => {
       <View style={styles.itemNormal}>
         <Icon name="credit-card" size={18} color="#D2691E" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Open SHB account</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Thẻ</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
@@ -68,7 +68,7 @@ export const Content: React.FC = observer(() => {
         <Icon onPress={onClickPoint} name="star" size={18} color="#DC143C" />
         <View style={styles.textWrapper}>
           <Text onPress={onClickPoint} style={{ color: "#000", fontSize: 14 }}>
-            Point
+            Đổi điểm
           </Text>
         </View>
         <Icon
@@ -81,28 +81,28 @@ export const Content: React.FC = observer(() => {
       <View style={styles.itemNormal}>
         <Icon name="notifications-none" size={18} color="#FFA07A" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Notification</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Thông báo</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
       <View style={styles.itemNormal}>
         <Icon name="edit-location" size={18} color="green" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Favorite Places</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Địa điểm ưa thích</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
       <View style={styles.itemNormal}>
         <Icon name="block" size={18} color="black" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Black list</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Danh sách chặn</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
       <View style={styles.itemMedium}>
         <Icon name="wallet-giftcard" size={18} color="red" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Promotion</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Khuyến mãi</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
@@ -118,7 +118,7 @@ export const Content: React.FC = observer(() => {
             onPress={onClickSettings}
             style={{ color: "#000", fontSize: 14 }}
           >
-            Settings
+            Cài đặt
           </Text>
         </View>
         <Icon
@@ -131,28 +131,28 @@ export const Content: React.FC = observer(() => {
       <View style={styles.itemNormal}>
         <Icon name="support-agent" size={18} color="#008B8B" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Quick Support</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Hỗ trợ</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
       <View style={styles.itemNormal}>
         <Icon name="person-add" size={18} color="#FF1493" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Invite Friends</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Thêm bạn bè</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
       <View style={styles.itemMedium}>
         <Icon name="groups" size={18} color="#00FF00" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Community</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Cộng đồng</Text>
         </View>
         <Icon name="chevron-right" size={18} color="gray" />
       </View>
       <TouchableOpacity onPress={onClickLogout} style={styles.itemNormal}>
         <Icon onPress={onClickLogout} name="logout" size={18} color="black" />
         <View style={styles.textWrapper}>
-          <Text style={{ color: "#000", fontSize: 14 }}>Logout</Text>
+          <Text style={{ color: "#000", fontSize: 14 }}>Đăng xuất</Text>
         </View>
         <Icon
           onPress={onClickLogout}
