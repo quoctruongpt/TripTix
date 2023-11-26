@@ -1,8 +1,8 @@
-import { EGender } from '@enums';
+import { EGender } from "@enums";
 
 const ListGender = [
-  { label: "Male", value: EGender.Male },
-  { label: "Female", value: EGender.Female },
+  { label: "Nam", value: EGender.Male },
+  { label: "Nữ", value: EGender.Female },
 ];
 
 export { ListGender };

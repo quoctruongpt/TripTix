@@ -30,7 +30,7 @@ export default function AuthNavigator() {
       <Stack.Screen
         name={"OTP"}
         component={OTP}
-        options={{ title: "Send OTP" }}
+        options={{ title: "Xác thực OTP" }}
       />
       <Stack.Screen
         name={"LoginOrRegisterForm"}
@@ -46,7 +46,7 @@ export default function AuthNavigator() {
         name="SignUp"
         component={SignUp}
         options={{
-          title: "Fill Your Profile",
+          title: "Đăng ký",
         }}
       />
     </Stack.Navigator>

@@ -54,7 +54,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"Settings"}
         component={Settings}
-        options={{ title: "Settings" }}
+        options={{ title: "Cài đặt" }}
       />
       <Stack.Screen
         name={"Point"}
@@ -64,7 +64,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name={"Info"}
         component={Info}
-        options={{ title: "User Information" }}
+        options={{ title: "Thông tin người dùng" }}
       />
       <Stack.Screen
         name={"TransactionHistory"}

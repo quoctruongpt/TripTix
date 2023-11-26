@@ -17,11 +17,11 @@ export const Welcome = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text h4 h4Style={styles.text}>
-        Welcome to TripTix
+        Chào mừng bạn đến TripTix
       </Text>
       <Image source={Images.Bus} style={styles.image} />
       <Button
-        title="Get started"
+        title="Bắt đầu"
         buttonStyle={styles.button}
         containerStyle={styles.buttonContainer}
         titleStyle={styles.titleButton}

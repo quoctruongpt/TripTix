@@ -58,7 +58,7 @@ export const OTP = () => {
     setTime(60);
     const { data } = await postSendOtp(params.phone);
     if (data.status === StatusApiCall.Success) {
-      toast.show("OTP has been sent successfully", { type: "success" });
+      toast.show("Mã OTP đã được gửi đi", { type: "success" });
     }
   };
 
@@ -107,10 +107,10 @@ export const OTP = () => {
           </View>
           <View style={styles.contentWrapper}>
             <Text h4 h4Style={styles.titleContent}>
-              Enter OTP
+              Nhập mã OTP
             </Text>
             <Text h4 h4Style={styles.titleDes}>
-              An 6 digit code has been sent to {"\n"} {params.phone}
+              Mã bao gồm 6 ký tự đã được gửi đến {"\n"} {params.phone}
             </Text>
           </View>
           <View style={{ marginTop: 24 }}>
@@ -157,7 +157,7 @@ export const OTP = () => {
               h4
               h4Style={[styles.footerText, { color: time ? "#ccc" : "orange" }]}
             >
-              Resend OTP {time > 0 ? `(${time}s)` : ""}
+              Gửi lại {time > 0 ? `(${time}s)` : ""}
             </Text>
           </TouchableOpacity>
         </View>

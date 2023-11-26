@@ -86,7 +86,7 @@ export const SignUp: React.FC = () => {
                 value={value}
                 onChangeText={onChange}
                 style={styles.input}
-                placeholder="Full Name"
+                placeholder="Họ tên"
                 placeholderTextColor={"#ccc"}
               />
             )}
@@ -100,7 +100,7 @@ export const SignUp: React.FC = () => {
                 value={value}
                 onChangeText={onChange}
                 style={styles.input}
-                placeholder="Address"
+                placeholder="Địa chỉ"
                 placeholderTextColor={"#ccc"}
               />
             )}
@@ -113,7 +113,7 @@ export const SignUp: React.FC = () => {
               <DatePicker
                 value={value}
                 onConfirm={onChange}
-                placeholder="Birthday"
+                placeholder="Ngày sinh"
                 maximumDate={new Date()}
               />
             )}
@@ -141,7 +141,7 @@ export const SignUp: React.FC = () => {
                 value={value}
                 onChangeText={onChange}
                 style={styles.input}
-                placeholder="Phone"
+                placeholder="Số điện thoại"
                 placeholderTextColor={"#ccc"}
                 keyboardType="phone-pad"
               />
@@ -156,7 +156,7 @@ export const SignUp: React.FC = () => {
                 value={value}
                 onChangeText={onChange}
                 style={styles.input}
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 placeholderTextColor={"#ccc"}
                 secureTextEntry
               />

@@ -76,9 +76,9 @@ export const SignIn = () => {
       <SafeAreaView style={styles.container}>
         <View>
           <Text h4 h4Style={styles.title}>
-            Login Account
+            Đăng nhập
           </Text>
-          <Text>Hello, welcome back to our account</Text>
+          <Text>Xin chào, mừng bạn quay trở lại</Text>
         </View>
         <View>
           <Controller
@@ -89,7 +89,7 @@ export const SignIn = () => {
                 errorMessage={errors.email?.message as string}
                 inputStyle={styles.inputStyle}
                 leftIcon={<Icon name="email-lock" size={20} />}
-                placeholder="Email ID"
+                placeholder="Email/SĐT"
                 value={value}
                 onChangeText={onChange}
               />
@@ -103,7 +103,7 @@ export const SignIn = () => {
                 errorMessage={errors.password?.message as string}
                 inputStyle={styles.inputStyle}
                 leftIcon={<Icon name="shield-key" size={20} />}
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 value={value}
                 onChangeText={onChange}
                 secureTextEntry
@@ -111,7 +111,7 @@ export const SignIn = () => {
             )}
           />
           <ButtonApp
-            title="Login"
+            title="Đăng nhập"
             containerStyle={styles.btnLoginContainer}
             buttonStyle={styles.btnLogin}
             onPress={handleSignIn}
@@ -120,9 +120,9 @@ export const SignIn = () => {
         </View>
         <View>
           <View style={styles.footer}>
-            <Text>Not Registered yet?</Text>
+            <Text>Bạn chưa có tài khoản?</Text>
             <Button
-              title="Create an Account"
+              title="Đăng ký"
               type="clear"
               titleStyle={styles.btnSignUp}
               onPress={handleSignUp}
