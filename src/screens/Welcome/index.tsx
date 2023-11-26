@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { Button, Text } from "@rneui/themed";
@@ -19,7 +19,18 @@ export const Welcome = () => {
       <Text h4 h4Style={styles.text}>
         Chào mừng bạn đến TripTix
       </Text>
-      <Image source={Images.Bus} style={styles.image} />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            borderRadius: 200,
+            width: 300,
+            height: 300,
+            overflow: "hidden",
+          }}
+        >
+          <Image source={Images.IconApp} style={styles.image} />
+        </View>
+      </View>
       <Button
         title="Bắt đầu"
         buttonStyle={styles.button}
