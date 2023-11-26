@@ -57,8 +57,8 @@ export const SignIn = () => {
         setUserInfo(data.data.user);
         setIsLogin(true);
 
-        const token = await registerForPushNotificationsAsync();
-        putTokenNotification(data.data.user.idUserSystem, token);
+        const token = await storage.getItem(StorageKeys.notificationToken);
+        token && putTokenNotification(data.data.user.idUserSystem, token);
       }
     } catch (e) {
       setError("password", { message: "Đăng nhập thất bại. Vui lòng thử lại" });

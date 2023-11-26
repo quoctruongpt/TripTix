@@ -18,12 +18,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { DatePicker } from "@components/DatePicker";
 import { putUpdateUserInfo } from "@httpClient/authentication.api";
 import dayjs from "dayjs";
-import { StatusApiCall } from "@constants/global";
+import { StatusApiCall, StorageKeys } from "@constants/global";
 import { useToast } from "react-native-toast-notifications";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerForPushNotificationsAsync } from "@utils/app";
 import * as Clipboard from "expo-clipboard";
+import { storage } from "@storage/index";
 
 const schema = yup.object().shape({
   fullName: yup
@@ -52,10 +53,13 @@ export const Info: React.FC = () => {
   const toast = useToast();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((value) => {
-      setToken(value);
-    });
+    getTokenNoti();
   });
+
+  const getTokenNoti = async () => {
+    const t = await storage.getItem(StorageKeys.notificationToken);
+    setToken(t);
+  };
 
   const {
     handleSubmit,

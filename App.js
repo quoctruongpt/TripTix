@@ -4,40 +4,37 @@ import { rootStore } from "@store/store";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { getProvinces } from "@httpClient/global.api";
-import { putTokenNotification } from "@httpClient/authentication.api";
 import { storage } from "@storage/index";
 import { Keys } from "@constants/storage";
 import { ToastProvider } from "react-native-toast-notifications";
-import * as Notifications from "expo-notifications";
 import { StorageKeys } from "@constants/global";
-import { registerForPushNotificationsAsync } from "@utils/app";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
   }),
 });
 
 export default function App() {
   useEffect(() => {
-    getTokenNotification();
+    registerForPushNotificationsAsync()
+      .then((token) => {
+        alert(token);
+        storage.setItem(StorageKeys.notificationToken, token);
+      })
+      .catch((error) => {
+        alert("token error: " + JSON.stringify(error));
+      });
   }, []);
 
   useEffect(() => {
     getListProvince();
   }, []);
-
-  const getTokenNotification = async () => {
-    const token = await registerForPushNotificationsAsync();
-    console.log(token);
-    const userInfo = await storage.getItem(StorageKeys.userInfo);
-
-    if (token && userInfo?.idUserSystem) {
-      putTokenNotification(userInfo.idUserSystem, token);
-    }
-  };
 
   const getListProvince = async () => {
     try {
@@ -58,14 +55,37 @@ export default function App() {
     </Provider>
   );
 }
+async function registerForPushNotificationsAsync() {
+  let token;
 
-export async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: "Here is the notification body",
-      data: { data: "goes here" },
-    },
-    trigger: { seconds: 2 },
-  });
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId,
+    });
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  return token.data;
 }

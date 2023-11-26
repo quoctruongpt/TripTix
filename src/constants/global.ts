@@ -8,6 +8,7 @@ const StatusApiCall = {
 const StorageKeys = {
   Token: "token",
   userInfo: "user_info",
+  notificationToken: "notification_token",
 };
 
 const DeviceSize = Dimensions.get("screen");
